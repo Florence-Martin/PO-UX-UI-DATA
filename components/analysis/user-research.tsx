@@ -1,17 +1,13 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { FileText, Users, UserCircle } from "lucide-react"
-import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { FileText, Users, UserCircle } from "lucide-react";
+import { useState } from "react";
 
 export function UserResearch() {
-  const [activeTemplate, setActiveTemplate] = useState<string | null>(null)
-
   const templates = [
     {
       id: "questionnaire",
@@ -23,7 +19,7 @@ export function UserResearch() {
 2. Quelles fonctionnalités utilisez-vous le plus ?
 3. Quels sont les points de friction principaux ?
 4. Quelles améliorations souhaiteriez-vous voir ?
-5. Comment évaluez-vous la facilité d'utilisation ?`
+5. Comment évaluez-vous la facilité d'utilisation ?`,
     },
     {
       id: "interview",
@@ -41,7 +37,7 @@ export function UserResearch() {
 
 3. Timeline :
    - Quel est le planning idéal ?
-   - Quelles sont les deadlines critiques ?`
+   - Quelles sont les deadlines critiques ?`,
     },
     {
       id: "persona",
@@ -63,9 +59,26 @@ Points de friction :
 
 Besoins principaux :
 - [Besoin 1]
-- [Besoin 2]`
+- [Besoin 2]`,
+    },
+  ];
+
+  const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [content, setContent] = useState<string>("");
+
+  const handleTemplateClick = (id: string) => {
+    const selected = templates.find((t) => t.id === id);
+    if (selected) {
+      setActiveTemplate(id);
+      setContent(selected.content);
     }
-  ]
+  };
+
+  const handleReset = () => {
+    const original =
+      templates.find((t) => t.id === activeTemplate)?.content || "";
+    setContent(original);
+  };
 
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
@@ -79,7 +92,7 @@ Besoins principaux :
               key={template.id}
               variant={activeTemplate === template.id ? "default" : "outline"}
               className="w-full justify-start"
-              onClick={() => setActiveTemplate(template.id)}
+              onClick={() => handleTemplateClick(template.id)}
             >
               <template.icon className="mr-2 h-4 w-4" />
               {template.title}
@@ -91,7 +104,9 @@ Besoins principaux :
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle>
-            {activeTemplate ? templates.find(t => t.id === activeTemplate)?.title : "Sélectionnez un template"}
+            {activeTemplate
+              ? templates.find((t) => t.id === activeTemplate)?.title
+              : "Sélectionnez un template"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -100,11 +115,14 @@ Besoins principaux :
               <ScrollArea className="h-[400px] w-full rounded-md border p-4">
                 <Textarea
                   className="min-h-[350px] font-mono"
-                  defaultValue={templates.find(t => t.id === activeTemplate)?.content}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                 />
               </ScrollArea>
               <div className="flex justify-end space-x-2">
-                <Button variant="outline">Réinitialiser</Button>
+                <Button variant="outline" onClick={handleReset}>
+                  Réinitialiser
+                </Button>
                 <Button>Sauvegarder</Button>
               </div>
             </div>
@@ -116,5 +134,5 @@ Besoins principaux :
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
