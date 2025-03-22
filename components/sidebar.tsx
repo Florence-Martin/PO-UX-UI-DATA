@@ -1,0 +1,94 @@
+"use client"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  LayoutDashboard,
+  FileSearch,
+  Trello,
+  Database,
+  CheckSquare,
+  Menu
+} from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+import { usePathname } from "next/navigation"
+
+const navigation = [
+  {
+    name: "Dashboard UX/Data",
+    href: "/",
+    icon: LayoutDashboard
+  },
+  {
+    name: "Analyse & Wireframes",
+    href: "/analysis",
+    icon: FileSearch
+  },
+  {
+    name: "Backlog & Agile",
+    href: "/backlog",
+    icon: Trello
+  },
+  {
+    name: "Collaboration BI",
+    href: "/bi",
+    icon: Database
+  },
+  {
+    name: "Validation & Qualité",
+    href: "/validation",
+    icon: CheckSquare
+  }
+]
+
+export function Sidebar() {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const pathname = usePathname()
+
+  return (
+    <div
+      className={cn(
+        "relative flex flex-col border-r bg-background",
+        isCollapsed ? "w-16" : "w-64"
+      )}
+    >
+      <div className="flex h-16 items-center justify-between px-4">
+        {!isCollapsed && (
+          <span className="text-lg font-semibold">UX Data PO Kit</span>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          <Menu className="h-4 w-4" />
+        </Button>
+      </div>
+      <nav className="flex-1 space-y-2 p-2">
+        {navigation.map((item) => {
+          const isActive = pathname === item.href
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-accent",
+                isActive ? "bg-accent" : "transparent",
+                isCollapsed && "justify-center"
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              {!isCollapsed && <span>{item.name}</span>}
+            </Link>
+          )
+        })}
+      </nav>
+      <div className="p-4">
+        <ThemeToggle />
+      </div>
+    </div>
+  )
+}
