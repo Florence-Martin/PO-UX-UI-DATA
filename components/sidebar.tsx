@@ -1,51 +1,51 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   LayoutDashboard,
   FileSearch,
   Trello,
   Database,
   CheckSquare,
-  Menu
-} from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { usePathname } from "next/navigation"
+  Menu,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navigation = [
   {
     name: "Dashboard UX/Data",
     href: "/",
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
   },
   {
     name: "Analyse & Wireframes",
     href: "/analysis",
-    icon: FileSearch
+    icon: FileSearch,
   },
   {
     name: "Backlog & Agile",
     href: "/backlog",
-    icon: Trello
+    icon: Trello,
   },
   {
     name: "Collaboration BI",
     href: "/bi",
-    icon: Database
+    icon: Database,
   },
   {
     name: "Validation & Qualité",
     href: "/validation",
-    icon: CheckSquare
-  }
-]
+    icon: CheckSquare,
+  },
+];
 
 export function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div
@@ -64,12 +64,16 @@ export function Sidebar() {
           className="h-6 w-6"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
-          <Menu className="h-4 w-4" />
+          {isCollapsed ? (
+            <Menu className="h-4 w-4" />
+          ) : (
+            <span className="h-4 w-4">X</span>
+          )}
         </Button>
       </div>
       <nav className="flex-1 space-y-2 p-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
@@ -83,12 +87,12 @@ export function Sidebar() {
               <item.icon className="h-4 w-4" />
               {!isCollapsed && <span>{item.name}</span>}
             </Link>
-          )
+          );
         })}
       </nav>
       <div className="p-4">
         <ThemeToggle />
       </div>
     </div>
-  )
+  );
 }

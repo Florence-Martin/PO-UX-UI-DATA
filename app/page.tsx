@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Overview } from "@/components/dashboard/overview"
-import { RecentActivity } from "@/components/dashboard/recent-activity"
-import { UserMetrics } from "@/components/dashboard/user-metrics"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Overview } from "@/components/dashboard/overview";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { UserMetrics } from "@/components/dashboard/user-metrics";
 
 export default function Home() {
   return (
@@ -52,7 +52,7 @@ export default function Home() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Taux d'Engagement
+              Taux d&apos;Engagement
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -66,7 +66,7 @@ export default function Home() {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Vue d'ensemble</CardTitle>
+            <CardTitle>Vue d&apos;ensemble</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
             <Overview />
@@ -92,5 +92,5 @@ export default function Home() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

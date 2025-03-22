@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 export function Documentation() {
   return (
@@ -26,7 +26,7 @@ export function Documentation() {
             <Label>Titre</Label>
             <Input placeholder="En tant que [rôle], je veux [action] afin de [bénéfice]" />
           </div>
-          
+
           <div className="space-y-2">
             <Label>Description</Label>
             <Textarea placeholder="Description détaillée de la user story..." />
@@ -66,9 +66,9 @@ export function Documentation() {
           </div>
 
           <div className="space-y-2">
-            <Label>Critères d'Acceptation</Label>
-            <Textarea 
-              placeholder="1. Étant donné [contexte], quand [action], alors [résultat attendu]" 
+            <Label>Critères d&apos;Acceptation</Label>
+            <Textarea
+              placeholder="1. Étant donné [contexte], quand [action], alors [résultat attendu]"
               className="min-h-[150px]"
             />
           </div>
@@ -80,5 +80,5 @@ export function Documentation() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
