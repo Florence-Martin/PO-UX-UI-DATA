@@ -1,83 +1,91 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Users, UserCircle } from "lucide-react";
-import { useState } from "react";
+import { getTemplate, saveTemplate } from "@/lib/templateService";
+import { toast } from "@/hooks/use-toast";
+
+// Définition des templates disponibles dans l'interface utilisateur
+const templatesMeta = [
+  { id: "questionnaire", title: "Questionnaire Utilisateur", icon: FileText },
+  { id: "interview", title: "Guide d'Interview Stakeholder", icon: Users },
+  { id: "persona", title: "Générateur de Personas", icon: UserCircle },
+];
 
 export function UserResearch() {
-  const templates = [
-    {
-      id: "questionnaire",
-      title: "Questionnaire Utilisateur",
-      icon: FileText,
-      content: `# Questionnaire Utilisateur
-
-1. Quel est votre usage principal de notre produit ?
-2. Quelles fonctionnalités utilisez-vous le plus ?
-3. Quels sont les points de friction principaux ?
-4. Quelles améliorations souhaiteriez-vous voir ?
-5. Comment évaluez-vous la facilité d'utilisation ?`,
-    },
-    {
-      id: "interview",
-      title: "Guide d'Interview Stakeholder",
-      icon: Users,
-      content: `# Guide d'Interview Stakeholder
-
-1. Objectifs business :
-   - Quels sont vos objectifs principaux ?
-   - Comment mesurez-vous le succès ?
-
-2. Contraintes :
-   - Quelles sont les contraintes techniques ?
-   - Quelles sont les contraintes business ?
-
-3. Timeline :
-   - Quel est le planning idéal ?
-   - Quelles sont les deadlines critiques ?`,
-    },
-    {
-      id: "persona",
-      title: "Générateur de Personas",
-      icon: UserCircle,
-      content: `# Template de Persona
-
-Nom : [Nom du persona]
-Rôle : [Rôle professionnel]
-Age : [Age]
-
-Objectifs :
-- [Objectif principal]
-- [Objectif secondaire]
-
-Points de friction :
-- [Point de friction 1]
-- [Point de friction 2]
-
-Besoins principaux :
-- [Besoin 1]
-- [Besoin 2]`,
-    },
-  ];
-
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    questionnaire: FileText,
+    interview: Users,
+    persona: UserCircle,
+  };
 
-  const handleTemplateClick = (id: string) => {
-    const selected = templates.find((t) => t.id === id);
-    if (selected) {
-      setActiveTemplate(id);
-      setContent(selected.content);
+  // Charger le template depuis Firestore en fonction de l'ID
+  const loadTemplate = async (id: string) => {
+    try {
+      const data = await getTemplate(id);
+      if (data) {
+        setActiveTemplate(id);
+        setContent(data.content.replace(/\\n/g, "\n"));
+        setTitle(data.title);
+      } else {
+        toast({
+          title: "Erreur",
+          description: `Aucun template trouvé pour : ${id}`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur lors du chargement",
+        description: "Impossible de charger le template depuis Firestore.",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleReset = () => {
-    const original =
-      templates.find((t) => t.id === activeTemplate)?.content || "";
-    setContent(original);
+  // Sauvegarder le template dans Firebase
+  const handleSave = async () => {
+    if (!activeTemplate) return;
+
+    try {
+      await saveTemplate(activeTemplate, { title, content });
+      toast({
+        title: "Succès ✅",
+        description: "Le template a été sauvegardé dans Firebase 🔥",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "La sauvegarde a échoué. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Réinitialiser le contenu du template
+  const handleReset = async () => {
+    if (activeTemplate) {
+      try {
+        await loadTemplate(activeTemplate);
+        toast({
+          title: "Succès ✅",
+          description: "Les modifications ont été annulées 🔥",
+        });
+      } catch (error) {
+        toast({
+          title: "Erreur",
+          description: "La sauvegarde a échoué. Veuillez réessayer.",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   return (
@@ -87,26 +95,27 @@ Besoins principaux :
           <CardTitle>Templates</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {templates.map((template) => (
-            <Button
-              key={template.id}
-              variant={activeTemplate === template.id ? "default" : "outline"}
-              className="w-full justify-start"
-              onClick={() => handleTemplateClick(template.id)}
-            >
-              <template.icon className="mr-2 h-4 w-4" />
-              {template.title}
-            </Button>
-          ))}
+          {templatesMeta.map((template) => {
+            const Icon = iconMap[template.id];
+            return (
+              <Button
+                key={template.id}
+                variant={activeTemplate === template.id ? "default" : "outline"}
+                className="w-full justify-start"
+                onClick={() => loadTemplate(template.id)}
+              >
+                <Icon className="mr-2 h-4 w-4" />
+                {template.title}
+              </Button>
+            );
+          })}
         </CardContent>
       </Card>
 
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle>
-            {activeTemplate
-              ? templates.find((t) => t.id === activeTemplate)?.title
-              : "Sélectionnez un template"}
+            {activeTemplate ? title : "Sélectionnez un template"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -121,9 +130,9 @@ Besoins principaux :
               </ScrollArea>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={handleReset}>
-                  Réinitialiser
+                  Annuler les modifications
                 </Button>
-                <Button>Sauvegarder</Button>
+                <Button onClick={handleSave}>Sauvegarder</Button>
               </div>
             </div>
           ) : (
