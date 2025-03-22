@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Overview } from "@/components/dashboard/overview";
+// import { Overview } from "@/components/dashboard/overview";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { UserMetrics } from "@/components/dashboard/user-metrics";
+import { MetricsGrid } from "@/components/dashboard/metricsGrid";
 
 export default function Home() {
   return (
@@ -69,7 +70,8 @@ export default function Home() {
             <CardTitle>Vue d&apos;ensemble</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <Overview />
+            {/* <Overview /> */}
+            <MetricsGrid />
           </CardContent>
         </Card>
         <Card className="col-span-3">
