@@ -25,6 +25,7 @@ export function NewPersonaForm() {
     try {
       await savePersona(id, {
         name,
+        role: "",
         company,
         goals: "",
         pains: "",
