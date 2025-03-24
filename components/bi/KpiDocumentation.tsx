@@ -1,12 +1,11 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Plus, Search } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Plus, Search } from "lucide-react";
 
 export function KpiDocumentation() {
   const kpis = [
@@ -17,18 +16,19 @@ export function KpiDocumentation() {
       source: "Google Analytics + CRM",
       objective: "4.5% à fin Q2 2024",
       frequency: "Quotidien",
-      owner: "Équipe Marketing"
+      owner: "Équipe Marketing",
     },
     {
       id: "2",
       name: "Taux de Rebond",
-      definition: "Pourcentage d'utilisateurs qui quittent le site après une seule page",
+      definition:
+        "Pourcentage d'utilisateurs qui quittent le site après une seule page",
       source: "Google Analytics",
       objective: "< 30% à fin Q2 2024",
       frequency: "Quotidien",
-      owner: "Équipe UX"
-    }
-  ]
+      owner: "Équipe UX",
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -51,7 +51,9 @@ export function KpiDocumentation() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-semibold">{kpi.name}</h4>
-                    <p className="text-sm text-muted-foreground">{kpi.definition}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {kpi.definition}
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -79,5 +81,5 @@ export function KpiDocumentation() {
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }

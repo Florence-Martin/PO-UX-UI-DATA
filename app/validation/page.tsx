@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ApiTesting } from "@/components/validation/api-testing";
-import { ExternalTools } from "@/components/validation/external-tools";
-import { ValidationChecklists } from "@/components/validation/validation-checklists";
+import { ApiTesting } from "@/components/validation/ApiTesting";
+import { ExternalTools } from "@/components/validation/ExternalTools";
+import { ValidationChecklists } from "@/components/validation/ValidationChecklists";
 
 export default function ValidationPage() {
   return (

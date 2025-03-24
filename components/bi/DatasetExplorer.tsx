@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Database, Download } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Database, Download } from "lucide-react";
 
 export function DatasetExplorer() {
   const datasets = [
@@ -15,16 +20,16 @@ export function DatasetExplorer() {
       name: "Utilisateurs",
       rows: 15000,
       lastUpdate: "2024-03-20",
-      columns: ["user_id", "signup_date", "last_login", "country"]
+      columns: ["user_id", "signup_date", "last_login", "country"],
     },
     {
       id: "events",
       name: "Événements",
       rows: 50000,
       lastUpdate: "2024-03-20",
-      columns: ["event_id", "user_id", "event_type", "timestamp"]
-    }
-  ]
+      columns: ["event_id", "user_id", "event_type", "timestamp"],
+    },
+  ];
 
   return (
     <ScrollArea className="h-[400px]">
@@ -38,7 +43,8 @@ export function DatasetExplorer() {
                   <div>
                     <h4 className="font-semibold">{dataset.name}</h4>
                     <p className="text-sm text-muted-foreground">
-                      {dataset.rows.toLocaleString()} lignes • Mis à jour le {dataset.lastUpdate}
+                      {dataset.rows.toLocaleString()} lignes • Mis à jour le{" "}
+                      {dataset.lastUpdate}
                     </p>
                   </div>
                 </div>
@@ -69,5 +75,5 @@ export function DatasetExplorer() {
         ))}
       </div>
     </ScrollArea>
-  )
+  );
 }
