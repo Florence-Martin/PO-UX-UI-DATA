@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Overview } from "@/components/dashboard/overview";
-import { RecentActivity } from "@/components/dashboard/recent-activity";
-import { UserMetrics } from "@/components/dashboard/user-metrics";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { UserMetrics } from "@/components/dashboard/UserMetrics";
 import { MetricsGrid } from "@/components/dashboard/metricsGrid";
 
 export default function Home() {

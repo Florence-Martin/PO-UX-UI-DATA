@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Plus } from "lucide-react"
-import { useDroppable } from "@dnd-kit/core"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Plus } from "lucide-react";
+import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { KanbanItem } from "./kanban-item"
+} from "@dnd-kit/sortable";
+import { KanbanItem } from "./KanbanItem";
 
 type Task = {
-  id: string
-  title: string
-  priority: string
-  points: number
-}
+  id: string;
+  title: string;
+  priority: string;
+  points: number;
+};
 
 type Column = {
-  id: string
-  title: string
-  tasks: Task[]
-}
+  id: string;
+  title: string;
+  tasks: Task[];
+};
 
 interface KanbanColumnProps {
-  column: Column
-  tasks: Task[]
+  column: Column;
+  tasks: Task[];
 }
 
 export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
   const { setNodeRef } = useDroppable({
     id: column.id,
-  })
+  });
 
   return (
     <div
@@ -41,22 +41,17 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
     >
       <div className="flex items-center justify-between p-2">
         <h3 className="font-semibold">{column.title}</h3>
-        <span className="text-muted-foreground text-sm">
-          {tasks.length}
-        </span>
+        <span className="text-muted-foreground text-sm">{tasks.length}</span>
       </div>
 
       <ScrollArea className="flex-1">
         <SortableContext
-          items={tasks.map(task => task.id)}
+          items={tasks.map((task) => task.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-2 p-2">
             {tasks.map((task) => (
-              <KanbanItem
-                key={task.id}
-                task={task}
-              />
+              <KanbanItem key={task.id} task={task} />
             ))}
           </div>
         </SortableContext>
@@ -67,5 +62,5 @@ export function KanbanColumn({ column, tasks }: KanbanColumnProps) {
         Ajouter une tâche
       </Button>
     </div>
-  )
+  );
 }

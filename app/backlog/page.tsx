@@ -1,13 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { KanbanBoard } from "@/components/backlog/kanban-board"
-import { SprintPlanning } from "@/components/backlog/sprint-planning"
-import { MoscowPrioritization } from "@/components/backlog/moscow-prioritization"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KanbanBoard } from "@/components/backlog/KanbanBoard";
+import { SprintPlanning } from "@/components/backlog/SprintPlanning";
+import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
 
 export default function BacklogPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Backlog & Organisation Agile</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Backlog & Organisation Agile
+        </h2>
       </div>
 
       <div className="grid gap-4 grid-cols-1">
@@ -41,5 +43,5 @@ export default function BacklogPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { KpiDocumentation } from "@/components/bi/kpi-documentation"
-import { DatasetExplorer } from "@/components/bi/dataset-explorer"
-import { DeliverableTracking } from "@/components/bi/deliverable-tracking"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiDocumentation } from "@/components/bi/KpiDocumentation";
+import { DatasetExplorer } from "@/components/bi/DatasetExplorer";
+import { DeliverableTracking } from "@/components/bi/DeliverableTracking";
 
 export default function BiPage() {
   return (
@@ -41,5 +41,5 @@ export default function BiPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
