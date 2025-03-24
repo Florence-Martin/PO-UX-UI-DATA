@@ -16,16 +16,22 @@ Cette application doit servir de **boîte à outils complète** pour un PO UX/Da
 ### 2. Espace Analyse Produit & Wireframes
 
 - **Analyse des besoins métier** :
+
   - Fiches de questionnaires utilisateurs
   - Templates pour interviews utilisateurs & stakeholders
-  - Générateur de personas
+  - Création, mise à jour et suppression de personas enregistrés
+  - Sauvegarde en base Firebase
+  - Affichage dynamique de la liste des personas
+
 - **Wireframes** :
   - Grilles modulables pour wireframes basse fidélité
   - Composants visuels pour prototypage rapide
   - Intégration ou liens vers maquettes Figma
 - **Documentation fonctionnelle** :
-  - Éditeur de user stories avec critères d’acceptation
-  - Suivi de l’avancement des fonctionnalités
+  - Éditeur de user stories avec titre, description, priorité, story points et critères d’acceptation
+  - Sauvegarde en base Firebase
+  - Affichage dynamique des stories enregistrées avec options de modification et suppression
+  - Préparation au suivi d’avancement des fonctionnalités
 
 ---
 

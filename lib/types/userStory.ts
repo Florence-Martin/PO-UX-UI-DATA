@@ -5,6 +5,6 @@ export interface UserStory {
   priority: "high" | "medium" | "low";
   storyPoints: number;
   acceptanceCriteria: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }

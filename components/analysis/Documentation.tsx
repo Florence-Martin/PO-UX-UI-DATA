@@ -6,6 +6,7 @@ import {
   getAllUserStories,
   deleteUserStory,
   updateUserStory,
+  UserStory,
 } from "@/lib/services/userStoryService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,26 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-
-interface UserStory {
-  id?: string;
-  title: string;
-  description: string;
-  priority: "high" | "medium" | "low";
-  storyPoints: number;
-  acceptanceCriteria: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const priorityStyles: Record<string, string> = {
-  high: "text-red-600 border-red-600",
-  medium: "text-yellow-500 border-yellow-500",
-  low: "text-green-600 border-green-600",
-};
 
 export function Documentation() {
   const [title, setTitle] = useState("");
@@ -57,6 +40,16 @@ export function Documentation() {
     };
     fetchStories();
   }, []);
+
+  const resetForm = () => {
+    setIsEditing(false);
+    setEditingId(null);
+    setTitle("");
+    setDescription("");
+    setPriority("");
+    setStoryPoints(null);
+    setAcceptanceCriteria("");
+  };
 
   const handleSave = async () => {
     if (!title || !priority || storyPoints === null) return;
@@ -81,15 +74,7 @@ export function Documentation() {
       toast.success("User story sauvegardée ✅");
     }
 
-    // Reset
-    setIsEditing(false);
-    setEditingId(null);
-    setTitle("");
-    setDescription("");
-    setPriority("");
-    setStoryPoints(null);
-    setAcceptanceCriteria("");
-
+    resetForm();
     const updatedStories = await getAllUserStories();
     setUserStories(updatedStories);
   };
@@ -113,6 +98,7 @@ export function Documentation() {
 
   return (
     <div className="grid gap-6">
+      {/* 📝 Formulaire */}
       <Card>
         <CardHeader>
           <CardTitle>✍️ Éditeur de User Stories</CardTitle>
@@ -175,7 +161,7 @@ export function Documentation() {
           </div>
 
           <div className="space-y-2">
-            <Label>Critères d&apos;Acceptation</Label>
+            <Label>Critères d'Acceptation</Label>
             <Textarea
               value={acceptanceCriteria}
               onChange={(e) => setAcceptanceCriteria(e.target.value)}
@@ -185,16 +171,7 @@ export function Documentation() {
           </div>
 
           <div className="flex justify-end space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setTitle("");
-                setDescription("");
-                setPriority("");
-                setStoryPoints(null);
-                setAcceptanceCriteria("");
-              }}
-            >
+            <Button variant="outline" onClick={resetForm}>
               Annuler
             </Button>
             <Button onClick={handleSave}>
@@ -204,6 +181,7 @@ export function Documentation() {
         </CardContent>
       </Card>
 
+      {/* 📋 Liste des stories */}
       <Card>
         <CardHeader>
           <CardTitle>📜 User Stories existantes</CardTitle>
