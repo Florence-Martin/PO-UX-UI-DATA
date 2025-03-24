@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { KanbanBoard } from "@/components/backlog/KanbanBoard";
-import { SprintPlanning } from "@/components/backlog/SprintPlanning";
-import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
+import { KanbanBoard } from "../../components/backlog/KanbanBoard";
+import { SprintPlanning } from "../../components/backlog/SprintPlanning";
+import { MoscowPrioritization } from "../../components/backlog/MoscowPrioritization";
 
 export default function BacklogPage() {
   return (
