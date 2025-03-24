@@ -1,4 +1,4 @@
-import { Persona } from "@/lib/personaService";
+import { Persona } from "@/lib/services/personaService";
 
 // Nettoie une liste : supprime doublons et formate proprement
 export const cleanList = (list: string[]): string => {

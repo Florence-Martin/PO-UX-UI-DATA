@@ -9,8 +9,8 @@ import {
   getPersona,
   savePersona,
   Persona,
-} from "@/lib/personaService";
-import { getTemplate, saveTemplate } from "@/lib/templateService";
+} from "@/lib/services/personaService";
+import { getTemplate, saveTemplate } from "@/lib/services/templateService";
 import { parsePersona, formatPersona } from "@/hooks/usePersonaLogic";
 
 const TEMPLATE_IDS = ["questionnaire", "interview", "persona"];

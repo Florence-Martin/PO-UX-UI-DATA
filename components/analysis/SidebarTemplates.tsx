@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
-import { Persona } from "@/lib/personaService";
+import { Persona } from "@/lib/services/personaService";
 
 type SidebarTemplatesProps = {
   templates: {
