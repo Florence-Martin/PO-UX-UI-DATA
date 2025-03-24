@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { Timestamp } from "firebase/firestore";
 
 export function Documentation() {
   const [title, setTitle] = useState("");
