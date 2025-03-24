@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Calendar } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+import { Calendar } from "lucide-react";
 
 export function SprintPlanning() {
   const sprints = [
@@ -15,7 +15,7 @@ export function SprintPlanning() {
       progress: 65,
       velocity: 34,
       completed: 22,
-      total: 34
+      total: 34,
     },
     {
       id: "2",
@@ -25,9 +25,9 @@ export function SprintPlanning() {
       progress: 0,
       velocity: 34,
       completed: 0,
-      total: 42
-    }
-  ]
+      total: 42,
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -52,7 +52,7 @@ export function SprintPlanning() {
                 <span>Progression</span>
                 <span>{sprint.progress}%</span>
               </div>
-              <Progress value={sprint.progress} />
+              <ProgressBar value={sprint.progress} />
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-4">
@@ -71,5 +71,5 @@ export function SprintPlanning() {
         </Card>
       ))}
     </div>
-  )
+  );
 }

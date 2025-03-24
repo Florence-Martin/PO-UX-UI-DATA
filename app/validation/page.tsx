@@ -1,13 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ValidationChecklists } from "@/components/validation/validation-checklists"
-import { ApiTesting } from "@/components/validation/api-testing"
-import { ExternalTools } from "@/components/validation/external-tools"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ValidationChecklists } from "@/components/validation/validation-checklists";
+import { ApiTesting } from "@/components/validation/api-testing";
+import { ExternalTools } from "@/components/validation/external-tools";
 
 export default function ValidationPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Validation & Suivi Qualité</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Validation & Suivi Qualité
+        </h2>
       </div>
 
       <div className="grid gap-4 grid-cols-1">
@@ -41,5 +43,5 @@ export default function ValidationPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

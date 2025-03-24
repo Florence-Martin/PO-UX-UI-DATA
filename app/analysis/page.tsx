@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserResearch } from "@/components/analysis/UserResearch";
-import { Wireframes } from "@/components/analysis/wireframes";
-import { Documentation } from "@/components/analysis/documentation";
+import { Wireframes } from "@/components/analysis/Wireframes";
+import { Documentation } from "@/components/analysis/Documentation";
 
 export default function AnalysisPage() {
   return (
