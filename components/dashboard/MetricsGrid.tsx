@@ -73,7 +73,7 @@ export function MetricsGrid() {
               <Line
                 type="monotone"
                 dataKey="conversion"
-                stroke="hsl(var(--primary))"
+                stroke="#60A5FA"
                 {...graphStyle}
               />
             </LineChart>

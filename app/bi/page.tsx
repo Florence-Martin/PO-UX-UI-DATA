@@ -1,3 +1,4 @@
+import { BannerInfo } from "@/components/banner/BannerInfos";
 import { DatasetExplorer } from "@/components/bi/DatasetExplorer";
 import { DeliverableTracking } from "@/components/bi/DeliverableTracking";
 import { KpiDocumentation } from "@/components/bi/KpiDocumentation";
@@ -6,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function BiPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <BannerInfo />
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Collaboration BI</h2>
       </div>
