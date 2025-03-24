@@ -1,7 +1,7 @@
+import { DatasetExplorer } from "@/components/bi/DatasetExplorer";
+import { DeliverableTracking } from "@/components/bi/DeliverableTracking";
+import { KpiDocumentation } from "@/components/bi/KpiDocumentation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { KpiDocumentation } from "../../components/bi/KpiDocumentation";
-import { DatasetExplorer } from "../../components/bi/DatasetExplorer";
-import { DeliverableTracking } from "../../components/bi/DeliverableTracking";
 
 export default function BiPage() {
   return (
