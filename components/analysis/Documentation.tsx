@@ -68,8 +68,8 @@ export function Documentation() {
     } else {
       await createUserStory({
         ...payload,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
       });
       toast.success("User story sauvegardée ✅");
     }
