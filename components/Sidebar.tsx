@@ -12,8 +12,9 @@ import {
   Menu,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const navigation = [
   {
@@ -44,8 +45,14 @@ const navigation = [
 ];
 
 export function Sidebar() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+
+  // Fermer la sidebar par défaut si l’écran est petit
+  useEffect(() => {
+    setIsCollapsed(isMobile);
+  }, [isMobile]);
 
   return (
     <div
