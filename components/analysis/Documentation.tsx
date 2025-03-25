@@ -1,13 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  createUserStory,
-  getAllUserStories,
-  deleteUserStory,
-  updateUserStory,
-  UserStory,
-} from "@/lib/services/userStoryService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,82 +12,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Timestamp } from "firebase/firestore";
+import { useDocumentation } from "@/hooks/useDocumentation";
 
 export function Documentation() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<"high" | "medium" | "low" | "">("");
-  const [storyPoints, setStoryPoints] = useState<number | null>(null);
-  const [acceptanceCriteria, setAcceptanceCriteria] = useState("");
-  const [userStories, setUserStories] = useState<UserStory[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchStories = async () => {
-      const stories = await getAllUserStories();
-      setUserStories(stories);
-    };
-    fetchStories();
-  }, []);
-
-  const resetForm = () => {
-    setIsEditing(false);
-    setEditingId(null);
-    setTitle("");
-    setDescription("");
-    setPriority("");
-    setStoryPoints(null);
-    setAcceptanceCriteria("");
-  };
-
-  const handleSave = async () => {
-    if (!title || !priority || storyPoints === null) return;
-
-    const payload = {
-      title,
-      description,
-      priority,
-      storyPoints,
-      acceptanceCriteria,
-    };
-
-    if (isEditing && editingId) {
-      await updateUserStory(editingId, payload);
-      toast.success("User story mise à jour ✏️");
-    } else {
-      await createUserStory({
-        ...payload,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      });
-      toast.success("User story sauvegardée ✅");
-    }
-
-    resetForm();
-    const updatedStories = await getAllUserStories();
-    setUserStories(updatedStories);
-  };
-
-  const handleEdit = (story: UserStory) => {
-    setIsEditing(true);
-    setEditingId(story.id || null);
-    setTitle(story.title);
-    setDescription(story.description);
-    setPriority(story.priority);
-    setStoryPoints(story.storyPoints);
-    setAcceptanceCriteria(story.acceptanceCriteria);
-  };
-
-  const handleDelete = async (id?: string) => {
-    if (!id) return;
-    await deleteUserStory(id);
-    setUserStories((prev) => prev.filter((story) => story.id !== id));
-    toast.success("User story supprimée ❌");
-  };
+  const {
+    title,
+    description,
+    priority,
+    storyPoints,
+    acceptanceCriteria,
+    userStories,
+    isEditing,
+    setTitle,
+    setDescription,
+    setPriority,
+    setStoryPoints,
+    setAcceptanceCriteria,
+    handleSave,
+    handleEdit,
+    handleDelete,
+    resetForm,
+  } = useDocumentation();
 
   return (
     <div className="grid gap-6">
@@ -162,7 +100,7 @@ export function Documentation() {
           </div>
 
           <div className="space-y-2">
-            <Label>Critères d'Acceptation</Label>
+            <Label>Critères d&#39;Acceptation</Label>
             <Textarea
               value={acceptanceCriteria}
               onChange={(e) => setAcceptanceCriteria(e.target.value)}

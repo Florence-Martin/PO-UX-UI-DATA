@@ -1,90 +1,143 @@
-Dashboard Product Owner" spécialisée en UX/UI et datavisualisation.
+## 🎯 UX Data PO Kit
 
-Cette application doit servir de **boîte à outils complète** pour un PO UX/Data, avec les fonctionnalités suivantes :
+Cette application est conçue comme une boîte à outils complète pour Product Owner spécialisé en UX/UI et datavisualisation, avec un focus fort sur les workflows agiles, la recherche utilisateur et le pilotage produit.
 
----
+⸻
 
-### 1. Dashboard UX/Data
+### 🚀 Objectif
 
-- Visualisation des KPIs métier et UX : taux de conversion, taux de rebond, taux de scroll, taux d’engagement.
-- Composants de datavisualisation : bar charts, line charts, heatmaps, funnel.
-- Interface adaptative avec un **mode light/dark**.
-- Design system basé sur TailwindCSS + Shadcn UI.
+- Créer une application professionnelle pour permettre à un Product Owner UX/UI & Data de :
 
----
+- Recueillir et structurer les besoins métier,
 
-### 2. Espace Analyse Produit & Wireframes
+- Concevoir wireframes et documentations fonctionnelles,
 
-- **Analyse des besoins métier** :
+- Gérer le backlog produit en méthode Scrum avec priorisation MoSCoW,
 
-  - Fiches de questionnaires utilisateurs
-  - Templates pour interviews utilisateurs & stakeholders
-  - Création, mise à jour et suppression de personas enregistrés
-  - Sauvegarde en base Firebase
-  - Affichage dynamique de la liste des personas
+- Créer des dashboards UX/Data lisibles et centrés utilisateur,
 
-- **Wireframes** :
-  - Grilles modulables pour wireframes basse fidélité
-  - Composants visuels pour prototypage rapide
-  - Intégration ou liens vers maquettes Figma
-- **Documentation fonctionnelle** :
-  - Éditeur de user stories avec titre, description, priorité, story points et critères d’acceptation
-  - Sauvegarde en base Firebase
-  - Affichage dynamique des stories enregistrées avec options de modification et suppression
-  - Préparation au suivi d’avancement des fonctionnalités
+- Collaborer efficacement avec les équipes BI et tech,
 
----
+- Valider les livrables fonctionnels avec clarté.
+  ⸻
 
-### 3. Backlog & Organisation Agile
+### 1. 📊 Dashboard UX/Data
 
-- **Backlog produit** structuré avec un board Kanban : To Do / In Progress / Done
-- **Méthodologie Scrum** :
-  - Création et gestion des sprints
-  - Vélocité, story points, états de complétion
-- **Méthode de priorisation MoSCoW** :
-  - Must / Should / Could / Won’t
-  - Classement des fonctionnalités par priorité business
+- Visualisation des KPIs métier et UX : taux de conversion, rebond, scroll, engagement
 
----
+- Composants de datavisualisation : bar charts, line charts, heatmaps, funnel
 
-### 4. Collaboration avec l’équipe BI
+- Interface responsive avec mode light/dark
 
-- Espace “Collaboration BI” :
-  - Documentation des KPIs (nom, définition, source de données, objectif métier)
-  - Liaison possible avec des datasets fictifs ou APIs mockées
-  - Suivi des livrables data / indicateurs attendus
+- Design system basé sur TailwindCSS + Shadcn UI
 
----
+⸻
 
-### 5. Validation fonctionnelle & Suivi qualité
+### 2. 🔍 Analyse Produit & Wireframes
 
-- **Checklists de validation PO** par fonctionnalité :
+🎯 Analyse des besoins métier
+
+- Fiches de questionnaires utilisateurs
+
+- Templates pour interviews utilisateurs & stakeholders
+
+- Création, mise à jour et suppression de personas enregistrés
+
+- Persistance via Firebase
+
+- Affichage dynamique de la liste des personas
+
+🧱 Wireframes
+
+- Grilles modulables pour wireframes basse fidélité
+
+- Composants visuels pour prototypage rapide
+
+- Intégration ou liens vers maquettes Figma
+
+📝 Documentation fonctionnelle
+
+- Éditeur de user stories avec :
+
+  - titre
+
+  - description
+
+  - priorité
+
+  - story points
+
+  - critères d’acceptation
+
+- Sauvegarde via Firebase
+
+- Affichage dynamique des stories enregistrées avec options de modification et suppression
+
+⸻
+
+### 3. 🏋️‍♂️ Backlog & Organisation Agile
+
+- Backlog produit avec board Kanban : To Do / In Progress / Done
+
+- Méthodologie Scrum :
+
+  - Création et gestion de sprints
+
+  - Vélocité, story points, complétion
+
+- Priorisation MoSCoW : Must / Should / Could / Won’t
+
+⸻
+
+### 4. 🤖 Collaboration BI
+
+- Documentation des KPIs : nom, définition, source de données, objectif métier
+
+- Liaison possible avec datasets fictifs ou APIs mockées
+
+- Suivi des livrables data et des indicateurs attendus
+
+⸻
+
+### 5. 📝 Validation fonctionnelle & Qualité
+
+- Checklists de validation PO par fonctionnalité :
+
   - Critères d’acceptation
+
   - Validation visuelle UI/UX
+
   - Feedbacks utilisateurs
+
 - Simulation de tests fonctionnels (Postman ou checklist API)
-- Possibilité d’intégrer des outils externes (JIRA, Postman)
 
----
+- Intégration possible d’outils externes (JIRA, Postman, etc.)
 
-### Stack technique :
+⸻
+
+### ⚙️ Stack technique
 
 - Next.js (App Router)
 - TypeScript
 - TailwindCSS
 - Shadcn UI
-- Chart.js ou composants dataviz mock
-- Firebase ou LocalStorage pour la persistance (facultatif)
+- Chart.js (ou composants dataviz mock)
+- Firebase
 
----
+⸻
 
-### Objectif final :
+### ⏳ Statut Actuel
 
-Créer une application professionnelle pour permettre à un Product Owner UX/UI & Data de :
+Le projet est en cours. Certaines pages et composants sont encore en construction ou en cours d’amélioration. Les fonctionnalités principales sont fonctionnelles : user stories, personas, thèmes adaptatifs, structure de navigation responsive, etc.
 
-- Recueillir et structurer les besoins métier,
-- Concevoir wireframes et documentations fonctionnelles,
-- Gérer le backlog produit en méthode Scrum avec priorisation MoSCoW,
-- Créer des dashboards UX/Data lisibles et centrés utilisateur,
-- Collaborer efficacement avec les équipes BI et tech,
-- Valider les livrables fonctionnels avec clarté.
+Des mises à jour régulières sont en cours pour intégrer les wireframes dynamiques, les dashboards de KPIs, et la gestion complète des sprints.
+
+⸻
+
+### 🚀 Envie de suivre l'évolution ?
+
+Tu peux :
+
+- Suivre les commits sur [GitHub](https://github.com/Florence-Martin/PO-UX-UI-DATA)
+
+- Me contacter sur [LinkedIn](https://www.linkedin.com/in/florence-martin-922b3861/) pour échanger ou collaborer !
