@@ -15,7 +15,7 @@ export interface BacklogTask {
   description: string;
   priority: "low" | "medium" | "high";
   storyPoints: number;
-  status: "todo" | "in-progress" | "testing" | "done";
+  status: "todo" | "in-progress" | "in-testing" | "done";
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

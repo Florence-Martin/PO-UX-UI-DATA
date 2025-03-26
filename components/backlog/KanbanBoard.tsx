@@ -23,7 +23,7 @@ export function KanbanBoard() {
   const {
     todo,
     inProgress,
-    testing,
+    inTesting,
     done,
     addTask,
     updateTask,
@@ -87,7 +87,7 @@ export function KanbanBoard() {
   };
 
   const findTask = (taskId: string): BacklogTask | undefined => {
-    const allTasks = [...todo, ...inProgress, ...testing, ...done];
+    const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
     return allTasks.find((task) => task.id === taskId);
   };
 
@@ -113,8 +113,8 @@ export function KanbanBoard() {
             onTaskClick={handleClickTask}
           />
           <KanbanColumn
-            column={{ id: "testing", title: "A tester" }}
-            tasks={testing}
+            column={{ id: "in-testing", title: "A tester" }}
+            tasks={inTesting}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
           />

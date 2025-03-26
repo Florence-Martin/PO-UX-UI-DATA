@@ -68,6 +68,7 @@ export const useBacklogTasks = () => {
           task.id === taskId ? { ...task, status: newStatus } : task
         )
       );
+      toast.success("Statut mis à jour avec succès !");
     } catch (err) {
       console.error("Erreur lors du changement de statut :", err);
       toast.error("Erreur : Impossible de changer le statut.");
@@ -87,13 +88,13 @@ export const useBacklogTasks = () => {
 
   const todo = tasks.filter((s) => s.status === "todo");
   const inProgress = tasks.filter((s) => s.status === "in-progress");
-  const testing = tasks.filter((s) => s.status === "testing");
+  const inTesting = tasks.filter((s) => s.status === "in-testing");
   const done = tasks.filter((s) => s.status === "done");
 
   return {
     todo,
     inProgress,
-    testing,
+    inTesting,
     done,
     addTask,
     updateTask,
