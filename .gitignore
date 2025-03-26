@@ -37,3 +37,10 @@ next-env.d.ts
 
 # scripts
 /fix-casing.sh
+
+# Fichier d’aide local ChatGPT
+chatgpt-cheatsheet.md
+
+# Ignore les scripts et pages dev
+lib/scripts/
+app/dev/

@@ -77,7 +77,7 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 
 ### 3. 🏋️‍♂️ Backlog & Organisation Agile
 
-- Backlog produit avec board Kanban : To Do / In Progress / Done
+- Backlog produit avec board Kanban : To Do / In Progress / In Testing / Done
 
 - Méthodologie Scrum :
 

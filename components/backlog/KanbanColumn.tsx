@@ -27,7 +27,10 @@ export function KanbanColumn({
   onAddTask,
   onTaskClick,
 }: KanbanColumnProps) {
-  const { setNodeRef } = useDroppable({ id: column.id });
+  const { setNodeRef } = useDroppable({
+    id: column.id,
+    data: { columnId: column.id },
+  });
 
   return (
     <div
@@ -43,6 +46,7 @@ export function KanbanColumn({
 
       <ScrollArea className="flex-1">
         <SortableContext
+          id={column.id}
           items={tasks.map((task) => task.id!)}
           strategy={verticalListSortingStrategy}
         >

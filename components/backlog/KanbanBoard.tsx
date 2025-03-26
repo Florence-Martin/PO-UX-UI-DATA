@@ -52,6 +52,7 @@ export function KanbanBoard() {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
+    console.log("🚀 START INFO", event.active.id);
     setActiveId(event.active.id as string);
   };
 
@@ -62,12 +63,29 @@ export function KanbanBoard() {
       return;
     }
 
-    const newStatus = over.id as BacklogTask["status"];
     const task = findTask(active.id as string);
+    // Ajout du log ici
+    console.log("🔥 DROP DEBUG", {
+      activeId: active.id,
+      overId: over.id,
+      task: task?.title,
+      from: task?.status,
+      to: over.data?.current?.columnId,
+    });
+
+    const newStatus =
+      over.data?.current?.columnId || (over.id as BacklogTask["status"]);
+
     if (task && task.status !== newStatus) {
       updateTaskStatus(task.id!, newStatus);
     }
+
     setActiveId(null);
+  };
+
+  const findTask = (taskId: string): BacklogTask | undefined => {
+    const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
+    return allTasks.find((task) => task.id === taskId);
   };
 
   const handleClickTask = (task: BacklogTask) => {
@@ -84,11 +102,6 @@ export function KanbanBoard() {
   const handleDelete = (taskId: string) => {
     deleteTask(taskId);
     setTaskToEdit(null);
-  };
-
-  const findTask = (taskId: string): BacklogTask | undefined => {
-    const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
-    return allTasks.find((task) => task.id === taskId);
   };
 
   return (

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BacklogTask } from "@/lib/services/backlogTasksService";
-import { GripVertical } from "lucide-react"; // ou autre icône
+import { GripVertical } from "lucide-react";
 
 interface KanbanItemProps {
   task: BacklogTask;
@@ -19,30 +19,44 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id! });
+  } = useSortable({
+    id: task.id!,
+    data: {
+      task,
+      columnId: task.status, // ✅ très important pour DnD
+    },
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    cursor: "grab",
   };
 
   return (
     <div ref={setNodeRef} style={style}>
       <Card
-        className="bg-background cursor-pointer hover:ring-2 ring-primary"
+        className="bg-background hover:ring-2 ring-primary"
         onClick={() => {
-          onClick?.(task);
+          if (!isDragging) onClick?.(task);
         }}
       >
         <CardContent className="p-3 space-y-2">
           <div className="flex justify-between items-start">
             <div className="font-medium">{task.title}</div>
-            {/* Zone de drag (handle seulement ici) */}
-            <div {...attributes} {...listeners} className="cursor-grab">
+
+            {/* Handle de drag */}
+            <div
+              {...listeners}
+              {...attributes}
+              className="cursor-grab active:cursor-grabbing"
+              onClick={(e) => e.stopPropagation()}
+            >
               <GripVertical className="h-4 w-4 opacity-50" />
             </div>
           </div>
+
           <div className="flex items-center justify-between text-sm">
             <span
               className={`px-2 py-1 rounded-full text-xs ${
