@@ -7,6 +7,7 @@ export interface UserStory {
   priority: "high" | "medium" | "low";
   storyPoints: number;
   acceptanceCriteria: string;
+  status: "todo" | "in-progress" | "done";
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { useDocumentation } from "@/hooks/useDocumentation";
+import { useUserStories } from "@/hooks/useUserStories";
 
 export function Documentation() {
   const {
@@ -33,7 +33,17 @@ export function Documentation() {
     handleEdit,
     handleDelete,
     resetForm,
-  } = useDocumentation();
+    error,
+    loading,
+  } = useUserStories();
+
+  if (loading) {
+    return <p>Chargement en cours...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
 
   return (
     <div className="grid gap-6">

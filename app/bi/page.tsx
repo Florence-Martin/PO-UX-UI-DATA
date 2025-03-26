@@ -1,4 +1,4 @@
-import { BannerInfo } from "@/components/banner/BannerInfos";
+import { BannerInfo } from "@/components/banner/BannerInfos 2";
 import { DatasetExplorer } from "@/components/bi/DatasetExplorer";
 import { DeliverableTracking } from "@/components/bi/DeliverableTracking";
 import { KpiDocumentation } from "@/components/bi/KpiDocumentation";

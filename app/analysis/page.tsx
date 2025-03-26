@@ -1,7 +1,7 @@
 import { Documentation } from "@/components/analysis/Documentation";
 import { UserResearch } from "@/components/analysis/UserResearch";
 import { Wireframes } from "@/components/analysis/Wireframes";
-import { BannerInfo } from "@/components/banner/BannerInfos";
+import { BannerInfo } from "@/components/banner/BannerInfos 2";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AnalysisPage() {

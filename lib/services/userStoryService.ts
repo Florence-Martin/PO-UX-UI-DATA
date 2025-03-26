@@ -16,6 +16,7 @@ export interface UserStory {
   priority: "high" | "medium" | "low";
   storyPoints: number;
   acceptanceCriteria: string;
+  status: "todo" | "in-progress" | "done";
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
@@ -25,7 +26,7 @@ const COLLECTION_NAME = "user_stories";
 export const getAllUserStories = async (): Promise<UserStory[]> => {
   const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
   return querySnapshot.docs.map((doc) => ({
-    id: doc.id,
+    id: doc.id || "",
     ...doc.data(),
   })) as UserStory[];
 };

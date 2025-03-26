@@ -8,18 +8,18 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 
 - Créer une application professionnelle pour permettre à un Product Owner UX/UI & Data de :
 
-- Recueillir et structurer les besoins métier,
+  - Recueillir et structurer les besoins métier,
 
-- Concevoir wireframes et documentations fonctionnelles,
+  - Concevoir wireframes et documentations fonctionnelles,
 
-- Gérer le backlog produit en méthode Scrum avec priorisation MoSCoW,
+  - Gérer le backlog produit en méthode Scrum avec priorisation MoSCoW,
 
-- Créer des dashboards UX/Data lisibles et centrés utilisateur,
+  - Créer des dashboards UX/Data lisibles et centrés utilisateur,
 
-- Collaborer efficacement avec les équipes BI et tech,
+  - Collaborer efficacement avec les équipes BI et tech,
 
-- Valider les livrables fonctionnels avec clarté.
-  ⸻
+  - Valider les livrables fonctionnels avec clarté.
+    ⸻
 
 ### 1. 📊 Dashboard UX/Data
 

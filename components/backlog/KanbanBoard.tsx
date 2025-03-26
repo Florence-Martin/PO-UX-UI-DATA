@@ -15,67 +15,24 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { KanbanColumn } from "./KanbanColumn";
 import { KanbanItem } from "./KanbanItem";
-
-type Task = {
-  id: string;
-  title: string;
-  priority: string;
-  points: number;
-};
-
-type Column = {
-  id: string;
-  title: string;
-  tasks: Task[];
-};
+import { useBacklogTasks } from "@/hooks/useBacklogTasks";
+import { BacklogTask } from "@/lib/services/backlogTasksService";
+import { EditTaskModal } from "./EditTaskModal";
 
 export function KanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>([
-    {
-      id: "todo",
-      title: "À Faire",
-      tasks: [
-        {
-          id: "1",
-          title: "Refonte page d'accueil",
-          priority: "high",
-          points: 8,
-        },
-        {
-          id: "2",
-          title: "Optimisation performances",
-          priority: "medium",
-          points: 5,
-        },
-      ],
-    },
-    {
-      id: "inProgress",
-      title: "En Cours",
-      tasks: [
-        {
-          id: "3",
-          title: "Tests A/B tunnel de conversion",
-          priority: "high",
-          points: 13,
-        },
-      ],
-    },
-    {
-      id: "done",
-      title: "Terminé",
-      tasks: [
-        {
-          id: "4",
-          title: "Analyse des besoins utilisateurs",
-          priority: "high",
-          points: 5,
-        },
-      ],
-    },
-  ]);
+  const {
+    todo,
+    inProgress,
+    testing,
+    done,
+    addTask,
+    updateTask,
+    deleteTask,
+    updateTaskStatus,
+  } = useBacklogTasks();
 
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -84,80 +41,109 @@ export function KanbanBoard() {
     })
   );
 
+  const handleAddTask = (status: BacklogTask["status"]) => {
+    addTask({
+      title: "Nouvelle tâche",
+      description: "Description de la tâche",
+      priority: "medium",
+      storyPoints: 3,
+      status,
+    });
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!over || active.id === over.id) {
+      setActiveId(null);
+      return;
+    }
 
-    if (!over) return;
-
-    const activeTask = findTask(active.id as string);
-    const overColumn = columns.find(
-      (col) =>
-        col.id === over.id || col.tasks.some((task) => task.id === over.id)
-    );
-
-    if (!activeTask || !overColumn) return;
-
-    setColumns((prevColumns) => {
-      const oldColumn = prevColumns.find((col) =>
-        col.tasks.some((task) => task.id === activeTask.id)
-      );
-
-      if (!oldColumn) return prevColumns;
-
-      // Remove from old column
-      const newOldColumn = {
-        ...oldColumn,
-        tasks: oldColumn.tasks.filter((task) => task.id !== activeTask.id),
-      };
-
-      // Add to new column
-      const newOverColumn = {
-        ...overColumn,
-        tasks: [...overColumn.tasks, activeTask],
-      };
-
-      return prevColumns.map((col) => {
-        if (col.id === oldColumn.id) return newOldColumn;
-        if (col.id === overColumn.id) return newOverColumn;
-        return col;
-      });
-    });
-
+    const newStatus = over.id as BacklogTask["status"];
+    const task = findTask(active.id as string);
+    if (task && task.status !== newStatus) {
+      updateTaskStatus(task.id!, newStatus);
+    }
     setActiveId(null);
   };
 
-  const findTask = (taskId: string): Task | undefined => {
-    for (const column of columns) {
-      const task = column.tasks.find((t) => t.id === taskId);
-      if (task) return task;
+  const handleClickTask = (task: BacklogTask) => {
+    setTaskToEdit(task);
+  };
+
+  const handleSaveEdit = (updated: BacklogTask) => {
+    if (updated.id) {
+      updateTask(updated);
+      setTaskToEdit(null);
     }
-    return undefined;
+  };
+
+  const handleDelete = (taskId: string) => {
+    deleteTask(taskId);
+    setTaskToEdit(null);
+  };
+
+  const findTask = (taskId: string): BacklogTask | undefined => {
+    const allTasks = [...todo, ...inProgress, ...testing, ...done];
+    return allTasks.find((task) => task.id === taskId);
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="flex gap-4 h-[600px]">
-        {columns.map((column) => (
-          <KanbanColumn key={column.id} column={column} tasks={column.tasks} />
-        ))}
-      </div>
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[600px]">
+          <KanbanColumn
+            column={{ id: "todo", title: "À Faire" }}
+            tasks={todo}
+            onAddTask={handleAddTask}
+            onTaskClick={handleClickTask}
+          />
+          <KanbanColumn
+            column={{ id: "in-progress", title: "En Cours" }}
+            tasks={inProgress}
+            onAddTask={handleAddTask}
+            onTaskClick={handleClickTask}
+          />
+          <KanbanColumn
+            column={{ id: "testing", title: "A tester" }}
+            tasks={testing}
+            onAddTask={handleAddTask}
+            onTaskClick={handleClickTask}
+          />
+          <KanbanColumn
+            column={{ id: "done", title: "Terminé" }}
+            tasks={done}
+            onAddTask={handleAddTask}
+            onTaskClick={handleClickTask}
+          />
+        </div>
 
-      <DragOverlay>
-        {activeId ? (
-          <div className="w-[300px]">
-            <KanbanItem task={findTask(activeId)!} />
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+        <DragOverlay>
+          {activeId && (
+            <div className="w-[300px]">
+              <KanbanItem task={findTask(activeId)!} />
+            </div>
+          )}
+        </DragOverlay>
+      </DndContext>
+
+      {taskToEdit && (
+        <EditTaskModal
+          task={taskToEdit}
+          isOpen={!!taskToEdit}
+          onClose={() => setTaskToEdit(null)}
+          onSave={handleSaveEdit}
+          onDelete={handleDelete}
+        />
+      )}
+    </>
   );
 }
