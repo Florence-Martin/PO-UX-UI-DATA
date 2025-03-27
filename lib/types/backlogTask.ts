@@ -1,13 +1,6 @@
-import { Timestamp } from "firebase/firestore";
+import { TaskStoryBase } from "./taskStoryBase";
 
-export interface BacklogTask {
+export interface BacklogTask extends TaskStoryBase {
   id?: string;
-  title: string;
-  description: string;
-  priority: "low" | "medium" | "high";
-  storyPoints: number;
-  status: "todo" | "in-progress" | "in-testing" | "done";
-  userStoryIds?: string[]; // Lien vers la user story concernée
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  userStoryIds?: string[];
 }

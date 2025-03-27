@@ -18,7 +18,7 @@ export default function AnalysisPage() {
         <TabsList className="space-x-4">
           <TabsTrigger value="research">Analyse des besoins</TabsTrigger>
           <TabsTrigger value="wireframes">Wireframes</TabsTrigger>
-          <TabsTrigger value="documentation">Documentation</TabsTrigger>
+          <TabsTrigger value="documentation">User stories</TabsTrigger>
         </TabsList>
 
         <TabsContent value="research" className="space-y-4">

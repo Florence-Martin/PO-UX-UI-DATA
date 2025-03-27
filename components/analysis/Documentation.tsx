@@ -15,6 +15,9 @@ import {
 import { motion } from "framer-motion";
 import { useUserStories } from "@/hooks/useUserStories";
 
+import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
+import { List, NotebookPen } from "lucide-react";
+
 export function Documentation() {
   const {
     title,
@@ -22,7 +25,6 @@ export function Documentation() {
     priority,
     storyPoints,
     acceptanceCriteria,
-    userStories,
     isEditing,
     setTitle,
     setDescription,
@@ -33,24 +35,18 @@ export function Documentation() {
     handleEdit,
     handleDelete,
     resetForm,
-    error,
-    loading,
   } = useUserStories();
-
-  if (loading) {
-    return <p>Chargement en cours...</p>;
-  }
-
-  if (error) {
-    return <p className="text-red-500">{error}</p>;
-  }
+  const { filteredStories, filterByPriority } = useUserStories();
 
   return (
     <div className="grid gap-6">
-      {/* 📝 Formulaire */}
+      {/* Formulaire */}
       <Card>
         <CardHeader>
-          <CardTitle>✍️ Éditeur de User Stories</CardTitle>
+          <CardTitle className="flex items-center">
+            <NotebookPen className="w-6 h-6 mr-2" />
+            Éditeur de User Stories
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -130,73 +126,81 @@ export function Documentation() {
         </CardContent>
       </Card>
 
-      {/* 📋 Liste des stories */}
+      {/* Liste des stories */}
       <Card>
         <CardHeader>
-          <CardTitle>📜 User Stories existantes</CardTitle>
+          <CardTitle className="flex items-center">
+            <List className="w-6 h-6 mr-2" />
+            User Stories existantes
+          </CardTitle>
+          <UserStorySearchBar onFilterChange={filterByPriority} />
         </CardHeader>
         <CardContent className="space-y-3">
-          {userStories.length === 0 ? (
+          {filteredStories.length === 0 ? ( // Utilisez filteredStories ici
             <p className="text-sm text-muted-foreground italic">
               Aucune user story pour le moment. Commencez par en créer une !
             </p>
           ) : (
-            userStories.map((story) => (
-              <motion.div
-                key={story.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
-              >
-                <p className="font-medium text-foreground flex items-center gap-2">
-                  📄 {story.title}
-                  <span
-                    className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
-                      story.priority === "high"
-                        ? "bg-red-500/10 text-red-500"
-                        : story.priority === "medium"
-                        ? "bg-yellow-500/10 text-yellow-500"
-                        : "bg-green-500/10 text-green-500"
-                    }`}
-                  >
-                    {story.priority}
-                  </span>
-                </p>
+            filteredStories.map(
+              (
+                story // Utilisez filteredStories ici
+              ) => (
+                <motion.div
+                  key={story.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
+                >
+                  <p className="font-medium text-foreground flex items-center gap-2">
+                    📄 {story.title}
+                    <span
+                      className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
+                        story.priority === "high"
+                          ? "bg-red-500/10 text-red-500"
+                          : story.priority === "medium"
+                          ? "bg-yellow-500/10 text-yellow-500"
+                          : "bg-green-500/10 text-green-500"
+                      }`}
+                    >
+                      {story.priority}
+                    </span>
+                  </p>
 
-                <p className="text-sm italic text-muted-foreground mb-2">
-                  {story.description}
-                </p>
+                  <p className="text-sm italic text-muted-foreground mb-2">
+                    {story.description}
+                  </p>
 
-                <div className="text-sm text-yellow-500 flex items-center gap-1 ">
-                  ⭐{" "}
-                  <span className="text-foreground">
-                    {story.storyPoints} points
-                  </span>
-                </div>
+                  <div className="text-sm text-yellow-500 flex items-center gap-1 ">
+                    ⭐{" "}
+                    <span className="text-foreground">
+                      {story.storyPoints} points
+                    </span>
+                  </div>
 
-                <p className="text-sm text-foreground whitespace-pre-line mt-2">
-                  {story.acceptanceCriteria}
-                </p>
+                  <p className="text-sm text-foreground whitespace-pre-line mt-2">
+                    {story.acceptanceCriteria}
+                  </p>
 
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleEdit(story)}
-                  >
-                    Modifier
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(story.id)}
-                  >
-                    Supprimer
-                  </Button>
-                </div>
-              </motion.div>
-            ))
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleEdit(story)}
+                    >
+                      Modifier
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(story.id)}
+                    >
+                      Supprimer
+                    </Button>
+                  </div>
+                </motion.div>
+              )
+            )
           )}
         </CardContent>
       </Card>

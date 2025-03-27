@@ -1,14 +1,9 @@
-import { Timestamp } from "firebase/firestore";
+// types/userStory.ts
 
-export interface UserStory {
+import { TaskStoryBase } from "./taskStoryBase";
+
+export interface UserStory extends TaskStoryBase {
   id?: string;
-  title: string;
-  description: string;
-  priority: "high" | "medium" | "low";
-  storyPoints: number;
   acceptanceCriteria: string;
-  status: "todo" | "in-progress" | "done";
-  taskIds?: string[]; // Liste des tâches liées
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  taskIds?: string[];
 }
