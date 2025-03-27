@@ -14,9 +14,8 @@ import {
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { useUserStories } from "@/hooks/useUserStories";
-
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
-import { List, NotebookPen } from "lucide-react";
+import { ArrowDownToDot, List, Notebook } from "lucide-react";
 
 export function Documentation() {
   const {
@@ -35,17 +34,29 @@ export function Documentation() {
     handleEdit,
     handleDelete,
     resetForm,
+    filteredStories,
+    filterByPriority,
   } = useUserStories();
-  const { filteredStories, filterByPriority } = useUserStories();
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-6 px-4 sm:px-6 lg:px-8">
       {/* Formulaire */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <NotebookPen className="w-6 h-6 mr-2" />
-            Éditeur de User Stories
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="flex items-center">
+              <Notebook className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+              <span className="text-base sm:text-lg">
+                Éditeur de User Stories
+              </span>
+            </div>
+            <a
+              href="#user-stories-list"
+              className="text-sm text-primary hover:underline flex items-center"
+            >
+              <ArrowDownToDot className="w-5 h-5 sm:w-6 sm:h-6 mr-1" />
+              Liste user stories
+            </a>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -106,7 +117,7 @@ export function Documentation() {
           </div>
 
           <div className="space-y-2">
-            <Label>Critères d&#39;Acceptation</Label>
+            <Label>Critères d’Acceptation</Label>
             <Textarea
               value={acceptanceCriteria}
               onChange={(e) => setAcceptanceCriteria(e.target.value)}
@@ -115,7 +126,7 @@ export function Documentation() {
             />
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end gap-2 pt-4">
             <Button variant="outline" onClick={resetForm}>
               Annuler
             </Button>
@@ -127,80 +138,78 @@ export function Documentation() {
       </Card>
 
       {/* Liste des stories */}
-      <Card>
+      <Card id="user-stories-list">
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <List className="w-6 h-6 mr-2" />
-            User Stories existantes
+          <CardTitle className="flex items-center gap-2">
+            <List className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="text-base sm:text-lg">
+              User Stories existantes
+            </span>
           </CardTitle>
           <UserStorySearchBar onFilterChange={filterByPriority} />
         </CardHeader>
         <CardContent className="space-y-3">
-          {filteredStories.length === 0 ? ( // Utilisez filteredStories ici
+          {filteredStories.length === 0 ? (
             <p className="text-sm text-muted-foreground italic">
               Aucune user story pour le moment. Commencez par en créer une !
             </p>
           ) : (
-            filteredStories.map(
-              (
-                story // Utilisez filteredStories ici
-              ) => (
-                <motion.div
-                  key={story.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
-                >
-                  <p className="font-medium text-foreground flex items-center gap-2">
-                    📄 {story.title}
-                    <span
-                      className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
-                        story.priority === "high"
-                          ? "bg-red-500/10 text-red-500"
-                          : story.priority === "medium"
-                          ? "bg-yellow-500/10 text-yellow-500"
-                          : "bg-green-500/10 text-green-500"
-                      }`}
-                    >
-                      {story.priority}
-                    </span>
-                  </p>
+            filteredStories.map((story) => (
+              <motion.div
+                key={story.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
+              >
+                <p className="font-medium text-foreground flex items-center gap-2">
+                  📄 {story.title}
+                  <span
+                    className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
+                      story.priority === "high"
+                        ? "bg-red-500/10 text-red-500"
+                        : story.priority === "medium"
+                        ? "bg-yellow-500/10 text-yellow-500"
+                        : "bg-green-500/10 text-green-500"
+                    }`}
+                  >
+                    {story.priority}
+                  </span>
+                </p>
 
-                  <p className="text-sm italic text-muted-foreground mb-2">
-                    {story.description}
-                  </p>
+                <p className="text-sm italic text-muted-foreground mb-2">
+                  {story.description}
+                </p>
 
-                  <div className="text-sm text-yellow-500 flex items-center gap-1 ">
-                    ⭐{" "}
-                    <span className="text-foreground">
-                      {story.storyPoints} points
-                    </span>
-                  </div>
+                <div className="text-sm text-yellow-500 flex items-center gap-1">
+                  ⭐{" "}
+                  <span className="text-foreground">
+                    {story.storyPoints} points
+                  </span>
+                </div>
 
-                  <p className="text-sm text-foreground whitespace-pre-line mt-2">
-                    {story.acceptanceCriteria}
-                  </p>
+                <p className="text-sm text-foreground whitespace-pre-line mt-2">
+                  {story.acceptanceCriteria}
+                </p>
 
-                  <div className="flex justify-end gap-2 pt-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleEdit(story)}
-                    >
-                      Modifier
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(story.id)}
-                    >
-                      Supprimer
-                    </Button>
-                  </div>
-                </motion.div>
-              )
-            )
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleEdit(story)}
+                  >
+                    Modifier
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDelete(story.id)}
+                  >
+                    Supprimer
+                  </Button>
+                </div>
+              </motion.div>
+            ))
           )}
         </CardContent>
       </Card>
