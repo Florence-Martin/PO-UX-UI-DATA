@@ -5,10 +5,12 @@ import { useState } from "react";
 
 interface UserStorySearchBarProps {
   onFilterChange: (priority: string) => void;
+  hideAllOption?: boolean;
 }
 
 export const UserStorySearchBar = ({
   onFilterChange,
+  hideAllOption = false,
 }: UserStorySearchBarProps) => {
   const [priority, setPriority] = useState("high");
   const router = useRouter();
@@ -40,7 +42,7 @@ export const UserStorySearchBar = ({
         <option value="high">Haute</option>
         <option value="medium">Moyenne</option>
         <option value="low">Basse</option>
-        <option value="all">Toutes (page dédiée)</option>
+        {!hideAllOption && <option value="all">Toutes (page dédiée)</option>}
       </select>
     </div>
   );
