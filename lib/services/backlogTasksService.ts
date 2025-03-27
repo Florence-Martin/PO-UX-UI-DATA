@@ -8,17 +8,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
-
-export interface BacklogTask {
-  id?: string;
-  title: string;
-  description: string;
-  priority: "low" | "medium" | "high";
-  storyPoints: number;
-  status: "todo" | "in-progress" | "in-testing" | "done";
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
-}
+import { BacklogTask } from "../types/backlogTask";
 
 const COLLECTION_NAME = "backlog_tasks";
 

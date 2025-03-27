@@ -1,9 +1,9 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { BacklogTask } from "@/lib/services/backlogTasksService";
 import { GripVertical } from "lucide-react";
 
 interface KanbanItemProps {
@@ -73,6 +73,13 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
               {task.storyPoints} pts
             </span>
           </div>
+          {Array.isArray(task.userStoryIds) && task.userStoryIds.length > 0 && (
+            <div className="text-xs text-muted-foreground mt-1">
+              📌 {task.userStoryIds.length} user stor
+              {task.userStoryIds.length > 1 ? "ies" : "y"} liée
+              {task.userStoryIds.length > 1 ? "s" : ""}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

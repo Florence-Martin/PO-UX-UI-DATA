@@ -9,7 +9,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { KanbanItem } from "./KanbanItem";
-import { BacklogTask } from "@/lib/services/backlogTasksService";
+import { BacklogTask } from "@/lib/types/backlogTask";
 
 interface KanbanColumnProps {
   column: {

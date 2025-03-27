@@ -8,6 +8,7 @@ export interface UserStory {
   storyPoints: number;
   acceptanceCriteria: string;
   status: "todo" | "in-progress" | "done";
+  taskIds?: string[]; // Liste des tâches liées
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

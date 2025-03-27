@@ -4,10 +4,10 @@ import {
   deleteUserStory,
   getAllUserStories,
   updateUserStory,
-  UserStory,
 } from "@/lib/services/userStoryService";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
+import { UserStory } from "@/lib/types/userStory";
 
 export function useUserStories() {
   const [title, setTitle] = useState("");

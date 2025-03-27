@@ -16,8 +16,8 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { KanbanColumn } from "./KanbanColumn";
 import { KanbanItem } from "./KanbanItem";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
-import { BacklogTask } from "@/lib/services/backlogTasksService";
 import { EditTaskModal } from "./EditTaskModal";
+import { BacklogTask } from "@/lib/types/backlogTask";
 
 export function KanbanBoard() {
   const {

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FilePenLine, X } from "lucide-react";
-import { BacklogTask } from "@/lib/services/backlogTasksService";
+import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
+import { BacklogTask } from "@/lib/types/backlogTask";
+import { UserStory } from "@/lib/types/userStory";
+import { getAllUserStories } from "@/lib/services/userStoryService";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -20,6 +22,8 @@ export function EditTaskModal({
   onDelete,
 }: EditTaskModalProps) {
   const [edited, setEdited] = useState<BacklogTask | null>(null);
+  const [userStories, setUserStories] = useState<UserStory[]>([]);
+  const [showStoryList, setShowStoryList] = useState(false);
 
   useEffect(() => {
     if (task) {
@@ -27,11 +31,24 @@ export function EditTaskModal({
     }
   }, [task]);
 
+  useEffect(() => {
+    getAllUserStories().then(setUserStories);
+  }, []);
+
   if (!isOpen || !edited) return null;
+
+  const toggleUserStorySelection = (storyId: string) => {
+    const currentIds = edited.userStoryIds || [];
+    const updatedIds = currentIds.includes(storyId)
+      ? currentIds.filter((id) => id !== storyId)
+      : [...currentIds, storyId];
+    setEdited({ ...edited, userStoryIds: updatedIds });
+  };
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-      <div className="relative bg-white dark:bg-neutral-900 text-black border-4 border-gray-200 border-t-gray-500 dark:text-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-4">
+      {/* <div className="relative bg-white dark:bg-neutral-900 text-black border-4 border-gray-200 border-t-gray-500 dark:text-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-4"> */}
+      <div className="relative w-full mx-4 max-w-md sm:max-w-xl lg:max-w-2xl bg-white dark:bg-neutral-900 text-black dark:text-white border-4 border-gray-200 border-t-gray-500 rounded-xl shadow-lg p-6 space-y-4">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-600 dark:text-white hover:text-black dark:hover:text-gray-300"
@@ -62,10 +79,7 @@ export function EditTaskModal({
         />
 
         <div>
-          <label
-            htmlFor="task-title"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Priorité
           </label>
           <select
@@ -82,10 +96,7 @@ export function EditTaskModal({
         </div>
 
         <div>
-          <label
-            htmlFor="task-title"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Story points
           </label>
           <input
@@ -100,11 +111,8 @@ export function EditTaskModal({
         </div>
 
         <div>
-          <label
-            htmlFor="task-title"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Status
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Statut
           </label>
           <select
             value={edited.status}
@@ -115,9 +123,57 @@ export function EditTaskModal({
           >
             <option value="todo">À faire</option>
             <option value="in-progress">En cours</option>
-            <option value="in-testing">A tester</option>
+            <option value="in-testing">À tester</option>
             <option value="done">Terminé</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Lier aux user stories
+          </label>
+
+          {(edited.userStoryIds?.length ?? 0) > 0 && (
+            <ul className="text-sm text-muted-foreground mb-2 list-disc list-inside space-y-1">
+              {userStories
+                .filter((story) =>
+                  edited.userStoryIds?.includes(story.id || "")
+                )
+                .map((story) => (
+                  <li key={story.id}>{story.title}</li>
+                ))}
+            </ul>
+          )}
+
+          <button
+            onClick={() => setShowStoryList(!showStoryList)}
+            className="text-xs underline text-primary flex items-center gap-1 mb-2"
+          >
+            {showStoryList ? (
+              <ChevronUp className="w-3 h-3" />
+            ) : (
+              <ChevronDown className="w-3 h-3" />
+            )}
+            {showStoryList ? "Masquer" : "Afficher la liste"}
+          </button>
+
+          {showStoryList && (
+            <div className="max-h-32 overflow-y-auto border rounded p-2 space-y-1">
+              {userStories.map((story) => (
+                <label
+                  key={story.id}
+                  className="flex items-center space-x-2 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    checked={edited.userStoryIds?.includes(story.id || "")}
+                    onChange={() => toggleUserStorySelection(story.id || "")}
+                  />
+                  <span>{story.title}</span>
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between pt-4">

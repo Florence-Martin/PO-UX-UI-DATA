@@ -4,9 +4,9 @@ import {
   createBacklogTask,
   updateBacklogTask,
   deleteBacklogTask,
-  BacklogTask,
 } from "@/lib/services/backlogTasksService";
 import { toast } from "sonner";
+import { BacklogTask } from "@/lib/types/backlogTask";
 
 export const useBacklogTasks = () => {
   const [tasks, setTasks] = useState<BacklogTask[]>([]);
