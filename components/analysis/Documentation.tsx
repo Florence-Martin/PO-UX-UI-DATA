@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import { motion } from "framer-motion";
 import { useUserStories } from "@/hooks/useUserStories";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 import { ArrowDownToDot, List, Notebook } from "lucide-react";
+import Link from "next/link";
 
 export function Documentation() {
   const {
@@ -37,11 +39,25 @@ export function Documentation() {
     filteredStories,
     filterByPriority,
   } = useUserStories();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isEditing && cardRef.current) {
+      const el = cardRef.current;
+
+      // Ajoute une classe focus temporairement
+      el.classList.add("ring-2", "ring-primary", "transition-shadow");
+
+      setTimeout(() => {
+        el.classList.remove("ring-2", "ring-primary");
+      }, 3000);
+    }
+  }, [isEditing]);
 
   return (
     <div className="grid gap-6 px-4 sm:px-6 lg:px-8">
       {/* Formulaire */}
-      <Card>
+      <Card id="edit-user-story" ref={cardRef}>
         <CardHeader>
           <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center">
@@ -50,13 +66,13 @@ export function Documentation() {
                 Éditeur de User Stories
               </span>
             </div>
-            <a
+            <Link
               href="#user-stories-list"
               className="text-sm text-primary hover:underline flex items-center"
             >
               <ArrowDownToDot className="w-5 h-5 sm:w-6 sm:h-6 mr-1" />
               Liste user stories
-            </a>
+            </Link>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -196,7 +212,14 @@ export function Documentation() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => handleEdit(story)}
+                    onClick={() => {
+                      handleEdit(story);
+
+                      const form = document.getElementById("edit-user-story");
+                      if (form) {
+                        form.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
                   >
                     Modifier
                   </Button>
