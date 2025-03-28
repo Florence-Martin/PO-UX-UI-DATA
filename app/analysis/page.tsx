@@ -1,4 +1,4 @@
-import { Documentation } from "@/components/analysis/Documentation";
+import { UserStories } from "@/components/analysis/UserStories";
 import { UserResearch } from "@/components/analysis/UserResearch";
 import { Wireframes } from "@/components/analysis/Wireframes";
 import { BannerInfo } from "@/components/banner/BannerInfos 2";
@@ -33,7 +33,7 @@ export default function AnalysisPage() {
         </TabsContent>
 
         <TabsContent value="documentation" className="space-y-4">
-          <Documentation />
+          <UserStories />
         </TabsContent>
       </Tabs>
     </div>

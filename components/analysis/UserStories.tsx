@@ -16,7 +16,7 @@ import {
 import { motion } from "framer-motion";
 import { useUserStories } from "@/hooks/useUserStories";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
-import { ArrowDownToDot, ExternalLink, List, Notebook } from "lucide-react";
+import { ArrowDownToDot, List, Notebook } from "lucide-react";
 import Link from "next/link";
 import {
   Tooltip,
@@ -26,7 +26,7 @@ import {
 } from "../ui/tooltip";
 import Image from "next/image";
 
-export function Documentation() {
+export function UserStories() {
   const {
     title,
     description,
