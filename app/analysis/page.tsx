@@ -3,6 +3,7 @@ import { UserResearch } from "@/components/analysis/UserResearch";
 import { Wireframes } from "@/components/analysis/Wireframes";
 import { BannerInfo } from "@/components/banner/BannerInfos 2";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Roadmap from "@/components/analysis/Roadmap";
 
 export default function AnalysisPage() {
   return (
@@ -17,12 +18,17 @@ export default function AnalysisPage() {
       </div>
 
       {/* Onglets */}
-      <Tabs defaultValue="research" className="space-y-4">
+      <Tabs defaultValue="roadmap" className="space-y-4">
         <TabsList className="flex flex-wrap gap-2 sm:gap-4 mb-9">
+          <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
           <TabsTrigger value="research">Analyse des besoins</TabsTrigger>
           <TabsTrigger value="wireframes">Wireframes</TabsTrigger>
           <TabsTrigger value="documentation">User stories</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="roadmap" className="space-y-4">
+          <Roadmap />
+        </TabsContent>
 
         <TabsContent value="research" className="space-y-4">
           <UserResearch />

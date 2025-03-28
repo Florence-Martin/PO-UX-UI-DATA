@@ -1,3 +1,4 @@
+import { RoadmapFlow } from "@/components/analysis/RoadmapFlow";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UserMetrics } from "@/components/dashboard/UserMetrics";
@@ -10,6 +11,7 @@ export default function Home() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard UX/Data</h2>
       </div>
+      <RoadmapFlow />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
