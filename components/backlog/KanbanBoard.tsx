@@ -52,32 +52,22 @@ export function KanbanBoard() {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    console.log("🚀 START INFO", event.active.id);
     setActiveId(event.active.id as string);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
     if (!over || active.id === over.id) {
       setActiveId(null);
       return;
     }
 
     const task = findTask(active.id as string);
-    // Ajout du log ici
-    console.log("🔥 DROP DEBUG", {
-      activeId: active.id,
-      overId: over.id,
-      task: task?.title,
-      from: task?.status,
-      to: over.data?.current?.columnId,
-    });
-
-    const newStatus =
-      over.data?.current?.columnId || (over.id as BacklogTask["status"]);
+    const newStatus = over?.data?.current?.columnId as BacklogTask["status"]; // Récupère la colonne cible
 
     if (task && task.status !== newStatus) {
-      updateTaskStatus(task.id!, newStatus);
+      updateTaskStatus(task.id!, newStatus); // Met à jour le statut de la tâche
     }
 
     setActiveId(null);
@@ -85,7 +75,9 @@ export function KanbanBoard() {
 
   const findTask = (taskId: string): BacklogTask | undefined => {
     const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
-    return allTasks.find((task) => task.id === taskId);
+    const task = allTasks.find((task) => task.id === taskId);
+
+    return task;
   };
 
   const handleClickTask = (task: BacklogTask) => {
@@ -138,7 +130,6 @@ export function KanbanBoard() {
             onTaskClick={handleClickTask}
           />
         </div>
-
         <DragOverlay>
           {activeId && (
             <div className="w-[300px]">

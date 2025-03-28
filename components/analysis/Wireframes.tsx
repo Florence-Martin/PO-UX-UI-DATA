@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ExternalLink, Layout, Link } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 export function Wireframes() {
   const [gridSize, setGridSize] = useState({ cols: 4, rows: 3 });
@@ -82,7 +83,7 @@ export function Wireframes() {
         <Card>
           <CardHeader>
             <CardTitle>
-              <img
+              <Image
                 src="/figma.svg"
                 alt="Figma Logo"
                 width={10}
@@ -93,11 +94,21 @@ export function Wireframes() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full justify-start">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/not-found")}
+              title="Lien pas disponible 🙂 "
+            >
               <ExternalLink className="mr-2 h-4 w-4" />
               Maquettes HD
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/not-found")}
+              title="Lien pas disponible 🙂 "
+            >
               <ExternalLink className="mr-2 h-4 w-4" />
               Design System
             </Button>

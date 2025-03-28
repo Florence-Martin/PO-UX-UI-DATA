@@ -43,13 +43,50 @@ export const useBacklogTasks = () => {
     }
   };
 
+  // const updateTask = async (task: BacklogTask) => {
+  //   try {
+  //     if (!task.id) throw new Error("ID manquant pour la mise à jour");
+  //     await updateBacklogTask(task.id, task);
+  //     setTasks((prev) =>
+  //       prev.map((t) => (t.id === task.id ? { ...t, ...task } : t))
+  //     );
+  //     toast.success("Tâche mise à jour.");
+  //   } catch (err) {
+  //     console.error("Erreur lors de la mise à jour de la tâche :", err);
+  //     toast.error("Erreur : Impossible de mettre à jour la tâche.");
+  //   }
+  // };
+
+  // const updateTaskStatus = async (
+  //   taskId: string,
+  //   newStatus: BacklogTask["status"]
+  // ) => {
+  //   try {
+  //     await updateBacklogTask(taskId, { status: newStatus });
+  //     setTasks((prev) =>
+  //       prev.map((task) =>
+  //         task.id === taskId ? { ...task, status: newStatus } : task
+  //       )
+  //     );
+  //     toast.success("Statut mis à jour avec succès !");
+  //   } catch (err) {
+  //     console.error("Erreur lors du changement de statut :", err);
+  //     toast.error("Erreur : Impossible de changer le statut.");
+  //   }
+  // };
   const updateTask = async (task: BacklogTask) => {
     try {
       if (!task.id) throw new Error("ID manquant pour la mise à jour");
-      await updateBacklogTask(task.id, task);
+
+      // ✅ Envoie uniquement les champs modifiés à Firestore
+      const { id, ...data } = task;
+      await updateBacklogTask(id, data); // data est de type Partial<BacklogTask>
+
+      // 🟢 Met à jour localement
       setTasks((prev) =>
-        prev.map((t) => (t.id === task.id ? { ...t, ...task } : t))
+        prev.map((t) => (t.id === id ? { ...t, ...data } : t))
       );
+
       toast.success("Tâche mise à jour.");
     } catch (err) {
       console.error("Erreur lors de la mise à jour de la tâche :", err);
@@ -63,18 +100,19 @@ export const useBacklogTasks = () => {
   ) => {
     try {
       await updateBacklogTask(taskId, { status: newStatus });
+
       setTasks((prev) =>
         prev.map((task) =>
           task.id === taskId ? { ...task, status: newStatus } : task
         )
       );
+
       toast.success("Statut mis à jour avec succès !");
     } catch (err) {
       console.error("Erreur lors du changement de statut :", err);
       toast.error("Erreur : Impossible de changer le statut.");
     }
   };
-
   const deleteTask = async (taskId: string) => {
     try {
       await deleteBacklogTask(taskId);

@@ -81,7 +81,7 @@ export function UserStories() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link
-                        href="https://jira.example.com"
+                        href="/not-found"
                         target="_blank"
                         className="text-sm text-muted-foreground hover:text-primary flex items-center"
                       >
@@ -103,7 +103,7 @@ export function UserStories() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link
-                        href="https://confluence.example.com"
+                        href="/not-found"
                         target="_blank"
                         className="text-sm text-muted-foreground hover:text-primary flex items-center"
                       >

@@ -39,7 +39,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
       <Card
         className="bg-background hover:ring-2 ring-primary mr-1"
         onClick={() => {
-          if (!isDragging) onClick?.(task);
+          if (!isDragging) onClick?.(task); // Empêche l'ouverture de la modal pendant le click
         }}
       >
         <CardContent className="p-3 space-y-2">
