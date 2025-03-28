@@ -4,9 +4,9 @@ import Link from "next/link";
 
 const steps = [
   { id: 1, label: "Analyse des besoins", progress: 60 },
-  { id: 2, label: "Wireframes", progress: 100 },
+  { id: 2, label: "Wireframes", progress: 0 },
   { id: 3, label: "User Stories", progress: 33 },
-  { id: 4, label: "Backlog & Kanban", progress: 100 },
+  { id: 4, label: "Backlog & Kanban", progress: 50 },
   { id: 5, label: "Livrables & Qualité", progress: 0 },
 ];
 
