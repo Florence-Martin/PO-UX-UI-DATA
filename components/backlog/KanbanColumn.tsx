@@ -67,7 +67,7 @@ export function KanbanColumn({
         className="w-full mt-2"
         onClick={() => onAddTask(column.id)}
       >
-        <Plus className="h-4 w-4 mr-2" /> Ajouter une tâche
+        <Plus className="h-4 w-4 mr-2" /> Créer un ticket
       </Button>
     </div>
   );

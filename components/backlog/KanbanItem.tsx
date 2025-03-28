@@ -37,7 +37,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
   return (
     <div ref={setNodeRef} style={style}>
       <Card
-        className="bg-background hover:ring-2 ring-primary"
+        className="bg-background hover:ring-2 ring-primary mr-1"
         onClick={() => {
           if (!isDragging) onClick?.(task);
         }}
