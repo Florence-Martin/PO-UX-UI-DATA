@@ -9,7 +9,6 @@ import {
   TowerControl,
   TrendingUp,
 } from "lucide-react";
-import SprintTimeline from "../sprint/SprintTimeline";
 
 export default function Roadmap() {
   return (
@@ -165,9 +164,9 @@ export default function Roadmap() {
                     Éditeur UX complet
                   </div>
                   <p className="italic text-muted-foreground text-xs ml-4">
-                    Intègre les priorités, story points, critères d'acceptation
-                    et catégorisation métier pour une gestion complète des
-                    besoins.
+                    Intègre les priorités, story points, critères
+                    d&#39;acceptation et catégorisation métier pour une gestion
+                    complète des besoins.
                   </p>
                 </li>
               </ul>
@@ -184,8 +183,8 @@ export default function Roadmap() {
               <blockquote className="border-l-2 border-muted-foreground pl-4 mt-2 text-sm text-muted-foreground italic">
                 En tant que Product Owner, je souhaite organiser visuellement
                 mon backlog et planifier mes sprints de manière itérative, afin
-                d'assurer une exécution agile alignée avec les besoins métier
-                priorisés.
+                d&#39;assurer une exécution agile alignée avec les besoins
+                métier priorisés.
               </blockquote>
 
               <ul className="space-y-4 mt-2 text-sm text-muted-foreground">
@@ -194,8 +193,8 @@ export default function Roadmap() {
                     Backlog en tableau Kanban interactif
                   </div>
                   <p className="italic text-muted-foreground text-xs ml-4">
-                    Permet d'organiser les tâches par statut (à faire, en cours,
-                    fait), avec drag and drop et persistance.
+                    Permet d&#39;organiser les tâches par statut (à faire, en
+                    cours, fait), avec drag and drop et persistance.
                   </p>
                 </li>
 
@@ -271,13 +270,32 @@ export default function Roadmap() {
                 </li>
 
                 <li>
-                  {" "}
                   <div className="font-medium text-foreground">
                     Analyse des devices (Mobile, Tablet, Desktop)
                   </div>
                   <p className="italic text-muted-foreground text-xs ml-4">
                     Répartition des utilisateurs par device pour mieux adapter
                     les maquettes et tests.
+                  </p>
+                </li>
+
+                <li>
+                  <div className="font-medium text-foreground">
+                    Intégration de tests A/B et suivi des résultats UX
+                  </div>
+                  <p className="italic text-muted-foreground text-xs ml-4">
+                    Mise en place d’expérimentations UX (A/B tests) pour valider
+                    des variantes de design ou wording.
+                  </p>
+                </li>
+
+                <li>
+                  <div className="font-medium text-foreground">
+                    Analyse comportementale via heatmaps
+                  </div>
+                  <p className="italic text-muted-foreground text-xs ml-4">
+                    Utilisation de heatmaps pour détecter les zones d’attention
+                    et comportements utilisateurs sur les interfaces.
                   </p>
                 </li>
 
@@ -300,6 +318,16 @@ export default function Roadmap() {
                   <p className="italic text-muted-foreground text-xs ml-4">
                     Accès aux données brutes issues de l’API pour vérification,
                     analyse ou export CSV.
+                  </p>
+                </li>
+
+                <li>
+                  <div className="font-medium text-foreground">
+                    Connexion à des outils BI externes (ex: Power BI)
+                  </div>
+                  <p className="italic text-muted-foreground text-xs ml-4">
+                    Intégration avec des outils de dataviz externes pour
+                    enrichir les tableaux de bord avec des KPIs métiers.
                   </p>
                 </li>
               </ul>
@@ -376,10 +404,6 @@ export default function Roadmap() {
             </div>
           </div>
         </CardContent>
-      </Card>
-
-      <Card>
-        <SprintTimeline />
       </Card>
     </div>
   );

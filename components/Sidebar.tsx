@@ -33,8 +33,13 @@ const navigation = [
     icon: Trello,
   },
   {
+    name: "Sprint",
+    href: "/sprint",
+    icon: Trello,
+  },
+  {
     name: "Collaboration BI",
-    href: "/bi",
+    href: "/metrics",
     icon: Database,
   },
   {

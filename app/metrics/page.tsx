@@ -4,7 +4,7 @@ import { DeliverableTracking } from "@/components/bi/DeliverableTracking";
 import { KpiDocumentation } from "@/components/bi/KpiDocumentation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function BiPage() {
+export default function Metrics() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BannerInfo />

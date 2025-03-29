@@ -5,6 +5,30 @@ import { BannerInfo } from "@/components/banner/BannerInfos 2";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Roadmap from "@/components/analysis/Roadmap";
 
+// 💡 Définir les onglets une fois
+const tabs = [
+  {
+    value: "roadmap",
+    label: "Roadmap",
+    component: <Roadmap />,
+  },
+  {
+    value: "research",
+    label: "Analyse des besoins",
+    component: <UserResearch />,
+  },
+  {
+    value: "wireframes",
+    label: "Wireframes",
+    component: <Wireframes />,
+  },
+  {
+    value: "documentation",
+    label: "User Stories",
+    component: <UserStories />,
+  },
+];
+
 export default function AnalysisPage() {
   return (
     <div className="flex-1 space-y-4 px-4 sm:px-6 md:px-8 pt-6">
@@ -17,30 +41,21 @@ export default function AnalysisPage() {
         </h2>
       </div>
 
-      {/* Onglets */}
-      <Tabs defaultValue="roadmap" className="space-y-4">
+      {/* Onglets dynamiques */}
+      <Tabs defaultValue={tabs[0].value} className="space-y-4">
         <TabsList className="flex flex-wrap gap-2 sm:gap-4 mb-9">
-          <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
-          <TabsTrigger value="research">Analyse des besoins</TabsTrigger>
-          <TabsTrigger value="wireframes">Wireframes</TabsTrigger>
-          <TabsTrigger value="documentation">User stories</TabsTrigger>
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value}>
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
-        <TabsContent value="roadmap" className="space-y-4">
-          <Roadmap />
-        </TabsContent>
-
-        <TabsContent value="research" className="space-y-4">
-          <UserResearch />
-        </TabsContent>
-
-        <TabsContent value="wireframes" className="space-y-4">
-          <Wireframes />
-        </TabsContent>
-
-        <TabsContent value="documentation" className="space-y-4">
-          <UserStories />
-        </TabsContent>
+        {tabs.map((tab) => (
+          <TabsContent key={tab.value} value={tab.value} className="space-y-4">
+            {tab.component}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

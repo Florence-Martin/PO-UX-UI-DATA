@@ -44,3 +44,4 @@ chatgpt-cheatsheet.md
 # Ignore les scripts et pages dev
 lib/scripts/
 app/dev/
+app/sandbox/

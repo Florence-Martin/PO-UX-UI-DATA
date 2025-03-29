@@ -1,8 +1,7 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export function MoscowPrioritization() {
   const categories = [
@@ -13,28 +12,20 @@ export function MoscowPrioritization() {
       items: [
         "Authentification utilisateurs",
         "Tunnel de conversion",
-        "Page produit"
-      ]
+        "Page produit",
+      ],
     },
     {
       id: "should",
       title: "Should Have",
       color: "bg-yellow-100 text-yellow-800",
-      items: [
-        "Système de recherche",
-        "Filtres avancés",
-        "Notifications"
-      ]
+      items: ["Système de recherche", "Filtres avancés", "Notifications"],
     },
     {
       id: "could",
       title: "Could Have",
       color: "bg-green-100 text-green-800",
-      items: [
-        "Mode sombre",
-        "Export PDF",
-        "Intégration réseaux sociaux"
-      ]
+      items: ["Mode sombre", "Export PDF", "Intégration réseaux sociaux"],
     },
     {
       id: "wont",
@@ -43,37 +34,30 @@ export function MoscowPrioritization() {
       items: [
         "Application mobile native",
         "Chat en direct",
-        "Paiement cryptomonnaies"
-      ]
-    }
-  ]
+        "Paiement cryptomonnaies",
+      ],
+    },
+  ];
 
   return (
-    <ScrollArea className="h-[400px]">
-      <div className="space-y-4 p-1">
-        {categories.map((category) => (
-          <Card key={category.id}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-semibold">{category.title}</h4>
-                <Badge variant="outline" className={category.color}>
-                  {category.items.length}
-                </Badge>
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {categories.map((category) => (
+        <Card key={category.id}>
+          <CardHeader className="flex justify-between items-center">
+            <CardTitle>{category.title}</CardTitle>
+            <Badge variant="outline" className={category.color}>
+              {category.items.length}
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {category.items.map((item, index) => (
+              <div key={index} className="p-2 bg-muted rounded-md text-sm">
+                {item}
               </div>
-              <div className="space-y-2">
-                {category.items.map((item, index) => (
-                  <div
-                    key={index}
-                    className="p-2 bg-muted rounded-md text-sm"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </ScrollArea>
-  )
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 }
