@@ -13,6 +13,7 @@ type SectionTabsLayoutProps = {
   title: string;
   description?: string;
   tabs: TabItem[];
+  defaultTab?: string;
 };
 
 export default function SectionTabsLayout({
@@ -34,7 +35,7 @@ export default function SectionTabsLayout({
         </p>
       )}
 
-      <Tabs defaultValue={tabs[0].value} className="space-y-4">
+      <Tabs defaultValue={tabs[0].value || tabs[0].value} className="space-y-4">
         <TabsList className="flex flex-wrap gap-2 sm:gap-4 mb-9">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>

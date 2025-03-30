@@ -13,7 +13,7 @@ import {
   TowerControl,
   TrendingUp,
   Brain,
-  Pencil,
+  PencilLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,31 +45,20 @@ export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
   return (
     <Card className="border border-border relative">
       <CardContent className="space-y-4 py-6 text-sm text-muted-foreground">
-        {/* Bouton Modifier */}
-        {onEdit && (
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute top-3 right-3 rounded-full w-8 h-8"
-            onClick={() => onEdit(data)}
-            title="Modifier ce trimestre"
-            aria-label="Modifier"
-          >
-            <Pencil className="w-4 h-4" />
-          </Button>
-        )}
-
-        {/* Titre avec icône et badge de statut */}
+        {/* En-tête : titre + icône + badge + bouton modifier */}
         <div className="flex flex-wrap items-center justify-between gap-2 text-foreground font-medium text-base">
+          {/* Partie gauche : icône + titre */}
           <div className="flex items-center gap-2">
             {LucideIcon && <LucideIcon className={`w-5 h-5 ${iconColor}`} />}
             {title}
           </div>
-          <div className="shrink-0">
+
+          {/* Partie droite : badge + bouton d'édition */}
+          <div className="flex items-center gap-2">
             <Badge
-              className={`ml-auto px-2.5 py-0.5 rounded-full font-semibold text-[10px] sm:text-xs tracking-wide 
-                ${getBadgeStyle(status)} 
-                shadow-sm border border-white/10`}
+              className={`px-2.5 py-0.5 rounded-full font-semibold text-[10px] sm:text-xs tracking-wide 
+        ${getBadgeStyle(status)} 
+        shadow-sm border border-white/10`}
             >
               {status === "done"
                 ? "Terminé"
@@ -77,6 +66,20 @@ export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
                 ? "En cours"
                 : "À faire"}
             </Badge>
+
+            {onEdit && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 gap-2"
+                onClick={() => onEdit(data)}
+                title="Modifier ce trimestre"
+                aria-label="Modifier"
+              >
+                <PencilLine className="w-4 h-4" />
+                <span>Editer</span>
+              </Button>
+            )}
           </div>
         </div>
 

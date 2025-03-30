@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { UserStory } from "@/lib/types/userStory";
 import { getAllUserStories } from "@/lib/services/userStoryService";
+import Link from "next/link";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -140,7 +141,16 @@ export function EditTaskModal({
                   edited.userStoryIds?.includes(story.id || "")
                 )
                 .map((story) => (
-                  <li key={story.id}>{story.title}</li>
+                  <li key={story.id}>
+                    <Link
+                      href={`/user-stories#${story.id}`}
+                      className="hover:underline text-primary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      [{story.code}] - {story.title}
+                    </Link>
+                  </li>
                 ))}
             </ul>
           )}
@@ -169,7 +179,9 @@ export function EditTaskModal({
                     checked={edited.userStoryIds?.includes(story.id || "")}
                     onChange={() => toggleUserStorySelection(story.id || "")}
                   />
-                  <span>{story.title}</span>
+                  <span>
+                    [{story.code}] - {story.title}
+                  </span>
                 </label>
               ))}
             </div>

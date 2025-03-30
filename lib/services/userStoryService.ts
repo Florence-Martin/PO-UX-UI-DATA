@@ -2,11 +2,11 @@ import { db } from "../firebase";
 import {
   collection,
   getDocs,
-  addDoc,
   updateDoc,
   deleteDoc,
   doc,
   Timestamp,
+  setDoc,
 } from "firebase/firestore";
 import { UserStory } from "../types/userStory";
 
@@ -20,15 +20,34 @@ export const getAllUserStories = async (): Promise<UserStory[]> => {
   })) as UserStory[];
 };
 
-export const createUserStory = async (story: Omit<UserStory, "id">) => {
-  const now = Timestamp.now();
-  const newStory = {
-    ...story,
-    createdAt: now,
-    updatedAt: now,
+export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
+  const colRef = collection(db, "user_stories");
+
+  // Récupère tous les codes existants pour éviter les doublons
+  const snapshot = await getDocs(colRef);
+  const existingCodes = snapshot.docs.map((doc) => doc.data()?.code || "");
+
+  let nextNumber = 1;
+  let code = "";
+
+  // Génère un code unique du type US-001, US-002, ...
+  do {
+    code = `US-${String(nextNumber).padStart(3, "0")}`;
+    nextNumber++;
+  } while (existingCodes.includes(code));
+
+  const docRef = doc(colRef);
+  const story: UserStory = {
+    id: docRef.id,
+    code,
+    ...data,
+    createdAt: Timestamp.fromDate(new Date()),
+    updatedAt: Timestamp.fromDate(new Date()),
   };
-  await addDoc(collection(db, COLLECTION_NAME), newStory);
-};
+
+  await setDoc(docRef, story);
+  return story;
+}
 
 export const updateUserStory = async (
   id: string,

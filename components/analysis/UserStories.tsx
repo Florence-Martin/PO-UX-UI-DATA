@@ -237,20 +237,34 @@ export function UserStories() {
                   transition={{ duration: 0.3 }}
                   className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
                 >
-                  <p className="font-medium text-foreground flex items-center gap-2">
-                    📄 {story.title}
-                    <span
-                      className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
-                        story.priority === "high"
-                          ? "bg-red-500/10 text-red-500"
-                          : story.priority === "medium"
-                          ? "bg-yellow-500/10 text-yellow-500"
-                          : "bg-green-500/10 text-green-500"
-                      }`}
-                    >
-                      {story.priority}
-                    </span>
-                  </p>
+                  <div className="mb-3">
+                    <div className="flex items-start justify-between">
+                      {/* Code de la User Story */}
+                      {story.code && (
+                        <span className="text-lg font-mono tracking-wide text-muted-foreground">
+                          {story.code}
+                        </span>
+                      )}
+
+                      {/* Badge de priorité */}
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          story.priority === "high"
+                            ? "bg-red-500/10 text-red-500"
+                            : story.priority === "medium"
+                            ? "bg-yellow-500/10 text-yellow-500"
+                            : "bg-green-500/10 text-green-500"
+                        }`}
+                      >
+                        {story.priority}
+                      </span>
+                    </div>
+
+                    {/* Titre de la User Story */}
+                    <h3 className="mt-1 text-base font-semibold text-foreground leading-snug">
+                      {story.title}
+                    </h3>
+                  </div>
 
                   <p className="text-sm italic text-muted-foreground mb-2">
                     {story.description}

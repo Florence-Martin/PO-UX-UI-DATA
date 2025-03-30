@@ -31,12 +31,20 @@ export function UserStoryList() {
                   transition={{ duration: 0.3 }}
                   className="bg-background border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-base font-semibold text-foreground">
+                  <div className="mb-2 sm:mb-3">
+                    {story.code && (
+                      <div className="text-xs text-muted-foreground font-mono tracking-wide mb-1">
+                        {story.code}
+                      </div>
+                    )}
+                    <h3 className="text-base font-semibold text-foreground leading-snug">
                       {story.title}
                     </h3>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-2">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${
                         story.priority === "high"
                           ? "bg-red-100 text-red-700"
                           : story.priority === "medium"

@@ -9,6 +9,7 @@ import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { UserStory } from "@/lib/types/userStory";
 
+// Hook pour gérer les user stories
 export function useUserStories() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -99,6 +100,7 @@ export function useUserStories() {
     }
   };
 
+  // Fonction pour remplir le formulaire avec les données de la user story à éditer
   const handleEdit = (story: UserStory) => {
     setIsEditing(true);
     setEditingId(story.id || null);

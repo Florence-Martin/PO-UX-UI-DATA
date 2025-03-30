@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export', //pour exporter une app statique (sans backend)
   eslint: {
     ignoreDuringBuilds: true,
   },
