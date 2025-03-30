@@ -9,7 +9,7 @@ export const BannerInfo = () => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), 3000);
+    const timer = setTimeout(() => setVisible(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
