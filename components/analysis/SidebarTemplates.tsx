@@ -26,7 +26,7 @@ export function SidebarTemplates({
   onDeletePersona,
 }: SidebarTemplatesProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {templates.map(({ id, title, icon: Icon }) => (
         <Button
           key={id}

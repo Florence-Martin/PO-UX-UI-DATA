@@ -6,34 +6,37 @@ import { KanbanBoard } from "@/components/backlog/KanbanBoard";
 import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
 import { SprintPlanning } from "@/components/backlog/SprintPlanning";
 import { UserStoryList } from "@/components/backlog/UserStoryList";
-// import { PrioritizationBoard } from "@/components/backlog/PrioritizationBoard";
+import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 
-export default function BacklogPage() {
-  const tabs = [
-    { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
-    {
-      value: "sprints",
-      label: "Planning des Sprints",
-      component: <SprintPlanning />,
-    },
-    {
-      value: "user-stories",
-      label: "User Stories",
-      component: <UserStoryList />,
-    },
-    {
-      value: "priorisation",
-      label: "Priorisation",
-      component: <MoscowPrioritization />,
-    },
-  ];
+const tabs = [
+  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
+  {
+    value: "sprints",
+    label: "Planning des Sprints",
+    component: <SprintPlanning />,
+  },
+  {
+    value: "user-stories",
+    label: "User Stories",
+    component: <UserStoryList />,
+  },
+  {
+    value: "priorisation",
+    label: "Priorisation",
+    component: <MoscowPrioritization />,
+  },
+];
 
+export default function BacklogPage() {
   return (
-    <SectionTabsLayout
-      title="Backlog & Organisation Agile"
-      description="Gère les tâches du produit, les priorités, les sprints et les user stories pour assurer une livraison itérative."
-      tabs={tabs}
-    />
+    <div className="flex-1 space-y-4 px-4 sm:px-6 md:px-8 pt-6">
+      <BannerInfo />
+      <SectionTabsLayout
+        title="Backlog & Organisation Agile"
+        description="Gère les tâches du produit, les priorités, les sprints et les user stories pour assurer une livraison itérative."
+        tabs={tabs}
+      />
+    </div>
   );
 }

@@ -13,11 +13,6 @@ export function UserStoryList() {
     <div className="space-y-6">
       <Card>
         <CardHeader className="space-y-4">
-          <CardTitle className="flex items-center text-lg sm:text-xl">
-            <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
-            Toutes les User Stories
-          </CardTitle>
-
           <UserStorySearchBar onFilterChange={filterByPriority} hideAllOption />
         </CardHeader>
 

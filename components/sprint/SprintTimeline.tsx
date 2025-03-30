@@ -132,10 +132,7 @@ export default function SprintTimeline() {
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-foreground">
-            Timeline de Sprint (Scrum)
-          </h1>
+        <div className="text-left mb-6">
           <p className="mt-2 text-muted-foreground">Mars - Avril 2024</p>
         </div>
 
