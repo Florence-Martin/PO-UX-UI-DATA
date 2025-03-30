@@ -3,7 +3,7 @@ import { UserResearch } from "@/components/analysis/UserResearch";
 import { Wireframes } from "@/components/analysis/Wireframes";
 import Roadmap from "@/components/analysis/Roadmap";
 import { BannerInfo } from "@/components/banner/BannerInfo";
-import ClientTabsWrapper from "@/components/analysis/ClientTabsWrapper";
+import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 
 export default function AnalysisPage() {
   const tabs = [
@@ -32,7 +32,7 @@ export default function AnalysisPage() {
   return (
     <div className="flex-1 space-y-4 px-4 sm:px-6 md:px-8 pt-6">
       <BannerInfo />
-      <ClientTabsWrapper
+      <SectionTabsLayout
         title="Analyse Produit & Wireframes"
         description="Structure l'analyse UX grâce à des templates interactifs (questionnaire, interview, persona) et un éditeur de user stories connecté à vos wireframes et priorités produit."
         tabs={tabs}
