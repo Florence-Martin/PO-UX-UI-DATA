@@ -49,7 +49,9 @@ export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
         <div className="flex flex-wrap items-center justify-between gap-2 text-foreground font-medium text-base">
           {/* Partie gauche : icône + titre */}
           <div className="flex items-center gap-2">
-            {LucideIcon && <LucideIcon className={`w-5 h-5 ${iconColor}`} />}
+            {LucideIcon && (
+              <LucideIcon className={`w-5 h-5 ${iconColor} hidden sm:block`} />
+            )}
             {title}
           </div>
 

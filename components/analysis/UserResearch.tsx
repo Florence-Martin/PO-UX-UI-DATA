@@ -48,7 +48,7 @@ export function UserResearch() {
         </CardContent>
       </Card>
 
-      <Card className="col-span-2">
+      <Card className="col-span-1 sm:col-span-2">
         <CardHeader>
           <CardTitle>
             {activeTemplate ? title : "Sélectionnez un template"}
@@ -57,7 +57,7 @@ export function UserResearch() {
         <CardContent>
           {activeTemplate ? (
             <div className="space-y-4">
-              <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+              <ScrollArea className="h-[400px] w-full rounded-md border">
                 <Textarea
                   className="min-h-[350px] font-mono"
                   value={content}

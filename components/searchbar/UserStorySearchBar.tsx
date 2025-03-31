@@ -1,17 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { RotateCcw } from "lucide-react";
+import { PriorityFilterSelect } from "./PriorityFilterSelect";
+import { SearchUserStoryInput } from "./SearchUserStoryInput";
 
 interface UserStorySearchBarProps {
   onFilterChange: (priority: string) => void;
@@ -23,84 +15,42 @@ interface UserStorySearchBarProps {
 export const UserStorySearchBar = ({
   onFilterChange,
   onSearchChange,
-  searchValue = "", // 🔧 correction ici
+  searchValue = "",
   hideAllOption = false,
 }: UserStorySearchBarProps) => {
-  const router = useRouter();
   const [priority, setPriority] = useState("high");
-
-  // 🔁 Debounce pour limiter les appels de recherche
   const [localSearch, setLocalSearch] = useState(searchValue);
 
+  // Synchronise `localSearch` avec `searchValue` (prop)
   useEffect(() => {
-    const delay = setTimeout(() => {
-      onSearchChange?.(localSearch);
-    }, 300);
-
-    return () => clearTimeout(delay);
-  }, [localSearch]);
-
-  useEffect(() => {
-    setLocalSearch(searchValue); // 🔄 garde le champ synchro si modif externe
+    setLocalSearch(searchValue);
   }, [searchValue]);
 
-  const handlePriorityChange = (value: string) => {
-    setPriority(value);
-    if (value === "all") {
-      router.push("/user-stories");
-    } else {
-      onFilterChange(value);
-    }
-  };
+  // Appelle `onSearchChange` avec un délai (debounce)
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      onSearchChange?.(localSearch.trim().toLowerCase());
+    }, 300);
 
-  const handleReset = () => {
-    setPriority("high");
-    setLocalSearch("");
-    onFilterChange("high");
-    onSearchChange?.("");
-  };
+    return () => clearTimeout(debounce); // Nettoie le timeout précédent
+  }, [localSearch, onSearchChange]);
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
-      {/* Zone de recherche */}
-      <div className="w-full sm:max-w-xs space-y-1">
-        <Label htmlFor="search">Rechercher par code ou mot-clé</Label>
-        <Input
-          id="search"
-          placeholder="Ex: US-001, dashboard, persona..."
+    <div className="flex flex-col md:justify-between md:items-end gap-4 mb-4">
+      {/* Partie gauche : Search input */}
+      {/* <div className="w-full md:max-w-md">
+        <SearchUserStoryInput
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
-          className="text-sm"
         />
-      </div>
+      </div> */}
 
-      {/* Filtre + reset */}
-      <div className="flex items-end gap-2">
-        <div className="space-y-1">
-          <Label htmlFor="priority">Filtrer par priorité</Label>
-          <Select value={priority} onValueChange={handlePriorityChange}>
-            <SelectTrigger className="w-[180px] text-sm">
-              <SelectValue placeholder="Priorité" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="high">Haute</SelectItem>
-              <SelectItem value="medium">Moyenne</SelectItem>
-              <SelectItem value="low">Basse</SelectItem>
-              {!hideAllOption && (
-                <SelectItem value="all">Toutes (page dédiée)</SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Bouton Réinitialiser */}
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Réinitialiser
-        </button>
+      {/* Partie droite : filtre priorité */}
+      <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-end">
+        <PriorityFilterSelect
+          onFilterChange={onFilterChange}
+          onSearchChange={onSearchChange}
+        />
       </div>
     </div>
   );

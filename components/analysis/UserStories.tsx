@@ -62,7 +62,7 @@ export function UserStories() {
   }, [isEditing]);
 
   return (
-    <div className="grid gap-6 px-4 sm:px-6 lg:px-8">
+    <div className="grid gap-6 sm:px-6 lg:px-8">
       {/* Formulaire + liens */}
       <div className="grid grid-cols-1  gap-6">
         {/* Formulaire */}
@@ -281,7 +281,7 @@ export function UserStories() {
                     {story.acceptanceCriteria}
                   </p>
 
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div className="flex flex-wrap justify-end gap-2 pt-2">
                     <Button
                       variant="secondary"
                       size="sm"

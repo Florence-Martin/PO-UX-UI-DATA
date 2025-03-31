@@ -191,7 +191,7 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
           <Button
             type="button"
             onClick={handleAddItem}
-            variant="ghost"
+            variant="outline"
             size="sm"
             className="gap-2"
           >

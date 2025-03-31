@@ -22,7 +22,7 @@ export default function SectionTabsLayout({
   tabs,
 }: SectionTabsLayoutProps) {
   return (
-    <div className="flex-1 space-y-4 px-4 sm:px-6 md:px-8 pt-6">
+    <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           {title}

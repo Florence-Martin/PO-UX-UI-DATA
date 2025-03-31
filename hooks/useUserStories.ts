@@ -44,26 +44,14 @@ export function useUserStories() {
   }, []);
 
   useEffect(() => {
-    let filtered = [...userStories];
-
-    // 1. Filtrage par priorité
-    if (selectedPriority !== "all") {
-      filtered = filtered.filter(
-        (story) => story.priority === selectedPriority
-      );
-    }
-
-    // 2. Filtrage par code OU titre
-    if (searchTerm.trim() !== "") {
-      const lower = searchTerm.trim().toLowerCase();
-
-      filtered = filtered.filter((story) => {
-        const codeMatch = story.code?.toLowerCase().includes(lower);
-        const titleMatch = story.title?.toLowerCase().includes(lower);
-        return codeMatch || titleMatch;
-      });
-    }
-
+    const filtered = userStories.filter((story) => {
+      const matchesPriority =
+        selectedPriority === "all" || story.priority === selectedPriority;
+      const matchesSearch =
+        story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        story.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesPriority && matchesSearch;
+    });
     setFilteredStories(filtered);
   }, [userStories, selectedPriority, searchTerm]);
 

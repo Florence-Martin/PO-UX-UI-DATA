@@ -19,7 +19,7 @@ const tabs = [
 
 export default function SprintPage() {
   return (
-    <div className="flex-1 space-y-4 px-4 sm:px-6 md:px-8 pt-6">
+    <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <BannerInfo />
       <SectionTabsLayout
         title="Sprint"

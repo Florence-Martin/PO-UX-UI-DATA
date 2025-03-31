@@ -6,6 +6,7 @@ import { BacklogTask } from "@/lib/types/backlogTask";
 import { UserStory } from "@/lib/types/userStory";
 import { getAllUserStories } from "@/lib/services/userStoryService";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -189,21 +190,22 @@ export function EditTaskModal({
         </div>
 
         <div className="flex justify-between pt-4">
-          <button
-            className="text-red-600 border border-red-600 px-4 py-1 rounded hover:bg-red-100 dark:hover:bg-red-900"
+          <Button
+            variant="destructive"
+            className=" border-red-600 px-4 py-1 rounded hover:bg-red-100 dark:hover:bg-red-900"
             onClick={() => onDelete(edited.id!)}
           >
             Supprimer
-          </button>
-          <button
-            className="bg-black dark:bg-white text-white dark:text-black px-4 py-1 rounded hover:opacity-90"
+          </Button>
+          <Button
+            className="bg-gray-800 dark:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors"
             onClick={() => {
               onSave(edited);
               onClose();
             }}
           >
             Enregistrer
-          </button>
+          </Button>
         </div>
       </div>
     </div>
