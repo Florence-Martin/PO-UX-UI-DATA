@@ -8,6 +8,7 @@ import {
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { UserStory } from "@/lib/types/userStory";
+import { removeUserStoryIdFromTasks } from "@/lib/services/backlogTasksService";
 
 // Hook pour gérer les user stories
 export function useUserStories() {
@@ -121,6 +122,7 @@ export function useUserStories() {
     try {
       setLoading(true);
       await deleteUserStory(id);
+      await removeUserStoryIdFromTasks(id);
       setUserStories((prev) => prev.filter((story) => story.id !== id));
       toast.success("User story supprimée ❌");
       setError(null);

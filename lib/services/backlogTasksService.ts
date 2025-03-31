@@ -6,6 +6,9 @@ import {
   deleteDoc,
   doc,
   Timestamp,
+  query,
+  where,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { BacklogTask } from "../types/backlogTask";
@@ -49,4 +52,22 @@ export const updateBacklogTask = async (
 export const deleteBacklogTask = async (id: string) => {
   const taskRef = doc(db, COLLECTION_NAME, id);
   await deleteDoc(taskRef);
+};
+
+// Supprime l’ID d’une user story dans toutes les tâches qui la contiennent
+export const removeUserStoryIdFromTasks = async (userStoryId: string) => {
+  const tasksRef = collection(db, COLLECTION_NAME);
+  const snapshot = await getDocs(
+    query(tasksRef, where("userStoryIds", "array-contains", userStoryId))
+  );
+
+  const updatePromises = snapshot.docs.map((docSnap) => {
+    const taskRef = doc(db, COLLECTION_NAME, docSnap.id);
+    return updateDoc(taskRef, {
+      userStoryIds: arrayRemove(userStoryId),
+      updatedAt: Timestamp.now(),
+    });
+  });
+
+  await Promise.all(updatePromises);
 };

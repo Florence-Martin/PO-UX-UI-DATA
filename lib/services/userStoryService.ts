@@ -12,6 +12,7 @@ import { UserStory } from "../types/userStory";
 
 const COLLECTION_NAME = "user_stories";
 
+// Récupère toutes les user stories
 export const getAllUserStories = async (): Promise<UserStory[]> => {
   const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
   return querySnapshot.docs.map((doc) => ({
@@ -20,6 +21,7 @@ export const getAllUserStories = async (): Promise<UserStory[]> => {
   })) as UserStory[];
 };
 
+// Création d'une nouvelle user story
 export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
   const colRef = collection(db, "user_stories");
 
@@ -49,6 +51,7 @@ export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
   return story;
 }
 
+// Mise à jour user story par son ID
 export const updateUserStory = async (
   id: string,
   story: Partial<UserStory>
@@ -60,7 +63,19 @@ export const updateUserStory = async (
   });
 };
 
+// Supprime une user story par son ID
 export const deleteUserStory = async (id: string) => {
   const storyRef = doc(db, COLLECTION_NAME, id);
   await deleteDoc(storyRef);
+};
+
+// Récupère les IDs des user stories utilisées dans les tâches
+export const getUsedUserStoryIds = async (): Promise<string[]> => {
+  const querySnapshot = await getDocs(collection(db, "backlog_tasks"));
+  const usedIds = new Set<string>();
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    (data.userStoryIds || []).forEach((id: string) => usedIds.add(id));
+  });
+  return Array.from(usedIds);
 };
