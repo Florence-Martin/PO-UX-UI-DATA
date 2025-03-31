@@ -167,7 +167,6 @@ export function EditTaskModal({
                       <Link
                         href={`/user-stories#${story.id}`}
                         className="hover:underline text-primary"
-                        target="_blank"
                         rel="noopener noreferrer"
                       >
                         [{story.code}] - {story.title}

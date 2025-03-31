@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,36 +17,42 @@ interface PriorityFilterSelectProps {
   onFilterChange: (priority: string) => void;
   onSearchChange?: (search: string) => void;
   searchValue?: string;
-  hideAllOption?: boolean;
 }
 
 export const PriorityFilterSelect = ({
   onFilterChange,
   onSearchChange,
-  searchValue = "", // 🔧 correction ici
-  hideAllOption = false,
+  searchValue = "",
 }: PriorityFilterSelectProps) => {
   const router = useRouter();
-  const [priority, setPriority] = useState("high");
+  const pathname = usePathname();
 
-  // 🔁 Debounce pour limiter les appels de recherche
+  const isUserStoriesPage = pathname === "/user-stories";
+  const defaultPriority = isUserStoriesPage ? "all" : "high";
+
+  const [priority, setPriority] = useState(defaultPriority);
   const [localSearch, setLocalSearch] = useState(searchValue);
+
+  useEffect(() => {
+    onFilterChange(priority);
+  }, [priority]);
+
+  useEffect(() => {
+    setLocalSearch(searchValue);
+  }, [searchValue]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
       onSearchChange?.(localSearch);
     }, 300);
-
     return () => clearTimeout(delay);
   }, [localSearch]);
 
-  useEffect(() => {
-    setLocalSearch(searchValue); // 🔄 garde le champ synchro si modif externe
-  }, [searchValue]);
-
   const handlePriorityChange = (value: string) => {
     setPriority(value);
-    if (value === "all") {
+
+    // Redirige uniquement si on n'est PAS sur /user-stories
+    if (value === "all" && !isUserStoriesPage) {
       router.push("/user-stories");
     } else {
       onFilterChange(value);
@@ -54,9 +60,9 @@ export const PriorityFilterSelect = ({
   };
 
   const handleReset = () => {
-    setPriority("high");
+    setPriority(defaultPriority);
     setLocalSearch("");
-    onFilterChange("high");
+    onFilterChange(defaultPriority);
     onSearchChange?.("");
   };
 
@@ -74,9 +80,11 @@ export const PriorityFilterSelect = ({
               <SelectItem value="high">Haute</SelectItem>
               <SelectItem value="medium">Moyenne</SelectItem>
               <SelectItem value="low">Basse</SelectItem>
-              {!hideAllOption && (
-                <SelectItem value="all">Toutes (page dédiée)</SelectItem>
-              )}
+              <SelectItem value="all">
+                {isUserStoriesPage
+                  ? "Toutes les priorités"
+                  : "Voir toutes (redir.)"}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
