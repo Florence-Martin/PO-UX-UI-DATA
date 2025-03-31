@@ -38,7 +38,7 @@ const iconMap = {
 };
 
 export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
-  const { icon, iconColor, title, userStory, items, status } = data;
+  const { icon, iconColor, title, productVision, items, status } = data;
 
   const LucideIcon = getLucideIcon(icon);
 
@@ -83,9 +83,9 @@ export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
           </div>
         </div>
 
-        {/* Contexte user story */}
+        {/* Contexte */}
         <blockquote className="text-muted-foreground italic text-sm border-l-2 border-muted pl-4 mt-2">
-          {userStory}
+          {productVision}
         </blockquote>
 
         {/* Liste des éléments */}

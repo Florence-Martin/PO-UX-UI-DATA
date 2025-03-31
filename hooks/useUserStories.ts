@@ -22,6 +22,8 @@ export function useUserStories() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedPriority, setSelectedPriority] = useState("high");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -29,14 +31,7 @@ export function useUserStories() {
         setLoading(true);
         const stories = await getAllUserStories();
         setUserStories(stories);
-
-        // Par défaut, afficher les user stories avec une priorité "high"
-        const highPriorityStories = stories.filter(
-          (story) => story.priority === "high"
-        );
-        setFilteredStories(highPriorityStories);
-
-        setError(null); // Réinitialise l'erreur en cas de succès
+        setError(null);
       } catch (err) {
         console.error("Erreur lors de la récupération des user stories :", err);
         setError("Impossible de charger les user stories. Veuillez réessayer.");
@@ -47,6 +42,30 @@ export function useUserStories() {
     };
     fetchStories();
   }, []);
+
+  useEffect(() => {
+    let filtered = [...userStories];
+
+    // 1. Filtrage par priorité
+    if (selectedPriority !== "all") {
+      filtered = filtered.filter(
+        (story) => story.priority === selectedPriority
+      );
+    }
+
+    // 2. Filtrage par code OU titre
+    if (searchTerm.trim() !== "") {
+      const lower = searchTerm.trim().toLowerCase();
+
+      filtered = filtered.filter((story) => {
+        const codeMatch = story.code?.toLowerCase().includes(lower);
+        const titleMatch = story.title?.toLowerCase().includes(lower);
+        return codeMatch || titleMatch;
+      });
+    }
+
+    setFilteredStories(filtered);
+  }, [userStories, selectedPriority, searchTerm]);
 
   const resetForm = () => {
     setIsEditing(false);
@@ -89,8 +108,6 @@ export function useUserStories() {
       resetForm();
       const updatedStories = await getAllUserStories();
       setUserStories(updatedStories);
-      setFilteredStories(updatedStories);
-      setError(null); // Réinitialise l'erreur en cas de succès
     } catch (err) {
       console.error("Erreur lors de la sauvegarde de la user story :", err);
       setError("Impossible de sauvegarder la user story. Veuillez réessayer.");
@@ -100,7 +117,6 @@ export function useUserStories() {
     }
   };
 
-  // Fonction pour remplir le formulaire avec les données de la user story à éditer
   const handleEdit = (story: UserStory) => {
     setIsEditing(true);
     setEditingId(story.id || null);
@@ -118,7 +134,6 @@ export function useUserStories() {
       setLoading(true);
       await deleteUserStory(id);
       setUserStories((prev) => prev.filter((story) => story.id !== id));
-      setFilteredStories((prev) => prev.filter((story) => story.id !== id));
       toast.success("User story supprimée ❌");
       setError(null);
     } catch (err) {
@@ -131,14 +146,7 @@ export function useUserStories() {
   };
 
   const filterByPriority = (priority: string) => {
-    if (!priority || priority === "all") {
-      setFilteredStories(userStories);
-    } else {
-      const filtered = userStories.filter(
-        (story) => story.priority === priority
-      );
-      setFilteredStories(filtered);
-    }
+    setSelectedPriority(priority);
   };
 
   return {
@@ -155,6 +163,8 @@ export function useUserStories() {
     userStories,
     filteredStories,
     filterByPriority,
+    searchTerm,
+    setSearchTerm,
     isEditing,
     handleSave,
     handleEdit,

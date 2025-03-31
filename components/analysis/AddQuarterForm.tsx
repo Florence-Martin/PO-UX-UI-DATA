@@ -12,9 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash } from "lucide-react";
+import { Plus } from "lucide-react";
 import { RoadmapQuarter } from "@/lib/types/roadmapQuarter";
-import { v4 as uuidv4 } from "uuid";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
@@ -26,7 +25,9 @@ interface AddQuarterFormProps {
 
 export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
   const [title, setTitle] = useState(initialData?.title || "");
-  const [userStory, setUserStory] = useState(initialData?.userStory || "");
+  const [productVision, setProductVision] = useState(
+    initialData?.productVision || ""
+  );
   const [status, setStatus] = useState<RoadmapQuarter["status"]>(
     initialData?.status || "upcoming"
   );
@@ -58,7 +59,7 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
     .replace(/[^a-z0-9-]/g, "");
 
   const handleSubmit = async () => {
-    if (!title.trim() || !userStory.trim()) {
+    if (!title.trim() || !productVision.trim()) {
       toast.error("Merci de remplir tous les champs obligatoires.");
       return;
     }
@@ -68,7 +69,7 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
     const newQuarter: RoadmapQuarter = {
       id: initialData?.id || generatedId,
       title: title.trim(),
-      userStory: userStory.trim(),
+      productVision: productVision.trim(),
       status,
       icon,
       iconColor,
@@ -99,14 +100,14 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="story">
-            User story <span className="text-red-500">*</span>
+          <Label htmlFor="productVision">
+            Vision produit <span className="text-red-500">*</span>
           </Label>
           <Textarea
-            id="story"
-            value={userStory}
-            onChange={(e) => setUserStory(e.target.value)}
-            placeholder="Ex : En tant que PO, je souhaite..."
+            id="productVision"
+            value={productVision}
+            onChange={(e) => setProductVision(e.target.value)}
+            placeholder="Pourquoi on le fait et où on va..."
           />
         </div>
 

@@ -7,13 +7,24 @@ import { motion } from "framer-motion";
 import { UserStorySearchBar } from "@/components/searchbar/UserStorySearchBar";
 
 export function UserStoryList() {
-  const { filteredStories, filterByPriority } = useUserStories();
+  const { filteredStories, filterByPriority, searchTerm, setSearchTerm } =
+    useUserStories();
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader className="space-y-4">
-          <UserStorySearchBar onFilterChange={filterByPriority} hideAllOption />
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <ClipboardList className="w-5 h-5" />
+            User Stories existantes
+          </CardTitle>
+
+          <UserStorySearchBar
+            onFilterChange={filterByPriority}
+            onSearchChange={setSearchTerm}
+            hideAllOption={false}
+            searchValue={searchTerm} // 👈 ajouté pour contrôle du champ
+          />
         </CardHeader>
 
         <CardContent>

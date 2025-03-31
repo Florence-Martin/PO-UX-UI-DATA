@@ -4,15 +4,21 @@ export interface RoadmapQuarter {
   id: string;
   title: string;
   icon: string;
-  iconColor: string; //
-  userStory: string;
+  iconColor: string;
   status: "done" | "in-progress" | "upcoming";
+
+  productVision: string;
+
+  // Objectifs concrets (pas modifiables une fois créés)
   items: Array<{
     label: string;
     description: string;
   }>;
-  userStoryIds?: string[]; // Liste des IDs des user stories liées dans le backlog
-  taskIds?: string[]; // Liste des IDs des tâches liées dans le backlog
+
+  // Lien vers les entités du backlog (user stories + tasks)
+  userStoryIds?: string[];
+  taskIds?: string[];
+
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
