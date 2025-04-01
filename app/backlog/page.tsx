@@ -13,7 +13,7 @@ const tabs = [
   { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
   {
     value: "sprints",
-    label: "Planning des Sprints",
+    label: "Sprint Planning",
     component: <SprintPlanning />,
   },
   {

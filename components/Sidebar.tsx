@@ -6,7 +6,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import {
   LayoutDashboard,
   FileSearch,
-  Trello,
+  UsersRound,
+  SquareKanban,
   Database,
   CheckSquare,
   Menu,
@@ -30,12 +31,12 @@ const navigation = [
   {
     name: "Backlog & Agile",
     href: "/backlog",
-    icon: Trello,
+    icon: SquareKanban,
   },
   {
     name: "Sprint",
     href: "/sprint",
-    icon: Trello,
+    icon: SquareKanban,
   },
   {
     name: "Collaboration BI",
@@ -47,6 +48,7 @@ const navigation = [
     href: "/validation",
     icon: CheckSquare,
   },
+  { name: "Agile Scrum method", href: "/scrum-glossary", icon: UsersRound },
 ];
 
 export function Sidebar() {

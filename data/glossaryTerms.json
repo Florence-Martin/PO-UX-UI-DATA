@@ -1,0 +1,82 @@
+[
+  {
+    "term": "Roadmap",
+    "definition": "Vision macro. Vue d'ensemble des grands jalons et objectifs produits sur une période donnée (trimestres, semestres…)."
+  },
+  {
+    "term": "Epic",
+    "definition": "Grande fonctionnalité regroupant plusieurs User Stories liées à un même objectif produit."
+  },
+  {
+    "term": "User Story",
+    "definition": "Fonctionnalité décrite du point de vue de l'utilisateur final, souvent sous forme : 'En tant que... je veux... afin de...'."
+  },
+  {
+    "term": "Acceptance Criteria",
+    "definition": "Conditions précises à remplir pour qu'une User Story soit considérée comme terminée."
+  },
+  {
+    "term": "Prioritization (MoSCoW)",
+    "definition": "Méthode de priorisation : Must have / Should have / Could have / Won't have"
+  },
+  {
+    "term": "Story Points",
+    "definition": "Unité d'estimation relative de l'effort requis pour développer une User Story."
+  },
+  {
+    "term": "Capacity",
+    "definition": "Charge de travail que l'équipe peut absorber sur un sprint, en fonction de ses disponibilités."
+  },
+  {
+    "term": "Velocity",
+    "definition": "Nombre moyen de Story Points livrés par l’équipe à chaque sprint (vitesse de livraison)."
+  },
+  {
+    "term": "Burndown & Burn-up Charts",
+    "definition": "Graphiques représentant le travail restant (burndown) ou accompli (burn-up) au fil du temps."
+  },
+  {
+    "term": "Timeline",
+    "definition": "Représentation visuelle et chronologique des jalons, tâches ou releases prévues dans le projet."
+  },
+  {
+    "term": "Sprint Board",
+    "definition": "Tableau Kanban utilisé pour visualiser l’état des tâches pendant un sprint (To Do / In Progress / In Test / Done)."
+  },
+  {
+    "term": "Product Owner",
+    "definition": "Responsable de la vision produit et de la gestion du Product Backlog, garantissant la valeur business. Il est l’interface entre l’équipe et les parties prenantes, tout en gardant l'alignement entre les besoins utilisateurs, l'objectif business et les contraintes techniques."
+  },
+  {
+    "term": "Scrum Master",
+    "definition": "Facilitateur du cadre Scrum, veille à la bonne application des principes et au bon fonctionnement de l’équipe."
+  },
+  {
+    "term": "Tech lead",
+    "definition": "Référent technique de l'équipe de développement, garant des choix d’architecture et des bonnes pratiques."
+  },
+  {
+    "term": "Increment",
+    "definition": "Version fonctionnelle et potentiellement livrable du produit à la fin d’un sprint."
+  },
+  {
+    "term": "Iterative",
+    "definition": "Approche de développement basée sur des cycles courts et répétés (sprints), permettant des ajustements réguliers."
+  },
+  {
+    "term": "MVP",
+    "definition": "Produit Minimum Viable : version initiale d’un produit avec juste assez de fonctionnalités pour satisfaire les premiers utilisateurs et recueillir des feedbacks."
+  },
+  {
+    "term": "Lean",
+    "definition": "Méthodologie visant à maximiser la valeur tout en minimisant le gaspillage, souvent associée à l'approche Agile."
+  },
+  {
+    "term": "Kanban",
+    "definition": "Méthode de gestion visuelle du travail, permettant de suivre l'avancement des tâches et d'optimiser le flux de travail."
+  },
+  {
+    "term": "Backlog Grooming",
+    "definition": "Processus d'affinage et de priorisation du Product Backlog, souvent réalisé en continu."
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "term": "Backlog Refinement",
+    "definition": "Amélioration continue du Product Backlog : clarification, découpage, estimation et priorisation des User Stories."
+  },
+  {
+    "term": "Product Backlog",
+    "definition": "Liste priorisée et évolutive des fonctionnalités, bugs ou améliorations à développer."
+  },
+  {
+    "term": "Sprint Planning",
+    "definition": "Réunion de lancement de sprint où l’équipe sélectionne les User Stories à développer."
+  },
+  {
+    "term": "Sprint Backlog",
+    "definition": "Liste des tâches techniques issues des User Stories sélectionnées pour un sprint."
+  },
+  {
+    "term": "Sprint",
+    "definition": "Itération de 1 à 4 semaines pendant laquelle l’équipe développe un incrément fonctionnel."
+  },
+
+  {
+    "term": "Daily Stand-Up",
+    "definition": "Réunion quotidienne de 15 min pour synchroniser l’équipe, identifier les blocages et planifier la journée."
+  },
+  {
+    "term": "Sprint Review",
+    "definition": "Présentation du travail réalisé à la fin du sprint pour recueillir du feedback des parties prenantes."
+  },
+  {
+    "term": "Sprint Retrospective",
+    "definition": "Réunion d’amélioration continue après chaque sprint pour identifier ce qui a bien fonctionné et ce qui peut être amélioré."
+  },
+  {
+    "term": "Release",
+    "definition": "Mise à disposition officielle d’un lot de fonctionnalités pour les utilisateurs finaux."
+  }
+]

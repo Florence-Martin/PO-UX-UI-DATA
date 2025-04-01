@@ -1,0 +1,18 @@
+[
+  { "label": "Roadmap", "color": "#4FC3F7" },
+  { "label": "Backlog Refinement", "color": "#4DB6AC" },
+  { "label": "Product Vision", "color": "#FF7043" },
+  { "label": "Product Roadmap", "color": "#FFAB91" },
+  { "label": "Release Planning", "color": "#81D4FA" },
+  { "label": "Release Backlog", "color": "#80DEEA" },
+  { "label": "Release Planning", "color": "#A5D6A7" },
+  { "label": "Release Review", "color": "#FFE082" },
+  { "label": "Release Retrospective", "color": "#FFCC80" },
+  { "label": "Product Backlog", "color": "#64B5F6" },
+  { "label": "Sprint", "color": "#FFA726" },
+  { "label": "Sprint Planning", "color": "#FFB74D" },
+  { "label": "Sprint Review", "color": "#9575CD" },
+  { "label": "Sprint Backlog", "color": "#BA68C8" },
+  { "label": "Daily Stand-Up", "color": "#F06292" },
+  { "label": "Sprint Retrospective", "color": "#7986CB" }
+]

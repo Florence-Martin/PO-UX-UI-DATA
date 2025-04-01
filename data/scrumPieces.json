@@ -1,0 +1,10 @@
+[
+  { "title": "Backlog Refinement", "color": "bg-blue-500" },
+  { "title": "Product Backlog", "color": "bg-purple-500" },
+  { "title": "Sprint", "color": "bg-green-500" },
+  { "title": "Sprint Planning", "color": "bg-indigo-500" },
+  { "title": "Sprint Backlog", "color": "bg-pink-500" },
+  { "title": "Daily Stand-Up", "color": "bg-yellow-500" },
+  { "title": "Sprint Review", "color": "bg-red-500" },
+  { "title": "Sprint Retrospective", "color": "bg-orange-500" }
+]
