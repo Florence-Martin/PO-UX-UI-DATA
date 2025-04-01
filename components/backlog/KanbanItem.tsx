@@ -4,7 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import { Grab, MousePointerClick } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface KanbanItemProps {
   task: BacklogTask;
@@ -37,7 +43,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
   return (
     <div ref={setNodeRef} style={style}>
       <Card
-        className="bg-background hover:ring-2 ring-primary mr-1"
+        className="bg-background hover:ring-2 ring-primary mr-1 cursor-pointer"
         onClick={() => {
           if (!isDragging) onClick?.(task); // Empêche l'ouverture de la modal pendant le click
         }}
@@ -47,14 +53,23 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
             <div className="font-medium">{task.title}</div>
 
             {/* Handle de drag */}
-            <div
-              {...listeners}
-              {...attributes}
-              className="cursor-grab active:cursor-grabbing"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <GripVertical className="h-4 w-4 opacity-50" />
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    {...listeners}
+                    {...attributes}
+                    onClick={(e) => e.stopPropagation()}
+                    className="cursor-grab active:cursor-grabbing p-1 rounded-full bg-muted hover:bg-muted/70 animate-pulse"
+                  >
+                    <Grab className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">
+                  Glisser pour déplacer
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
 
           <div className="flex items-center justify-between text-sm">
