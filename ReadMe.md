@@ -51,6 +51,8 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 
 - Grilles modulables pour wireframes basse fidélité
 
+- Grille wireframe paramétrable
+
 - Composants visuels pour prototypage rapide
 
 - Intégration ou liens vers maquettes Figma
@@ -85,6 +87,8 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 
   - Vélocité, story points, complétion
 
+- Sprint planning visuel
+
 - Priorisation MoSCoW : Must / Should / Could / Won’t
 
 ⸻
@@ -92,6 +96,8 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 ### 4. 🤖 Collaboration BI
 
 - Documentation des KPIs : nom, définition, source de données, objectif métier
+
+- Explorateur de donnÃ©es + A/B test
 
 - Liaison possible avec datasets fictifs ou APIs mockées
 
@@ -114,6 +120,34 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 - Intégration possible d’outils externes (JIRA, Postman, etc.)
 
 ⸻
+
+### 📅 Roadmap Produit
+
+| Trimestre   | Objectif principal                              |
+| ----------- | ----------------------------------------------- |
+| **Q1 2025** | Structuration UX et création de personas        |
+| **Q2 2025** | Wireframes dynamiques + user stories connectées |
+| **Q3 2025** | Backlog agile et Sprint Planning                |
+| **Q4 2025** | Dashboard UX/Data + indicateurs                 |
+| **Q1 2026** | Intégration IA & automatisations PO             |
+
+⸻
+
+### 🤖 Teaser IA
+
+L’intégration de l’IA dans le **PO UX/Data Kit** est en cours de conception pour transformer la manière dont les Product Owners analysent, priorisent et planifient leur produit.
+
+Voici un aperçu de ce que l’IA pourrait bientôt rendre possible dans l'application :
+
+- **Génération automatique de personas et user stories** à partir de prompts (ex : secteur, type de produit, profil cible)
+- **Suggestions UX** pour améliorer l’engagement ou la conversion sur la base de vos wireframes ou données utilisateurs
+- **Proposition automatique de KPIs** adaptés à votre produit pour structurer vos dashboards
+- **Préparation assistée des sprints** en fonction des priorités, insights et contraintes métier
+- **Simulation de tests utilisateurs** avec feedback généré automatiquement et scoring de vos livrables
+
+> **Objectif** : accélérer la phase de cadrage produit tout en renforçant la cohérence et la valeur métier.
+
+🧬 L'IA sera disponible progressivement à partir du **T1 2026**, avec une première version en local puis via API.
 
 ### ⚙️ Stack technique
 
