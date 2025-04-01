@@ -1,13 +1,13 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 export type TabItem = {
   value: string;
   label: string;
-  component: ReactNode;
+  component: ReactNode | (() => ReactNode);
 };
 
 type SectionTabsLayoutProps = {
@@ -27,22 +27,24 @@ export default function SectionTabsLayout({
   const [activeTab, setActiveTab] = useState(tabs[0].value);
 
   useEffect(() => {
-    if (tabParam && tabs.some((tab) => tab.value === tabParam)) {
-      setActiveTab(tabParam);
-    }
-  }, [tabParam, tabs]);
+    if (!tabParam) return;
 
-  // Scroll vers l’ancre #user-stories-list si tab=documentation
-  useEffect(() => {
-    if (tabParam === "documentation") {
-      const el = document.querySelector("#user-stories-list");
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 150);
+    // Vérifie si l’onglet est valide
+    const matchedTab = tabs.find((tab) => tab.value === tabParam);
+    if (matchedTab) {
+      setActiveTab(tabParam);
+
+      // Si onglet "documentation", scroll vers l'ancre
+      if (tabParam === "documentation") {
+        const el = document.querySelector("#user-stories-list");
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 150);
+        }
       }
     }
-  }, [tabParam]);
+  }, [tabParam, tabs]);
 
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
@@ -73,7 +75,9 @@ export default function SectionTabsLayout({
 
         {tabs.map((tab) => (
           <TabsContent key={tab.value} value={tab.value} className="space-y-4">
-            {tab.component}
+            {typeof tab.component === "function"
+              ? tab.component()
+              : tab.component}
           </TabsContent>
         ))}
       </Tabs>

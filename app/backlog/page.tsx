@@ -1,6 +1,6 @@
 // # Kanban backlog (tasks liées aux user stories)
 
-"use client";
+import { Suspense } from "react";
 
 import { KanbanBoard } from "@/components/backlog/KanbanBoard";
 import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
@@ -32,11 +32,13 @@ export default function BacklogPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <BannerInfo />
-      <SectionTabsLayout
-        title="Backlog & Organisation Agile"
-        description="Gère les tâches du produit, les priorités, les sprints et les user stories pour assurer une livraison itérative."
-        tabs={tabs}
-      />
+      <Suspense fallback={<p>Loading tabs...</p>}>
+        <SectionTabsLayout
+          title="Backlog & Organisation Agile"
+          description="Gère les tâches du produit, les priorités, les sprints et les user stories pour assurer une livraison itérative."
+          tabs={tabs}
+        />
+      </Suspense>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { UserStories } from "@/components/analysis/UserStories";
 import { UserResearch } from "@/components/analysis/UserResearch";
 import { Wireframes } from "@/components/analysis/Wireframes";
@@ -32,11 +33,13 @@ export default function AnalysisPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <BannerInfo />
-      <SectionTabsLayout
-        title="Analyse Produit & Wireframes"
-        description="Structure l'analyse UX grâce à des templates interactifs (questionnaire, interview, persona) et un éditeur de user stories connecté à vos wireframes et priorités produit."
-        tabs={tabs}
-      />
+      <Suspense fallback={<p>Loading tabs...</p>}>
+        <SectionTabsLayout
+          title="Analyse Produit & Wireframes"
+          description="Structure l'analyse UX grâce à des templates interactifs (questionnaire, interview, persona) et un éditeur de user stories connecté à vos wireframes et priorités produit."
+          tabs={tabs}
+        />
+      </Suspense>
     </div>
   );
 }
