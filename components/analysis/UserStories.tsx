@@ -16,7 +16,7 @@ import {
 import { motion } from "framer-motion";
 import { useUserStories } from "@/hooks/useUserStories";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
-import { ArrowDownToDot, List, Notebook } from "lucide-react";
+import { ArrowDownToDot, List, Notebook, Pen } from "lucide-react";
 import Link from "next/link";
 import {
   Tooltip,
@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export function UserStories() {
   const {
@@ -34,6 +35,7 @@ export function UserStories() {
     storyPoints,
     acceptanceCriteria,
     isEditing,
+    editingCode,
     setTitle,
     setDescription,
     setPriority,
@@ -74,6 +76,15 @@ export function UserStories() {
                 <span className="text-base sm:text-lg">
                   Éditeur de User Stories
                 </span>
+                {isEditing && editingCode && (
+                  <span className="ml-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary border border-primary/20 shadow-sm animate-pulse">
+                    <Pen className="w-3 h-3" />
+                    <span>En modification</span>
+                    <span className="font-mono text-[14px] text-primary/70">
+                      {editingCode}
+                    </span>
+                  </span>
+                )}
               </div>
 
               <TooltipProvider>
@@ -137,6 +148,7 @@ export function UserStories() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Titre</Label>
+
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -287,7 +299,7 @@ export function UserStories() {
                       size="sm"
                       onClick={() => {
                         handleEdit(story);
-
+                        toast.success("✅ Modification !");
                         const form = document.getElementById("edit-user-story");
                         if (form) {
                           form.scrollIntoView({ behavior: "smooth" });

@@ -25,6 +25,7 @@ export function useUserStories() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedPriority, setSelectedPriority] = useState("high");
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingCode, setEditingCode] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -106,9 +107,11 @@ export function useUserStories() {
     }
   };
 
+  // Fonction pour gérer l'édition d'une user story
   const handleEdit = (story: UserStory) => {
     setIsEditing(true);
     setEditingId(story.id || null);
+    setEditingCode(story.code || null);
     setTitle(story.title);
     setDescription(story.description);
     setPriority(story.priority);
@@ -156,6 +159,8 @@ export function useUserStories() {
     searchTerm,
     setSearchTerm,
     isEditing,
+    editingCode,
+    setEditingCode,
     handleSave,
     handleEdit,
     handleDelete,

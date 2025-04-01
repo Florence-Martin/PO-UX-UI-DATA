@@ -1,7 +1,8 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ReactNode } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
 
 export type TabItem = {
   value: string;
@@ -21,6 +22,28 @@ export default function SectionTabsLayout({
   description,
   tabs,
 }: SectionTabsLayoutProps) {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabs[0].value);
+
+  useEffect(() => {
+    if (tabParam && tabs.some((tab) => tab.value === tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam, tabs]);
+
+  // Scroll vers l’ancre #user-stories-list si tab=documentation
+  useEffect(() => {
+    if (tabParam === "documentation") {
+      const el = document.querySelector("#user-stories-list");
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
+      }
+    }
+  }, [tabParam]);
+
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -35,7 +58,11 @@ export default function SectionTabsLayout({
         </p>
       )}
 
-      <Tabs defaultValue={tabs[0].value || tabs[0].value} className="space-y-4">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-4"
+      >
         <TabsList className="flex flex-wrap gap-2 sm:gap-4 mb-9">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>

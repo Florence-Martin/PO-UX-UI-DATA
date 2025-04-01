@@ -5,13 +5,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClipboardList } from "lucide-react";
 import { motion } from "framer-motion";
 import { UserStorySearchBar } from "@/components/searchbar/UserStorySearchBar";
+import { useEffect } from "react";
 
 export function UserStoryList() {
   const { filteredStories, filterByPriority, searchTerm, setSearchTerm } =
     useUserStories();
 
+  // Juste avant le rendu des user stories
+  useEffect(() => {
+    const hash = window.location.hash.slice(1); // "us-005"
+    if (hash) {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("ring-2", "ring-primary", "animate-pulse");
+
+        setTimeout(() => {
+          el.classList.remove("ring-2", "ring-primary", "animate-pulse");
+        }, 3000);
+      }
+    }
+  }, []);
+
   return (
-    <div className="space-y-6">
+    <div id="user-stories-list" className="space-y-6">
       <Card>
         <CardHeader className="space-y-4">
           <CardTitle className="flex items-center gap-2 text-lg">

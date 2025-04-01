@@ -27,7 +27,7 @@ export function UserStoryCard({ story }: Props) {
   return (
     <motion.div
       ref={ref}
-      id={story.id}
+      id={`us-${story.id}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -82,7 +82,10 @@ export function UserStoryCard({ story }: Props) {
 
       {isTargeted && (
         <div className="mt-4 flex justify-end">
-          <Link href="/analysis?tab=documentation#user-stories-list" passHref>
+          <Link
+            href={`/analysis?tab=documentation&edit=${story.id}#user-stories-list`}
+            passHref
+          >
             <Button variant="outline" size="sm">
               <PencilLine className="w-4 h-4 mr-2" />
               Modifier cette User Story
