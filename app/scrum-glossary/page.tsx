@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 
-import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import GlossaryTerms from "@/components/scrum/GlossaryTerms";
 import ScrumSteps from "@/components/scrum/ScrumSteps";
