@@ -1,5 +1,3 @@
-// # Kanban backlog (tasks liées aux user stories)
-
 import { Suspense } from "react";
 
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
@@ -25,7 +23,8 @@ export default function ScrumGlossaryPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Scrum Glossary & Process"
-          description="Glossaire & étapes de la méthodologie avec le framework Scrum pour une compréhension rapide."
+          description="Glossaire & étapes de la méthodologie avec le framework Scrum pour une compréhension rapide. Le processus Scrum est itératif et cyclique, chaque sprint relance l’amélioration
+          continue."
           tabs={tabs}
         />
       </Suspense>
