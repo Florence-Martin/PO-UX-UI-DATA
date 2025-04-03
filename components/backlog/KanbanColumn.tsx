@@ -42,7 +42,7 @@ export function KanbanColumn({
       <div className="flex items-center justify-between p-2">
         <h3 className="font-semibold">{column.title}</h3>
         <span className="text-muted-foreground text-sm">
-          {tasks.length} tâche{tasks.length > 1 ? "s" : ""}
+          {tasks.length} ticket{tasks.length > 1 ? "s" : ""}
         </span>
       </div>
 
@@ -68,7 +68,7 @@ export function KanbanColumn({
         className="w-full mt-2"
         onClick={() => onAddTask(column.id)}
       >
-        <Plus className="h-4 w-4 mr-2" /> Créer une tâche
+        <Plus className="h-4 w-4 mr-2" /> Créer un ticket
       </Button>
     </div>
   );

@@ -35,7 +35,7 @@ export const useBacklogTasks = () => {
   const addTask = async (task: Omit<BacklogTask, "id">) => {
     try {
       const docRef = await createBacklogTask(task);
-      setTasks((prev) => [...prev, { ...task, id: docRef.id }]);
+      setTasks((prev) => [{ ...task, id: docRef.id }, ...prev]);
       toast.success("Tâche ajoutée avec succès !");
     } catch (err) {
       console.error("Erreur lors de l'ajout de la tâche :", err);

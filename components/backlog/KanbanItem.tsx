@@ -4,13 +4,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Grab, MousePointerClick } from "lucide-react";
+import { Grip, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getAllUserStories } from "@/lib/services/userStoryService";
+import { UserStory } from "@/lib/types/userStory";
 
 interface KanbanItemProps {
   task: BacklogTask;
@@ -18,6 +22,8 @@ interface KanbanItemProps {
 }
 
 export function KanbanItem({ task, onClick }: KanbanItemProps) {
+  const [userStory, setUserStory] = useState<UserStory | null>(null);
+
   const {
     attributes,
     listeners,
@@ -29,7 +35,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
     id: task.id!,
     data: {
       task,
-      columnId: task.status, // ✅ très important pour DnD
+      columnId: task.status,
     },
   });
 
@@ -40,29 +46,71 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
     cursor: "grab",
   };
 
+  useEffect(() => {
+    const fetchLinkedUserStory = async () => {
+      const all = await getAllUserStories();
+      const firstLinked = all.find((s) => s.id === task.userStoryIds?.[0]);
+      setUserStory(firstLinked || null);
+    };
+    if (task.userStoryIds?.length) {
+      fetchLinkedUserStory();
+    }
+  }, [task.userStoryIds]);
+
   return (
     <div ref={setNodeRef} style={style}>
       <Card
-        className="bg-background hover:ring-2 ring-primary mr-1 cursor-pointer"
+        className="relative bg-background hover:ring-2 ring-primary mr-1 cursor-pointer"
         onClick={() => {
-          if (!isDragging) onClick?.(task); // Empêche l'ouverture de la modal pendant le click
+          if (!isDragging) onClick?.(task);
         }}
       >
-        <CardContent className="p-3 space-y-2">
-          <div className="flex justify-between items-start">
-            <div className="font-medium">{task.title}</div>
+        <CardContent className="p-3 space-y-2 flex flex-col justify-between h-[170px]">
+          {/* 🔗 User Story liée */}
+          {userStory ? (
+            <div className="text-xs text-muted-foreground space-y-1">
+              <div className="flex justify-between items-start">
+                <span className="font-medium text-[11px] tracking-wide flex items-center gap-1">
+                  <Pin className="w-3 h-3 text-red-500" />
+                  <span>[{userStory.code}]</span>
+                </span>
+                <Link
+                  href={`/user-stories#${userStory.id}`}
+                  title="Voir la fiche complète"
+                  className="text-muted-foreground hover:text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SquareArrowOutUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
 
-            {/* Handle de drag */}
+              <p className="text-[12px] text-muted-foreground leading-snug line-clamp-2">
+                {userStory.title}
+              </p>
+            </div>
+          ) : (
+            <div className="text-xs text-red-500 italic flex items-center gap-1 mb-2">
+              <PinOff className="w-3 h-3" />
+              Aucune User Story liée
+            </div>
+          )}
+          {/* 🔤 Titre de la tâche */}
+          <div className="flex justify-between items-start">
+            <div className="font-medium text-xs">{task.title}</div>
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div
-                    {...listeners}
-                    {...attributes}
-                    onClick={(e) => e.stopPropagation()}
-                    className="cursor-grab active:cursor-grabbing p-1 rounded-full bg-muted hover:bg-muted/70 animate-pulse"
-                  >
-                    <Grab className="h-4 w-4 text-muted-foreground" />
+                  <div className="absolute top-1/2 right-[-15px] -translate-y-1/2 z-10">
+                    <div
+                      {...listeners}
+                      {...attributes}
+                      onClick={(e) => e.stopPropagation()}
+                      className="cursor-grab active:cursor-grabbing p-1 rounded-full bg-muted hover:bg-muted/70 animate-pulse"
+                    >
+                      <Grip className="h-6 w-6 text-muted-foreground" />
+                    </div>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
@@ -72,6 +120,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
             </TooltipProvider>
           </div>
 
+          {/* 🎯 Infos tâches */}
           <div className="flex items-center justify-between text-sm">
             <span
               className={`px-2 py-1 rounded-full text-xs ${
@@ -88,13 +137,6 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
               {task.storyPoints} pts
             </span>
           </div>
-          {Array.isArray(task.userStoryIds) && task.userStoryIds.length > 0 && (
-            <div className="text-xs text-muted-foreground mt-1">
-              📌 {task.userStoryIds.length} user stor
-              {task.userStoryIds.length > 1 ? "ies" : "y"} liée
-              {task.userStoryIds.length > 1 ? "s" : ""}
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
