@@ -25,7 +25,7 @@ export default function Metrics() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Explorateur de Données</CardTitle>
+              <CardTitle>Gestion de Bases de Données (SGBD)</CardTitle>
             </CardHeader>
             <CardContent>
               <DatasetExplorer />

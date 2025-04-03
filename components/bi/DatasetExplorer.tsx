@@ -38,9 +38,9 @@ export function DatasetExplorer() {
           <Card key={dataset.id}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center">
-                  <Database className="h-4 w-4 mr-2" />
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:space-x-4">
+                  <Database className="h-4 w-4 flex-shrink-0 sm:h-5 sm:w-5 mb-2 sm:mb-0 text-blue-500" />
+                  <div className="flex-1">
                     <h4 className="font-semibold">{dataset.name}</h4>
                     <p className="text-sm text-muted-foreground">
                       {dataset.rows.toLocaleString()} lignes • Mis à jour le{" "}

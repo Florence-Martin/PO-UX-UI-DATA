@@ -63,7 +63,7 @@ export function DeliverableTracking() {
           <Card key={deliverable.id}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col">
                   {getStatusIcon(deliverable.status)}
                   <div>
                     <h4 className="font-semibold">{deliverable.name}</h4>

@@ -46,7 +46,7 @@ export function KanbanColumn({
         </span>
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 ">
         <SortableContext
           items={tasks.map((task) => task.id!)} // Les ID des tâches doivent être uniques
           strategy={verticalListSortingStrategy}

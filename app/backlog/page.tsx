@@ -5,9 +5,10 @@ import { Suspense } from "react";
 import { KanbanBoard } from "@/components/backlog/KanbanBoard";
 import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
 import { SprintPlanning } from "@/components/backlog/SprintPlanning";
-import { UserStoryList } from "@/components/backlog/UserStoryList";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
+import { FilterUserStoryList } from "@/components/searchbar/FilterUserStoryList";
+import { UserStoriesList } from "@/components/backlog/UserStoryList";
 
 const tabs = [
   { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
@@ -19,7 +20,7 @@ const tabs = [
   {
     value: "user-stories",
     label: "User Stories",
-    component: <UserStoryList />,
+    component: <UserStoriesList />,
   },
   {
     value: "priorisation",
