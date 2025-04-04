@@ -10,7 +10,32 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "UX Data PO Kit",
-  description: "A comprehensive toolkit for UX/Data Product Owners",
+  description:
+    "Une application pour structurer une démarche produit centrée sur l’UX, les données et l’agilité.",
+  openGraph: {
+    title: "UX Data PO Kit",
+    description:
+      "Une application pour structurer une démarche produit centrée sur l’UX, les données et l’agilité.",
+    url: "https://po-ux-ui-data.vercel.app",
+    siteName: "UX Data PO Kit",
+    images: [
+      {
+        url: "https://po-ux-ui-data.vercel.app/og-cover.jpg",
+        width: 1200,
+        height: 630,
+        alt: "UX Data PO Kit - interface",
+      },
+    ],
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UX Data PO Kit",
+    description:
+      "Une application pour structurer une démarche produit centrée sur l’UX, les données et l’agilité.",
+    images: ["https://po-ux-ui-data.vercel.app/og-cover.jpg"],
+  },
 };
 
 export default function RootLayout({
