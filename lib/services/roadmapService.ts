@@ -16,7 +16,6 @@ export async function getRoadmapQuarters(): Promise<RoadmapQuarter[]> {
 }
 
 export async function saveRoadmapQuarter(data: RoadmapQuarter) {
-  console.log("✅ Enregistrement Firestore :", data);
   const ref = doc(db, collectionName, data.id);
   await setDoc(
     ref,

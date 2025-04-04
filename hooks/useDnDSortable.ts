@@ -55,7 +55,6 @@ export function useDnDSortable<T>({
 
     // Vérifie si les éléments appartiennent à la même section
     if (getItemSection(activeItem) !== getItemSection(overItem)) {
-      console.log("❌ Items are in different sections, drag canceled");
       setActiveId(null);
       return;
     }
