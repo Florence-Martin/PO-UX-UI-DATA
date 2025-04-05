@@ -64,9 +64,7 @@ export const PriorityFilterSelect = ({
           <Select value={priority} onValueChange={handlePriorityChange}>
             <SelectTrigger className="w-[180px] text-sm">
               {priority === "all" ? (
-                <span className="text-muted-foreground">
-                  Sélectionner une priorité
-                </span>
+                <span className="text-muted-foreground">Ex: high...</span>
               ) : (
                 <SelectValue />
               )}
