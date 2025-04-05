@@ -80,7 +80,22 @@
     @apply bg-background text-foreground;
   }
 }
+/* animation BannerInfo */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
 
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 10s linear infinite;
+}
+
+/* animation loader */
 .loader {
   position: relative;
   width: 180px;
