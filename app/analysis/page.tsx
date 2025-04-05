@@ -33,6 +33,7 @@ export default function AnalysisPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <BannerInfo />
+
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Analyse Produit & Wireframes"

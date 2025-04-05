@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 export const BetaBadge = () => {
   return (
     <motion.div
+      role="status"
+      aria-live="polite"
       initial={{ scale: 0.95, opacity: 0 }}
       animate={{
         scale: [1, 1.05, 1],

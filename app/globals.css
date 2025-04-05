@@ -83,6 +83,7 @@
 /* animation BannerInfo */
 @keyframes marquee {
   0% {
+    /*Marge gauche*/
     transform: translateX(70%);
   }
   100% {
