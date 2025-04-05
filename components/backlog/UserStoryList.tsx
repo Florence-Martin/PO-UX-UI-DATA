@@ -1,10 +1,9 @@
 "use client";
 
 import { useUserStories } from "@/hooks/useUserStories";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList } from "lucide-react";
-import { UserStorySearchBar } from "@/components/searchbar/UserStorySearchBar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserStoryCard } from "@/components/ui/UserStoryCard";
+import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStoriesList() {
   const { filteredStories, filterByPriority } = useUserStories();

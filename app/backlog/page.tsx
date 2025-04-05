@@ -7,7 +7,6 @@ import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization"
 import { SprintPlanning } from "@/components/backlog/SprintPlanning";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
-import { FilterUserStoryList } from "@/components/searchbar/FilterUserStoryList";
 import { UserStoriesList } from "@/components/backlog/UserStoryList";
 
 const tabs = [

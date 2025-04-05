@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,19 +13,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { motion } from "framer-motion";
-import { useUserStories } from "@/hooks/useUserStories";
-import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
+import { Button } from "@/components/ui/button";
 import { ArrowDownToDot, List, Notebook, Pen } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+
+import { useUserStories } from "@/hooks/useUserStories";
+import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import Image from "next/image";
-import { toast } from "sonner";
+} from "@/components/ui/tooltip";
 
 export function UserStories() {
   const {
@@ -48,21 +50,38 @@ export function UserStories() {
     filteredStories,
     filterByPriority,
   } = useUserStories();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const storyIdToEdit = searchParams.get("edit");
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Auto-sélection d’une user story depuis l’URL
+  useEffect(() => {
+    if (!storyIdToEdit || filteredStories.length === 0) return;
+
+    const matched = filteredStories.find((s) => s.id === storyIdToEdit);
+    if (matched) {
+      handleEdit(matched);
+
+      // Nettoie l’URL après édition
+      router.replace("/analysis?tab=documentation", { scroll: false });
+
+      setTimeout(() => {
+        const el = document.getElementById("edit-user-story");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  }, [storyIdToEdit, filteredStories]);
+
+  // Effet de surlignage temporaire lors de la modification
   useEffect(() => {
     if (isEditing && cardRef.current) {
       const el = cardRef.current;
-
-      // Ajoute une classe focus temporairement
       el.classList.add("ring-2", "ring-primary", "transition-shadow");
-
-      setTimeout(() => {
-        el.classList.remove("ring-2", "ring-primary");
-      }, 3000);
+      setTimeout(() => el.classList.remove("ring-2", "ring-primary"), 3000);
     }
   }, [isEditing]);
-
   return (
     <div className="grid gap-6 sm:px-6 lg:px-8">
       {/* Formulaire + liens */}

@@ -23,7 +23,7 @@ export function useUserStories() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedPriority, setSelectedPriority] = useState("high");
+  const [selectedPriority, setSelectedPriority] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [editingCode, setEditingCode] = useState<string | null>(null);
 

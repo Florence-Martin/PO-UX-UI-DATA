@@ -18,7 +18,7 @@ export const UserStorySearchBar = ({
   searchValue = "",
   hideAllOption = false,
 }: UserStorySearchBarProps) => {
-  const [priority, setPriority] = useState("high");
+  const [priority, setPriority] = useState("medium");
   const [localSearch, setLocalSearch] = useState(searchValue);
 
   // Synchronise `localSearch` avec `searchValue` (prop)

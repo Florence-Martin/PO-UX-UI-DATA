@@ -165,7 +165,7 @@ export function EditTaskModal({
                   .map((story) => (
                     <li key={story.id}>
                       <Link
-                        href={`/user-stories#${story.id}`}
+                        href={`/backlog?tab=user-stories#${story.id}`}
                         className="hover:underline text-primary"
                         rel="noopener noreferrer"
                       >
@@ -222,7 +222,7 @@ export function EditTaskModal({
                           [{story.code}] - {story.title}
                           {isUsedElsewhere && (
                             <span className="ml-2 text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded">
-                              Déjà liée
+                              Déjà liée à une task
                             </span>
                           )}
                         </span>

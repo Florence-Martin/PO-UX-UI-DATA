@@ -31,12 +31,26 @@ export default function SectionTabsLayout({
 
     // Vérifie si l’onglet est valide
     const matchedTab = tabs.find((tab) => tab.value === tabParam);
+    // if (matchedTab) {
+    //   setActiveTab(tabParam);
+
+    //   // Si onglet "documentation", scroll vers l'ancre
+    //   if (tabParam === "documentation") {
+    //     const el = document.querySelector("#user-stories-list");
+    //     if (el) {
+    //       setTimeout(() => {
+    //         el.scrollIntoView({ behavior: "smooth", block: "start" });
+    //       }, 150);
+    //     }
+    //   }
+    // }
     if (matchedTab) {
       setActiveTab(tabParam);
 
-      // Si onglet "documentation", scroll vers l'ancre
-      if (tabParam === "documentation") {
-        const el = document.querySelector("#user-stories-list");
+      // Scroll vers l’ancre s’il y en a une
+      const hash = window.location.hash;
+      if (hash) {
+        const el = document.querySelector(hash);
         if (el) {
           setTimeout(() => {
             el.scrollIntoView({ behavior: "smooth", block: "start" });

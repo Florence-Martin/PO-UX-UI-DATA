@@ -25,7 +25,7 @@ export default function AnalysisPage() {
     },
     {
       value: "documentation",
-      label: "User Stories",
+      label: "Editeur US",
       component: <UserStories />,
     },
   ];

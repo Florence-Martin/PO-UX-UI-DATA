@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,13 +23,7 @@ export const PriorityFilterSelect = ({
   onSearchChange,
   searchValue = "",
 }: PriorityFilterSelectProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const isUserStoriesPage = pathname === "/user-stories";
-  const defaultPriority = isUserStoriesPage ? "all" : "high";
-
-  const [priority, setPriority] = useState(defaultPriority);
+  const [priority, setPriority] = useState("all");
   const [localSearch, setLocalSearch] = useState(searchValue);
 
   useEffect(() => {
@@ -50,19 +43,13 @@ export const PriorityFilterSelect = ({
 
   const handlePriorityChange = (value: string) => {
     setPriority(value);
-
-    // Redirige uniquement si on n'est PAS sur /user-stories
-    if (value === "all" && !isUserStoriesPage) {
-      router.push("/user-stories");
-    } else {
-      onFilterChange(value);
-    }
+    onFilterChange(value);
   };
 
   const handleReset = () => {
-    setPriority(defaultPriority);
+    setPriority("all");
     setLocalSearch("");
-    onFilterChange(defaultPriority);
+    onFilterChange("all");
     onSearchChange?.("");
   };
 
@@ -80,11 +67,7 @@ export const PriorityFilterSelect = ({
               <SelectItem value="high">Haute</SelectItem>
               <SelectItem value="medium">Moyenne</SelectItem>
               <SelectItem value="low">Basse</SelectItem>
-              <SelectItem value="all">
-                {isUserStoriesPage
-                  ? "Toutes les priorités"
-                  : "Voir toutes (redir.)"}
-              </SelectItem>
+              <SelectItem value="all">Toute</SelectItem>
             </SelectContent>
           </Select>
         </div>
