@@ -24,8 +24,9 @@ export function useUserStories() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedPriority, setSelectedPriority] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [prioritySearchTerm, setPrioritySearchTerm] = useState("");
   const [editingCode, setEditingCode] = useState<string | null>(null);
+  const [userStorySearchTerm, setUserStorySearchTerm] = useState("");
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -49,13 +50,19 @@ export function useUserStories() {
     const filtered = userStories.filter((story) => {
       const matchesPriority =
         selectedPriority === "all" || story.priority === selectedPriority;
-      const matchesSearch =
-        story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        story.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesPriority && matchesSearch;
+      const matchesPrioritySearch = story.priority
+        .toLowerCase()
+        .includes(prioritySearchTerm.toLowerCase());
+      const matchesUserStorySearch =
+        story.title.toLowerCase().includes(userStorySearchTerm.toLowerCase()) ||
+        story.description
+          .toLowerCase()
+          .includes(userStorySearchTerm.toLowerCase()) ||
+        story.code?.toLowerCase().includes(userStorySearchTerm.toLowerCase()); // Recherche par code
+      return matchesPriority && matchesPrioritySearch && matchesUserStorySearch;
     });
     setFilteredStories(filtered);
-  }, [userStories, selectedPriority, searchTerm]);
+  }, [userStories, selectedPriority, prioritySearchTerm, userStorySearchTerm]);
 
   const resetForm = () => {
     setIsEditing(false);
@@ -156,8 +163,8 @@ export function useUserStories() {
     userStories,
     filteredStories,
     filterByPriority,
-    searchTerm,
-    setSearchTerm,
+    prioritySearchTerm,
+    setPrioritySearchTerm,
     isEditing,
     editingCode,
     setEditingCode,
@@ -167,5 +174,7 @@ export function useUserStories() {
     resetForm,
     error,
     loading,
+    userStorySearchTerm,
+    setUserStorySearchTerm,
   };
 }

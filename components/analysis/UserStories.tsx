@@ -49,6 +49,7 @@ export function UserStories() {
     resetForm,
     filteredStories,
     filterByPriority,
+    setUserStorySearchTerm,
   } = useUserStories();
 
   const searchParams = useSearchParams();
@@ -249,15 +250,18 @@ export function UserStories() {
             <CardTitle className="flex items-center gap-2">
               <List className="w-5 h-5 sm:w-6 sm:h-6" />
               <span className="text-base sm:text-lg">
-                User Stories existantes
+                Liste de User Stories
               </span>
             </CardTitle>
-            <UserStorySearchBar onFilterChange={filterByPriority} />
+            <UserStorySearchBar
+              onFilterChange={filterByPriority}
+              onSearchChange={setUserStorySearchTerm} // Connecte la recherche
+            />
           </CardHeader>
           <CardContent className="space-y-3">
             {filteredStories.length === 0 ? (
               <p className="text-sm text-muted-foreground italic">
-                Aucune user story pour le moment. Commencez par en créer une !
+                Désolée, mais rien ne correspond à votre recherche!
               </p>
             ) : (
               filteredStories.map((story) => (

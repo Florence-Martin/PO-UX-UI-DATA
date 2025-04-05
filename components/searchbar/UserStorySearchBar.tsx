@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RotateCcw } from "lucide-react";
 import { PriorityFilterSelect } from "./PriorityFilterSelect";
 import { SearchUserStoryInput } from "./SearchUserStoryInput";
 
@@ -9,46 +8,48 @@ interface UserStorySearchBarProps {
   onFilterChange: (priority: string) => void;
   onSearchChange?: (search: string) => void;
   searchValue?: string;
-  hideAllOption?: boolean;
 }
 
 export const UserStorySearchBar = ({
   onFilterChange,
   onSearchChange,
   searchValue = "",
-  hideAllOption = false,
 }: UserStorySearchBarProps) => {
-  const [priority, setPriority] = useState("medium");
-  const [localSearch, setLocalSearch] = useState(searchValue);
+  const [prioritySearch, setPrioritySearch] = useState("all");
+  const [userStorySearch, setUserStorySearch] = useState(searchValue);
 
-  // Synchronise `localSearch` avec `searchValue` (prop)
+  // Déclenche le changement de priorité
   useEffect(() => {
-    setLocalSearch(searchValue);
-  }, [searchValue]);
+    onFilterChange(prioritySearch);
+  }, [prioritySearch, onFilterChange]);
 
-  // Appelle `onSearchChange` avec un délai (debounce)
+  // Déclenche le changement de recherche
   useEffect(() => {
     const debounce = setTimeout(() => {
-      onSearchChange?.(localSearch.trim().toLowerCase());
+      onSearchChange?.(userStorySearch.trim().toLowerCase());
     }, 300);
 
-    return () => clearTimeout(debounce); // Nettoie le timeout précédent
-  }, [localSearch, onSearchChange]);
+    return () => clearTimeout(debounce);
+  }, [userStorySearch, onSearchChange]);
+
+  const handleResetSearch = () => {
+    setUserStorySearch("");
+    onSearchChange?.(""); // Réinitialise la recherche
+  };
 
   return (
-    <div className="flex flex-col md:justify-between md:items-end gap-4 mb-4">
-      {/* Partie gauche : Search input */}
-      {/* <div className="w-full md:max-w-md">
+    <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-4">
+      <div className="w-full md:max-w-md">
         <SearchUserStoryInput
-          value={localSearch}
-          onChange={(e) => setLocalSearch(e.target.value)}
+          value={userStorySearch}
+          onChange={(e) => setUserStorySearch(e.target.value)}
+          onReset={handleResetSearch}
         />
-      </div> */}
+      </div>
 
-      {/* Partie droite : filtre priorité */}
       <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-end">
         <PriorityFilterSelect
-          onFilterChange={onFilterChange}
+          onFilterChange={setPrioritySearch}
           onSearchChange={onSearchChange}
         />
       </div>

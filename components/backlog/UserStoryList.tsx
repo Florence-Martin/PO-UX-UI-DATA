@@ -6,18 +6,22 @@ import { UserStoryCard } from "@/components/ui/UserStoryCard";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStoriesList() {
-  const { filteredStories, filterByPriority } = useUserStories();
+  const { filteredStories, filterByPriority, setUserStorySearchTerm } =
+    useUserStories();
 
   return (
     <Card>
       <CardHeader className="space-y-4">
-        <UserStorySearchBar onFilterChange={filterByPriority} hideAllOption />
+        <UserStorySearchBar
+          onFilterChange={filterByPriority}
+          onSearchChange={setUserStorySearchTerm}
+        />
       </CardHeader>
 
       <CardContent>
         {filteredStories.length === 0 ? (
           <p className="text-sm text-muted-foreground italic">
-            Aucune user story pour le moment.
+            Désolée, mais rien ne correspond à votre recherche!
           </p>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

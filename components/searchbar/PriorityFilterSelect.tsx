@@ -57,11 +57,19 @@ export const PriorityFilterSelect = ({
     <>
       {/* Filtre + reset */}
       <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2 w-full sm:w-auto">
-        <div className="space-y-1 w-full sm:w-auto">
-          <Label htmlFor="priority">Filtrer par priorité</Label>
+        <div className="w-full sm:w-auto">
+          <Label htmlFor="priority" className="sr-only">
+            Filtrer par priorité
+          </Label>
           <Select value={priority} onValueChange={handlePriorityChange}>
             <SelectTrigger className="w-[180px] text-sm">
-              <SelectValue placeholder="Priorité" />
+              {priority === "all" ? (
+                <span className="text-muted-foreground">
+                  Sélectionner une priorité
+                </span>
+              ) : (
+                <SelectValue />
+              )}
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="high">Haute</SelectItem>
