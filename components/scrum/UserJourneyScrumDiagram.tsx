@@ -15,7 +15,12 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-const steps = [
+const steps: {
+  title: string;
+  period: "Matinée" | "Après-midi" | "Soirée";
+  intensity: number;
+  icon: React.ElementType;
+}[] = [
   {
     title: "Participer à la daily meeting",
     period: "Matinée",
