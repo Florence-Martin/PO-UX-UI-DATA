@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
+import { ChevronDown, ChevronUp, FilePenLine, X, Ban } from "lucide-react";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { UserStory } from "@/lib/types/userStory";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/lib/services/userStoryService";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { FilterUserStoryList } from "../searchbar/FilterUserStoryList";
 
 interface EditTaskModalProps {
@@ -32,6 +33,7 @@ export function EditTaskModal({
   const [showStoryList, setShowStoryList] = useState(false);
   const [usedUserStoryIds, setUsedUserStoryIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchUsed = async () => {
@@ -54,6 +56,28 @@ export function EditTaskModal({
   if (!isOpen || !edited) return null;
 
   const toggleUserStorySelection = (storyId: string) => {
+    // Vérifie si une User Story est déjà liée
+    if (
+      (edited.userStoryIds?.length ?? 0) > 0 &&
+      !edited.userStoryIds?.includes(storyId)
+    ) {
+      toast({
+        title: (
+          <div className="flex items-center gap-2 p-2 text-red-500 rounded-md bg-stone-100">
+            <Ban className="w-5 h-5 shrink-0" />
+            <span className="font-semibold">Action non autorisée</span>
+          </div>
+        ),
+        description: (
+          <p className="text-sm text-muted-foreground mt-1 text-white">
+            Une tâche ne peut être liée qu’à une seule User Story.
+          </p>
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+
     const currentIds = edited.userStoryIds || [];
     const updatedIds = currentIds.includes(storyId)
       ? currentIds.filter((id) => id !== storyId)
