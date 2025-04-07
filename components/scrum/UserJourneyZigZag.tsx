@@ -94,7 +94,12 @@ export default function UserJourneyZigZag({
                 title={`Intensité : ${step.intensity}/5`}
                 aria-label={`Intensité ${step.intensity} sur 5`}
               >
-                {scoreEmoji[step.intensity]}
+                <span
+                  className="text-2xl"
+                  aria-label={`Intensité : ${step.intensity} sur 5`}
+                >
+                  {scoreEmoji[step.intensity as keyof typeof scoreEmoji]}
+                </span>
               </span>
             </div>
           </div>
