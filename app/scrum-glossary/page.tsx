@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import GlossaryTerms from "@/components/scrum/GlossaryTerms";
 import ScrumSteps from "@/components/scrum/ScrumSteps";
+import UserJourneyScrumDiagram from "@/components/scrum/UserJourneyScrumDiagram";
 
 const tabs = [
   {
@@ -14,6 +15,11 @@ const tabs = [
     value: "scrum-process",
     label: "Scrum process",
     component: <ScrumSteps />,
+  },
+  {
+    value: "PO-journey",
+    label: "PO Journey",
+    component: <UserJourneyScrumDiagram />,
   },
 ];
 

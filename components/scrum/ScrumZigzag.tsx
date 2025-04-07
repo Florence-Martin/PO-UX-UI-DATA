@@ -55,9 +55,6 @@ export function ScrumZigZag({ steps }: { steps: ScrumStep[] }) {
             );
           })}
         </div>
-        {/* <div className="hidden sm:block justify-center items-center flex-col gap-6">
-          <ScrumCycleLoader />
-        </div> */}
       </div>
     </section>
   );

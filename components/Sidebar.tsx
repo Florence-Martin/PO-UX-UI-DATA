@@ -29,7 +29,7 @@ const navigation = [
     icon: FileSearch,
   },
   {
-    name: "Backlog & Agile",
+    name: "Backlog & Kanban",
     href: "/backlog",
     icon: SquareKanban,
   },
@@ -39,16 +39,20 @@ const navigation = [
     icon: SquareKanban,
   },
   {
-    name: "Collaboration BI",
+    name: "KPIs & Suivi BI",
     href: "/metrics",
     icon: Database,
   },
   {
-    name: "Validation & Qualité",
+    name: "Checklists & QA Produit",
     href: "/validation",
     icon: CheckSquare,
   },
-  { name: "Agile Scrum method", href: "/scrum-glossary", icon: UsersRound },
+  {
+    name: "Agile Scrum method & Glossary",
+    href: "/scrum-glossary",
+    icon: UsersRound,
+  },
 ];
 
 export function Sidebar() {
