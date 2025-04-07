@@ -160,6 +160,10 @@ Voici un aperçu de ce que l’IA pourrait bientôt rendre possible dans l'appli
 
 ⸻
 
+### Règles de gestion
+
+[Règles de gestion du produit](./documentation/business-rules.md)
+
 ### ⏳ Statut Actuel
 
 Le projet est en cours. Certaines pages et composants sont encore en construction ou en cours d’amélioration. Les fonctionnalités principales sont fonctionnelles : user stories, personas, thèmes adaptatifs, structure de navigation responsive, etc.
