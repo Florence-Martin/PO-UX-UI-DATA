@@ -19,13 +19,13 @@ const steps = [
   {
     title: "Participer à la daily meeting",
     period: "Matinée",
-    intensity: 3,
+    intensity: 2,
     icon: CalendarClock,
   },
   {
     title: "Vérifier les retours utilisateurs (feedback, support, interviews)",
     period: "Matinée",
-    intensity: 4,
+    intensity: 3,
     icon: Search,
   },
   {
@@ -43,7 +43,7 @@ const steps = [
   {
     title: "Rédiger ou affiner les user stories",
     period: "Après-midi",
-    intensity: 5,
+    intensity: 4,
     icon: FilePlus2,
   },
   {

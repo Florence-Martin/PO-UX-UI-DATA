@@ -20,7 +20,7 @@ const periodColor = {
 interface UserJourneyZigZagProps {
   steps: {
     title: string;
-    period: string;
+    period: "Matinée" | "Après-midi" | "Soirée";
     intensity: number;
     icon: React.ElementType;
   }[];
@@ -37,11 +37,11 @@ export default function UserJourneyZigZag({
     <div className={`relative w-full py-20 overflow-x-auto ${className}`}>
       {/* Légende en haut */}
       <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground ">
-        <span className="flex items-center gap-1">😁 Très intense</span>
-        <span className="flex items-center gap-1">🙂 Intense</span>
+        <span className="flex items-center gap-1">😣 Très intense</span>
+        <span className="flex items-center gap-1">🙁 Intense</span>
         <span className="flex items-center gap-1">😐 Modérée</span>
-        <span className="flex items-center gap-1">🙁 Faible</span>
-        <span className="flex items-center gap-1">😣 Très faible</span>
+        <span className="flex items-center gap-1">🙂 Faible</span>
+        <span className="flex items-center gap-1">😁 Très faible</span>
       </div>
 
       {/* ZigZag positionné au centre */}
