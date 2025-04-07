@@ -35,18 +35,9 @@ export default function UserJourneyZigZag({
 
   return (
     <div className={`relative w-full py-20 overflow-x-auto ${className}`}>
-      {/* Légende en haut */}
-      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground ">
-        <span className="flex items-center gap-1">😣 Très intense</span>
-        <span className="flex items-center gap-1">🙁 Intense</span>
-        <span className="flex items-center gap-1">😐 Modérée</span>
-        <span className="flex items-center gap-1">🙂 Faible</span>
-        <span className="flex items-center gap-1">😁 Très faible</span>
-      </div>
-
       {/* ZigZag positionné au centre */}
       <motion.svg
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[1200px] h-24 z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[50%] w-[1200px] h-24 z-0"
         viewBox="0 0 1200 100"
         preserveAspectRatio="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -94,12 +85,7 @@ export default function UserJourneyZigZag({
                 title={`Intensité : ${step.intensity}/5`}
                 aria-label={`Intensité ${step.intensity} sur 5`}
               >
-                <span
-                  className="text-2xl"
-                  aria-label={`Intensité : ${step.intensity} sur 5`}
-                >
-                  {scoreEmoji[step.intensity as keyof typeof scoreEmoji]}
-                </span>
+                {scoreEmoji[step.intensity as keyof typeof scoreEmoji]}
               </span>
             </div>
           </div>

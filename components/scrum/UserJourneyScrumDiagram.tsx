@@ -73,7 +73,21 @@ const steps: {
 
 export default function UserJourneyScrumDiagram() {
   return (
-    <div className=" space-y-12">
+    <div className=" space-y-6">
+      <p className="text-sm text-muted-foreground">
+        Cette frise illustre une journée type structurée selon les temps forts
+        du rôle de PO, entre cadrage, pilotage produit et coordination avec les
+        équipes. Chaque étape est positionnée dans le temps (matinée,
+        après-midi, soirée) et qualifiée par son intensité perçue, pour mieux
+        visualiser la charge quotidienne.
+      </p>
+      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground ">
+        <span className="flex items-center gap-1">😣 Très intense</span>
+        <span className="flex items-center gap-1">🙁 Intense</span>
+        <span className="flex items-center gap-1">😐 Modérée</span>
+        <span className="flex items-center gap-1">🙂 Faible</span>
+        <span className="flex items-center gap-1">😁 Très faible</span>
+      </div>
       <UserJourneyZigZag steps={steps} />
     </div>
   );
