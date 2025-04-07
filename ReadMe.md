@@ -1,127 +1,53 @@
-## 🎯 UX Data PO Kit
+# 📦 PO-UX-UI-DATA – UX Product Owner Toolkit
 
-Cette application est conçue comme une boîte à outils complète pour Product Owner spécialisé en UX/UI et datavisualisation, avec un focus fort sur les workflows agiles, la recherche utilisateur et le pilotage produit.
+Cette application est conçue comme une **boîte à outils moderne pour Product Owner spécialisé en UX/UI et Datavisualisation**, intégrant les meilleures pratiques agiles (Scrum), la recherche utilisateur, le backlog produit et la documentation fonctionnelle.
 
-⸻
+Pensée pour un usage **terrain**, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
 
-### 🚀 Objectif
+---
 
-- Créer une application professionnelle pour permettre à un Product Owner UX/UI & Data de :
+## 📚 Sommaire
 
-  - Recueillir et structurer les besoins métier,
+- [🚀 Objectif du projet](#🚀-objectif-du-projet)
+- [1. 📊 Dashboard UX/Data](#1-📊-dashboard-uxdata)
+- [2. 📅 Roadmap Produit](#2-📅-roadmap-produit)
+- [3. 🔍 Analyse Produit & Wireframes](#3-🔍-analyse-produit--wireframes)
+  - [🎯 Recherche utilisateur](#🎯-recherche-utilisateur)
+  - [🧱 Wireframes](#🧱-wireframes)
+  - [📝 Documentation fonctionnelle](#📝-documentation-fonctionnelle)
+- [4. 🏋️ Backlog & Organisation Agile](#4-🏋️-backlog--organisation-agile)
+- [5. 🧠 Collaboration BI & Data](#5-🧠-collaboration-bi--data)
+- [6. ✅ Validation Produit & Qualité](#6-✅-validation-produit--qualité)
+- [7. 🤖 Fonctionnalités IA (à venir)](#7-🤖-fonctionnalités-ia-à-venir)
+- [🛠️ Stack Technique](#🛠️-stack-technique)
+- [📚 Règles de gestion](#📚-règles-de-gestion)
+- [⏳ Statut du projet](#⏳-statut-du-projet)
+- [✉️ Pour suivre le projet](#✉️-pour-suivre-le-projet)
 
-  - Concevoir wireframes et documentations fonctionnelles,
+---
 
-  - Gérer le backlog produit en méthode Scrum avec priorisation MoSCoW,
+## 🚀 Objectif du projet
 
-  - Créer des dashboards UX/Data lisibles et centrés utilisateur,
+- Structurer les **besoins métier** à partir de personas, interviews et questionnaires
+- Concevoir rapidement des **wireframes interactifs** (liés à Figma)
+- Gérer un **backlog produit agile** (Scrum + MoSCoW)
+- Organiser les **sprints** et suivre la vélocité
+- Visualiser des **indicateurs UX et business**
+- Coordonner les actions entre **UX, équipes BI, développeurs**
+- Assurer la **qualité fonctionnelle** avec des checklists, tests et validations
 
-  - Collaborer efficacement avec les équipes BI et tech,
+---
 
-  - Valider les livrables fonctionnels avec clarté.
-    ⸻
+## 1. 📊 Dashboard UX/Data
 
-### 1. 📊 Dashboard UX/Data
+- Visualisation de KPIs UX & produit : **taux de conversion**, **rebond**, **scroll**, **engagement**
+- Composants dataviz : **line chart**, **bar chart**, **heatmaps**, **funnel**
+- Interface responsive avec **dark/light mode**
+- Design system avec **TailwindCSS** et **Shadcn UI**
 
-- Visualisation des KPIs métier et UX : taux de conversion, rebond, scroll, engagement
+---
 
-- Composants de datavisualisation : bar charts, line charts, heatmaps, funnel
-
-- Interface responsive avec mode light/dark
-
-- Design system basé sur TailwindCSS + Shadcn UI
-
-⸻
-
-### 2. 🔍 Analyse Produit & Wireframes
-
-🎯 Analyse des besoins métier
-
-- Fiches de questionnaires utilisateurs
-
-- Templates pour interviews utilisateurs & stakeholders
-
-- Création, mise à jour et suppression de personas enregistrés
-
-- Persistance via Firebase
-
-- Affichage dynamique de la liste des personas
-
-🧱 Wireframes
-
-- Grilles modulables pour wireframes basse fidélité
-
-- Grille wireframe paramétrable
-
-- Composants visuels pour prototypage rapide
-
-- Intégration ou liens vers maquettes Figma
-
-📝 Documentation fonctionnelle
-
-- Éditeur de user stories avec :
-
-  - titre
-
-  - description
-
-  - priorité
-
-  - story points
-
-  - critères d’acceptation
-
-- Sauvegarde via Firebase
-
-- Affichage dynamique des stories enregistrées avec options de modification et suppression
-
-⸻
-
-### 3. 🏋️‍♂️ Backlog & Organisation Agile
-
-- Backlog produit avec board Kanban : To Do / In Progress / In Testing / Done
-
-- Méthodologie Scrum :
-
-  - Création et gestion de sprints
-
-  - Vélocité, story points, complétion
-
-- Sprint planning visuel
-
-- Priorisation MoSCoW : Must / Should / Could / Won’t
-
-⸻
-
-### 4. 🤖 Collaboration BI
-
-- Documentation des KPIs : nom, définition, source de données, objectif métier
-
-- Explorateur de donnÃ©es + A/B test
-
-- Liaison possible avec datasets fictifs ou APIs mockées
-
-- Suivi des livrables data et des indicateurs attendus
-
-⸻
-
-### 5. 📝 Validation fonctionnelle & Qualité
-
-- Checklists de validation PO par fonctionnalité :
-
-  - Critères d’acceptation
-
-  - Validation visuelle UI/UX
-
-  - Feedbacks utilisateurs
-
-- Simulation de tests fonctionnels (Postman ou checklist API)
-
-- Intégration possible d’outils externes (JIRA, Postman, etc.)
-
-⸻
-
-### 📅 Roadmap Produit
+## 2. 📅 Roadmap Produit
 
 | Trimestre   | Objectif principal                              |
 | ----------- | ----------------------------------------------- |
@@ -131,51 +57,126 @@ Cette application est conçue comme une boîte à outils complète pour Product 
 | **Q4 2025** | Dashboard UX/Data + indicateurs                 |
 | **Q1 2026** | Intégration IA & automatisations PO             |
 
-⸻
+---
 
-### 🤖 Teaser IA
+## 3. 🔍 Analyse Produit & Wireframes
 
-L’intégration de l’IA dans le **PO UX/Data Kit** est en cours de conception pour transformer la manière dont les Product Owners analysent, priorisent et planifient leur produit.
+### 🎯 Recherche utilisateur
 
-Voici un aperçu de ce que l’IA pourrait bientôt rendre possible dans l'application :
+- Éditeur de **questionnaires** et **interviews**
+- Création de **personas** avec :
+  - Nom, entreprise/type d’utilisateur
+  - Objectifs, besoins, points de friction
+  - Canaux de communication
+- Liste dynamique des personas (multi-persona avec édition & suppression)
+- Sauvegarde dans **Firebase**
 
-- **Génération automatique de personas et user stories** à partir de prompts (ex : secteur, type de produit, profil cible)
-- **Suggestions UX** pour améliorer l’engagement ou la conversion sur la base de vos wireframes ou données utilisateurs
-- **Proposition automatique de KPIs** adaptés à votre produit pour structurer vos dashboards
-- **Préparation assistée des sprints** en fonction des priorités, insights et contraintes métier
-- **Simulation de tests utilisateurs** avec feedback généré automatiquement et scoring de vos livrables
+### 🧱 Wireframes
 
-> **Objectif** : accélérer la phase de cadrage produit tout en renforçant la cohérence et la valeur métier.
+- Grilles modulables de **wireframes basse fidélité**
+- Aperçu visuel type **grid preview** pour faciliter le prototypage
+- Liaison possible avec des maquettes Figma
 
-🧬 L'IA sera disponible progressivement à partir du **T1 2026**, avec une première version en local puis via API.
+### 📝 Documentation fonctionnelle
 
-### ⚙️ Stack technique
+- Éditeur complet de **User Stories** avec :
+  - Titre
+  - Description
+  - Story points
+  - Priorité
+  - Critères d’acceptation
+- Validation du format (ex : "En tant que... je veux... afin de...")
+- Lien automatique vers la fiche ou tâche associée
+- Formulaire pré-rempli si redirection depuis le backlog
+- Gestion des doublons et édition dynamique
 
-- Next.js (App Router)
-- TypeScript
-- TailwindCSS
-- Shadcn UI
-- Chart.js (ou composants dataviz mock)
-- Firebase
+---
 
-⸻
+## 4. 🏋️ Backlog & Organisation Agile
 
-### Règles de gestion
+- **Kanban interactif** : To Do, In Progress, In Testing, Done
+- **Drag-and-drop** avec mise à jour du statut en temps réel (Firestore)
+- **Sprint Planning** :
+  - Sélection de stories par sprint
+  - Vélocité et complétion calculées dynamiquement
+- **MoSCoW Priorization** : Must / Should / Could / Won’t
+- Vue unifiée entre stories et tâches techniques liées
 
-[Règles de gestion du produit](./documentation/business-rules.md)
+---
 
-### ⏳ Statut Actuel
+## 5. 🧠 Collaboration BI & Data
 
-Le projet est en cours. Certaines pages et composants sont encore en construction ou en cours d’amélioration. Les fonctionnalités principales sont fonctionnelles : user stories, personas, thèmes adaptatifs, structure de navigation responsive, etc.
+- **Fiche KPI** : titre, description, source, fréquence, objectif, responsable
+- Explorateur de données & A/B testing
+- Liaison possible avec jeux de données fictifs ou APIs mockées
 
-Des mises à jour régulières sont en cours pour intégrer les wireframes dynamiques, les dashboards de KPIs, et la gestion complète des sprints.
+---
 
-⸻
+## 6. ✅ Validation Produit & Qualité
 
-### 🚀 Envie de suivre l'évolution ?
+- **Checklists de validation UX/UI** :
+  - Responsive
+  - Accessibilité
+  - Performance
+  - Respect des critères d’acceptation
+- **Tests API** avec éditeur intégré :
+  - Méthode (GET, POST…)
+  - Endpoint, headers, body
+  - Résultats attendus
+- Intégration d’**outils externes** :
+  - JIRA
+  - Postman
+  - Confluence
 
-Tu peux :
+---
 
-- Suivre les commits sur [GitHub](https://github.com/Florence-Martin/PO-UX-UI-DATA)
+## 7. 🤖 Fonctionnalités IA (à venir)
 
-- Me contacter sur [LinkedIn](https://www.linkedin.com/in/florence-martin-922b3861/) pour échanger ou collaborer !
+L’IA vise à transformer le rôle du PO dans l’analyse, la priorisation et la planification produit :
+
+- Génération automatique de **personas**, **user stories**, **KPIs**
+- Suggestions UX pour améliorer l’engagement
+- Planification de sprint assistée
+- Simulation de tests utilisateurs et scoring des livrables
+
+L’IA sera disponible dès **T1 2026** (version locale puis API).
+
+---
+
+## 🛠️ Stack Technique
+
+- `Next.js` (App Router)
+- `TypeScript`
+- `TailwindCSS` + `Shadcn UI`
+- `Chart.js`
+- `Firebase` (Auth + Firestore)
+- `Lucide Icons`
+- `Framer Motion`
+
+---
+
+## 📚 Règles de gestion
+
+Un document détaillé des **règles métier et fonctionnelles** est disponible ici :  
+👉 [Voir les règles de gestion](./documentation/business-rules.md)
+
+---
+
+## ⏳ Statut du projet
+
+L’application est en cours de développement itératif. Certaines fonctionnalités (comme la gestion du backlog, des user stories et des tâches) sont déjà **fonctionnelles et interactives**, avec des données dynamiques connectées à Firebase.
+
+D’autres sections sont pour le moment **présentées sous forme statique ou en prévisualisation**, dans l’attente de leur connexion aux données ou d’une implémentation complète.
+
+> Le projet évolue en continu avec des mises à jour régulières pour enrichir les fonctionnalités et renforcer l’aspect dynamique de chaque module.
+
+---
+
+## ✉️ Pour suivre le projet
+
+- 🧠 Suivre les updates sur [GitHub](https://github.com/Florence-Martin/PO-UX-UI-DATA)
+- 💬 Échanger sur [LinkedIn](https://www.linkedin.com/in/florence-martin-922b3861/)
+
+---
+
+> _Projet conçu par Florence Martin – PO / UX/UI / Frontend Developer._
