@@ -62,17 +62,8 @@ export function EditTaskModal({
       !edited.userStoryIds?.includes(storyId)
     ) {
       toast({
-        title: (
-          <div className="flex items-center gap-2 p-2 text-red-500 rounded-md bg-stone-100">
-            <Ban className="w-5 h-5 shrink-0" />
-            <span className="font-semibold">Action non autorisée</span>
-          </div>
-        ),
-        description: (
-          <p className="text-sm text-muted-foreground mt-1 text-white">
-            Une tâche ne peut être liée qu’à une seule User Story.
-          </p>
-        ),
+        title: "❌ Action non autorisée",
+        description: "Une tâche ne peut être liée qu’à une seule User Story.",
         variant: "destructive",
       });
       return;
