@@ -10,6 +10,13 @@ import {
 } from "@/lib/services/scenarioService";
 import { Timestamp } from "firebase/firestore";
 
+// Récupérer les scénarios existants
+export async function getAllScenarios(): Promise<Scenario[]> {
+  const ref = collection(db, "user_research_scenarios");
+  const snapshot = await getDocs(ref);
+  return snapshot.docs.map((doc) => doc.data() as Scenario);
+}
+
 export function useUserTestScenarios() {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(null);
@@ -27,13 +34,6 @@ export function useUserTestScenarios() {
   useEffect(() => {
     getAllScenarios().then(setScenarios);
   }, []);
-
-  // Récupérer les scénarios existant
-  export async function getAllScenarios(): Promise<Scenario[]> {
-    const ref = collection(db, "user_research_scenarios");
-    const snapshot = await getDocs(ref);
-    return snapshot.docs.map((doc) => doc.data() as Scenario);
-  }
 
   // Sélectionner un scénario existant
   const handleSelectScenario = useCallback(
