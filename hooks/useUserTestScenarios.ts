@@ -28,6 +28,13 @@ export function useUserTestScenarios() {
     getAllScenarios().then(setScenarios);
   }, []);
 
+  // Récupérer les scénarios existant
+  export async function getAllScenarios(): Promise<Scenario[]> {
+    const ref = collection(db, "user_research_scenarios");
+    const snapshot = await getDocs(ref);
+    return snapshot.docs.map((doc) => doc.data() as Scenario);
+  }
+
   // Sélectionner un scénario existant
   const handleSelectScenario = useCallback(
     (id: string) => {

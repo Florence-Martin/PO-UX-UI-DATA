@@ -29,9 +29,13 @@ export function UserResearch() {
     handleReset,
     handleCreatePersona,
     handleDeletePersona,
+    handleCreateScenario,
+    handleDeleteScenario,
     loadTemplate,
     personas,
     handleSelectPersona,
+    scenarios,
+    handleSelectScenario,
   } = useUserResearch();
 
   return (
@@ -46,9 +50,13 @@ export function UserResearch() {
             activeTemplate={activeTemplate}
             onTemplateClick={loadTemplate}
             onCreatePersona={handleCreatePersona}
-            personas={personas}
-            onSelectPersona={handleSelectPersona}
             onDeletePersona={handleDeletePersona}
+            onSelectPersona={handleSelectPersona}
+            personas={personas}
+            onCreateScenario={handleCreateScenario}
+            onDeleteScenario={handleDeleteScenario}
+            onSelectScenario={handleSelectScenario}
+            scenarios={scenarios}
           />
         </CardContent>
       </Card>
