@@ -6,12 +6,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { SidebarTemplates } from "@/components/analysis/SidebarTemplates";
 import { useUserResearch } from "@/hooks/useUserResearch";
-import { FileText, Users, UserCircle } from "lucide-react";
+import { FileText, Users, UserCircle, ClipboardCheck } from "lucide-react";
 
 const templatesMeta = [
   { id: "questionnaire", title: "Questionnaire Utilisateur", icon: FileText },
   { id: "interview", title: "Guide d'Interview Stakeholder", icon: Users },
   { id: "persona", title: "Champs des Personas", icon: UserCircle },
+  {
+    id: "scenario",
+    title: "Scénario/test d'utilisation",
+    icon: ClipboardCheck,
+  },
 ];
 
 export function UserResearch() {

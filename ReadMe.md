@@ -4,6 +4,13 @@ Cette application est conçue comme une **boîte à outils moderne pour Product 
 
 Pensée pour un usage **terrain**, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
 
+⚠️ Cette démo utilise des règles Firestore ouvertes :
+`allow read, write: if true;`
+
+- Aucune donnée sensible n’est stockée
+- L’application est en lecture/écriture publique uniquement à des fins de démonstration
+- Ces règles seront renforcées dans une future version avec authentification Firebase
+
 ---
 
 ## 📚 Sommaire

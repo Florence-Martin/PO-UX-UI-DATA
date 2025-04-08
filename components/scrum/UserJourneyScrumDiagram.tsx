@@ -22,7 +22,7 @@ const steps: {
   icon: React.ElementType;
 }[] = [
   {
-    title: "Participer à la daily meeting",
+    title: "Participer au daily meeting",
     period: "Matinée",
     intensity: 2,
     icon: CalendarClock,
