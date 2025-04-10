@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ArrowDownToDot, List, Notebook, Pen } from "lucide-react";
+import { ArrowDownToDot, Info, List, Notebook, Pen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -187,7 +187,27 @@ export function UserStories() {
 
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Priorité</Label>
+                <Label className="flex items-center gap-1">
+                  Priorité
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <ul className="list-disc pl-4">
+                          Indique l&apos;urgence ou l&apos;importance de la user
+                          story.
+                          <br />
+                          <li>Haute = 🚨 à faire ASAP</li>{" "}
+                          <li>Moyenne = important mais pas critique</li>{" "}
+                          <li>Basse = à faire... un jour 😅</li>
+                        </ul>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </Label>
+
                 <Select
                   value={priority}
                   onValueChange={(val) => setPriority(val as any)}
@@ -204,7 +224,23 @@ export function UserStories() {
               </div>
 
               <div className="space-y-2">
-                <Label>Story Points</Label>
+                <div className="flex items-center gap-2">
+                  <Label>Story Points</Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p>
+                          Estimation de l’effort à fournir. Plus le chiffre est
+                          grand, plus tu vas avoir besoin de café ☕️ !
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+
                 <Select
                   value={storyPoints?.toString() || ""}
                   onValueChange={(val) => setStoryPoints(Number(val))}
@@ -224,7 +260,23 @@ export function UserStories() {
             </div>
 
             <div className="space-y-2">
-              <Label>Critères d’Acceptation</Label>
+              <Label className="flex items-center gap-1">
+                Critères d’Acceptation
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p>
+                        Liste des conditions à remplir pour que la user story
+                        soit considérée comme terminée.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
+
               <Textarea
                 value={acceptanceCriteria}
                 onChange={(e) => setAcceptanceCriteria(e.target.value)}
