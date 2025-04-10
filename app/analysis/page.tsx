@@ -19,14 +19,14 @@ export default function AnalysisPage() {
       component: <UserResearch />,
     },
     {
-      value: "wireframes",
-      label: "Wireframes",
-      component: <Wireframes />,
-    },
-    {
       value: "documentation",
       label: "Editeur US",
       component: <UserStories />,
+    },
+    {
+      value: "wireframes",
+      label: "Wireframes",
+      component: <Wireframes />,
     },
   ];
 
@@ -37,7 +37,7 @@ export default function AnalysisPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Analyse Produit & Wireframes"
-          description="Structure l'analyse UX grâce à des templates interactifs (questionnaire, interview, persona) et un éditeur de user stories connecté à vos wireframes et priorités produit."
+          description="Structure ton cadrage produit UX étape par étape : définis ta roadmap, explore les besoins utilisateurs, rédige tes user stories à partir des insights, puis visualise tes idées à travers des wireframes connectés."
           tabs={tabs}
         />
       </Suspense>

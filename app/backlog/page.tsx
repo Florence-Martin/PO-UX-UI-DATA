@@ -10,12 +10,6 @@ import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { UserStoriesList } from "@/components/backlog/UserStoryList";
 
 const tabs = [
-  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
-  {
-    value: "sprints",
-    label: "Sprint Planning",
-    component: <SprintPlanning />,
-  },
   {
     value: "user-stories",
     label: "User Stories",
@@ -23,9 +17,15 @@ const tabs = [
   },
   {
     value: "priorisation",
-    label: "Priorisation",
+    label: "Priorisation (MoSCoW)",
     component: <MoscowPrioritization />,
   },
+  {
+    value: "sprints",
+    label: "Sprint Planning",
+    component: <SprintPlanning />,
+  },
+  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
 ];
 
 export default function BacklogPage() {
@@ -35,7 +35,7 @@ export default function BacklogPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Backlog & Organisation Agile"
-          description="Gère les tâches du produit, les priorités, les sprints et les user stories pour assurer une livraison itérative."
+          description="De la vision au delivery agile : commence par définir tes user stories (besoin métier), hiérarchise leur valeur avec MoSCoW, planifie les stories à livrer dans le sprint, puis pilote l’avancement des tâches dans ton backlog Kanban."
           tabs={tabs}
         />
       </Suspense>
