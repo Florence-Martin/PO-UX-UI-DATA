@@ -72,7 +72,7 @@ export function UserResearch() {
             <div className="space-y-4">
               <ScrollArea className="h-[400px] w-full rounded-md border">
                 <Textarea
-                  className="min-h-[350px] font-mono"
+                  className="min-h-[350px] font-mono whitespace-pre-wrap"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />

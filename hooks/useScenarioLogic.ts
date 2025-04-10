@@ -1,21 +1,20 @@
 // hooks/useScenarioLogic.ts
 import { Scenario } from "@/lib/services/scenarioService";
+import { Timestamp } from "firebase/firestore";
 
 export const cleanList = (list: string[]): string[] => {
   try {
     return Array.from(
       new Set(list.map((item) => item.trim()).filter((item) => item.length > 0))
-    );
+    ).sort((a, b) => a.localeCompare(b));
   } catch (err) {
-    console.error("Erreur dans cleanList:", err);
-    return [];
+    console.error("Erreur dans cleanList :", err);
+    return []; // Retourne un tableau vide en cas d'erreur
   }
 };
 
 // Cette fonction permet de parser un scénario brut en un objet structuré
-export const parseScenario = (
-  raw: string
-): Omit<Scenario, "id" | "createdAt" | "updatedAt"> => {
+export const parseScenario = (raw: string): Omit<Scenario, "id"> => {
   try {
     const lines = raw.split("\n").map((line) => line.trim());
 
@@ -57,6 +56,8 @@ export const parseScenario = (
         extractList("Points de friction observés :", ["Notes :"])
       ),
       notes: getLine("Notes :"),
+      createdAt: new Date() as unknown as Timestamp, // Default value for createdAt
+      updatedAt: new Date() as unknown as Timestamp, // Default value for updatedAt
     };
   } catch (err) {
     console.error("Erreur dans parseScenario:", err);
@@ -67,11 +68,8 @@ export const parseScenario = (
 // Cette fonction permet de formater un scénario structuré en une chaîne de caractères
 export const formatScenario = (scenario: Scenario): string => {
   try {
-    const formatList = (arr: string[]): string =>
-      arr
-        .filter((item) => item.trim() !== "")
-        .map((item) => `- ${item.trim()}`)
-        .join("\n") || "-";
+    const formatList = (input: string[]): string =>
+      input.map((item) => `- ${item.trim()}`).join("\n");
 
     return `
 Titre : ${scenario.title}

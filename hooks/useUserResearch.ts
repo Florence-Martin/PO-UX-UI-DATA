@@ -22,7 +22,13 @@ import { getTemplate, saveTemplate } from "@/lib/services/templateService";
 import { parsePersona, formatPersona } from "@/hooks/usePersonaLogic";
 import { parseScenario, formatScenario } from "@/hooks/useScenarioLogic";
 
-const TEMPLATE_IDS = ["questionnaire", "interview", "persona", "scenario"];
+// 🧠 Nom explicite uniquement pour les vrais templates génériques
+const TEMPLATE_IDS = [
+  "questionnaire",
+  "interview",
+  "persona_template",
+  "scenario_template",
+];
 
 export function useUserResearch() {
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
@@ -33,7 +39,10 @@ export function useUserResearch() {
 
   useEffect(() => {
     getAllPersonas().then(setPersonas);
-    getAllScenarios().then(setScenarios);
+    getAllScenarios().then((data) => {
+      console.log("Scénarios récupérés :", data);
+      setScenarios(data);
+    });
   }, []);
 
   const loadTemplate = async (id: string) => {
@@ -46,20 +55,23 @@ export function useUserResearch() {
       });
       return;
     }
+
     setActiveTemplate(id);
     setTitle(data.title);
-    setContent(data.content.replace(/\\n/g, "\n"));
+    setContent(data.content.replace(/\\n/g, "\n")); // Pour affichage propre
   };
 
   const handleSave = async () => {
     if (!activeTemplate) return;
 
+    // 💡 Cas 1 : Gabarit/template générique
     if (TEMPLATE_IDS.includes(activeTemplate)) {
       await saveTemplate(activeTemplate, { title, content });
       toast({ title: "Succès ✅", description: "Template sauvegardé 🔥" });
       return;
     }
 
+    // 💡 Cas 2 : Persona utilisateur
     const persona = personas.find((p) => p.id === activeTemplate);
     if (persona) {
       try {
@@ -79,6 +91,7 @@ export function useUserResearch() {
       }
     }
 
+    // 💡 Cas 3 : Scénario utilisateur
     const scenario = scenarios.find((s) => s.id === activeTemplate);
     if (scenario) {
       try {
@@ -101,25 +114,28 @@ export function useUserResearch() {
   const handleReset = async () => {
     if (!activeTemplate) return;
 
+    // Si c’est un template
     if (TEMPLATE_IDS.includes(activeTemplate)) {
       await loadTemplate(activeTemplate);
       toast({ title: "Réinitialisé", description: "Template restauré 🔄" });
-    } else {
-      const persona = await getPersona(activeTemplate);
-      if (persona) {
-        setTitle(persona.name);
-        setContent(formatPersona(persona));
-        toast({ title: "Réinitialisé", description: "Persona restauré 🔄" });
-        return;
-      }
+      return;
+    }
 
-      const scenario = await getScenario(activeTemplate);
-      if (scenario) {
-        setTitle(scenario.title);
-        setContent(formatScenario(scenario));
-        toast({ title: "Réinitialisé", description: "Scénario restauré 🔄" });
-        return;
-      }
+    // Sinon, c’est un persona ou un scénario
+    const persona = await getPersona(activeTemplate);
+    if (persona) {
+      setTitle(persona.name);
+      setContent(formatPersona(persona));
+      toast({ title: "Réinitialisé", description: "Persona restauré 🔄" });
+      return;
+    }
+
+    const scenario = await getScenario(activeTemplate);
+    if (scenario) {
+      setTitle(scenario.title);
+      setContent(formatScenario(scenario));
+      toast({ title: "Réinitialisé", description: "Scénario restauré 🔄" });
+      return;
     }
   };
 
@@ -167,22 +183,17 @@ export function useUserResearch() {
     }
   };
 
-  // Cette fonction permet de créer un scénario par défaut
   const handleCreateScenario = async () => {
     const defaultScenario = {
       title: "Nouveau scénario",
-      context:
-        "[Ex. : L’utilisateur souhaite rechercher un bien immobilier dans une ville ciblée]",
-      objective:
-        "[Ex. : Identifier les blocages dans le processus de filtrage]",
-      expectedInsights: [
-        "[Ex. : Comprendre pourquoi les utilisateurs ne cliquent pas sur le CTA]",
-      ],
-      associatedPersonaId: "[Ex. : Jean Dupont]",
-      targetKPI: "[Ex. : Taux de clic sur le bouton Valider]",
-      testedComponents: ["[Ex. : Barre de recherche, filtres, résultats]"],
-      painPointsObserved: ["[Ex. : Trop de résultats non pertinents]"],
-      notes: "[Ex. : À tester également sur mobile]",
+      context: "",
+      objective: "",
+      expectedInsights: [""],
+      associatedPersonaId: "",
+      targetKPI: "",
+      testedComponents: [""],
+      painPointsObserved: [""],
+      notes: "",
     };
 
     const id = await createScenario(defaultScenario);
@@ -193,7 +204,7 @@ export function useUserResearch() {
     if (newScenario) {
       setActiveTemplate(id);
       setTitle(newScenario.title);
-      setContent(formatScenario(newScenario)); // Affiche squelette complet
+      setContent(formatScenario(newScenario));
     }
   };
 
