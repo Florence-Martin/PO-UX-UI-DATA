@@ -7,11 +7,18 @@ import {
 } from "@/lib/services/backlogTasksService";
 import { toast } from "sonner";
 import { BacklogTask } from "@/lib/types/backlogTask";
+import { Task } from "@/lib/types/task";
 
 export const useBacklogTasks = () => {
   const [tasks, setTasks] = useState<BacklogTask[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState<"high" | "medium" | "low" | "">("");
+  const [storyPoints, setStoryPoints] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -100,6 +107,35 @@ export const useBacklogTasks = () => {
   const inTesting = tasks.filter((s) => s.status === "in-testing");
   const done = tasks.filter((s) => s.status === "done");
 
+  // Fonction pour initier l’édition d’une tâche
+  const handleEdit = (task: BacklogTask) => {
+    setIsEditing(true);
+    setEditingId(task.id || null);
+    setTitle(task.title);
+    setDescription(task.description);
+    setPriority(task.priority);
+    setStoryPoints(task.storyPoints);
+  };
+
+  // Fonction pour supprimer une tâche (avec toast et état local)
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+
+    try {
+      setLoading(true);
+      await deleteBacklogTask(id);
+      setTasks((prev) => prev.filter((task) => task.id !== id));
+      toast.success("Tâche supprimée ❌");
+      setError(null);
+    } catch (err) {
+      console.error("Erreur lors de la suppression de la tâche :", err);
+      setError("Impossible de supprimer la tâche. Veuillez réessayer.");
+      toast.error("Erreur : Impossible de supprimer la tâche.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     todo,
     inProgress,
@@ -110,7 +146,20 @@ export const useBacklogTasks = () => {
     deleteTask,
     updateTaskStatus,
     getTasksByUserStoryId,
+    handleEdit,
+    handleDelete,
     error,
     loading,
+    isEditing,
+    editingId,
+    title,
+    description,
+    priority,
+    storyPoints,
+    setIsEditing,
+    setTitle,
+    setDescription,
+    setPriority,
+    setStoryPoints,
   };
 };

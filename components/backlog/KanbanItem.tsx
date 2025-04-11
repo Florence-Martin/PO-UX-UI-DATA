@@ -62,21 +62,31 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
     }
   }, [task.userStoryIds]);
 
-  // 👇 Scroll automatique si l'URL contient le hash correspondant à cette tâche
+  // Scroll automatique si l'URL contient le hash correspondant à cette tâche
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hash = window.location.hash.replace("#", "");
-      if (hash === task.id) {
-        ref.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
+    const hash = window.location.hash.replace("#", "");
+    if (hash && hash === task.id && ref.current) {
+      setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        ref.current?.classList.add("ring-2", "ring-primary/60");
+
+        // Nettoyage du style visuel après un moment
+        setTimeout(() => {
+          ref.current?.classList.remove("ring-2", "ring-primary/60");
+        }, 3000);
+      }, 150); // ⏳ Attente que le DOM soit prêt
     }
   }, [task.id]);
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div
+      ref={(el) => {
+        setNodeRef(el); // Pour le drag and drop
+        ref.current = el; // Pour le scroll
+      }}
+      id={task.id}
+      style={style}
+    >
       <Card
         className="relative bg-background hover:ring-2 ring-primary mr-1 cursor-pointer"
         onClick={() => {
@@ -84,7 +94,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
         }}
       >
         <CardContent className="p-3 space-y-2 flex flex-col justify-between h-[170px]">
-          {/* 🔗 User Story liée */}
+          {/* User Story liée */}
           {userStory ? (
             <div className="text-xs text-muted-foreground space-y-1">
               <div className="flex justify-between items-start">
