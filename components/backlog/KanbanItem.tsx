@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useCombinedRefs } from "@/hooks/useCombinedRefs";
 
 import { Grip, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import {
@@ -24,7 +25,6 @@ interface KanbanItemProps {
 
 export function KanbanItem({ task, onClick }: KanbanItemProps) {
   const [userStory, setUserStory] = useState<UserStory | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
 
   const {
     attributes,
@@ -47,6 +47,8 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
     opacity: isDragging ? 0.5 : 1,
     cursor: "grab",
   };
+  const localRef = useRef<HTMLDivElement>(null);
+  const combinedRef = useCombinedRefs<HTMLDivElement>(localRef, setNodeRef);
 
   useEffect(() => {
     const fetchLinkedUserStory = async () => {
@@ -65,30 +67,25 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
   // Scroll automatique si l'URL contient le hash correspondant à cette tâche
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
-    if (hash && hash === task.id && ref.current) {
+    if (hash === task.id && localRef.current) {
       setTimeout(() => {
-        ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-        ref.current?.classList.add("ring-2", "ring-primary/60");
+        localRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        localRef.current?.classList.add("highlight-ring");
 
-        // Nettoyage du style visuel après un moment
         setTimeout(() => {
-          ref.current?.classList.remove("ring-2", "ring-primary/60");
+          localRef.current?.classList.remove("highlight-ring");
         }, 3000);
-      }, 150); // ⏳ Attente que le DOM soit prêt
+      }, 150);
     }
   }, [task.id]);
 
   return (
-    <div
-      ref={(el) => {
-        setNodeRef(el); // Pour le drag and drop
-        ref.current = el; // Pour le scroll
-      }}
-      id={task.id}
-      style={style}
-    >
+    <div ref={combinedRef} id={task.id} style={style}>
       <Card
-        className="relative bg-background hover:ring-2 ring-primary mr-1 cursor-pointer"
+        className="relative bg-background hover:ring-2 ring-primary/40 mr-1 cursor-pointer"
         onClick={() => {
           if (!isDragging) onClick?.(task);
         }}
@@ -106,7 +103,6 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
                   href={`/backlog?tab=user-stories#${userStory.id}`}
                   title="Voir la User Story liée"
                   className="text-muted-foreground hover:text-primary"
-                  rel="noopener noreferrer"
                   scroll={false}
                 >
                   <SquareArrowOutUpRight className="w-3.5 h-3.5" />

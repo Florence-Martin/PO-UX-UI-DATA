@@ -29,16 +29,17 @@ export default function SectionTabsLayout({
   useEffect(() => {
     if (!tabParam) return;
 
-    // Vérifie si l’onglet est valide
     const matchedTab = tabs.find((tab) => tab.value === tabParam);
 
     if (matchedTab) {
       setActiveTab(tabParam);
 
-      // Scroll vers l’ancre s’il y en a une
       const hash = window.location.hash;
+
       if (hash) {
-        const el = document.querySelector(hash);
+        // Convertit le hash en sélecteur CSS valide
+        const escapedHash = CSS.escape(hash.replace("#", ""));
+        const el = document.querySelector(`#${escapedHash}`);
         if (el) {
           setTimeout(() => {
             el.scrollIntoView({ behavior: "smooth", block: "start" });

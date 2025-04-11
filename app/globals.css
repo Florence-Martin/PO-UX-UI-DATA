@@ -233,3 +233,9 @@
     transform: rotate(360deg);
   }
 }
+
+@layer utilities {
+  .highlight-ring {
+    @apply p-4 border ring-2 rounded-xl ring-primary/60;
+  }
+}

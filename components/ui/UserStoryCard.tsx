@@ -124,8 +124,7 @@ export function UserStoryCard({ story }: Props) {
                 href={`/backlog?tab=kanban#${task.id}`}
                 title="Voir la tâche dans le Kanban"
                 className="text-muted-foreground hover:text-primary"
-                target="_blank"
-                rel="noopener noreferrer"
+                scroll={false}
               >
                 <SquareArrowOutUpRight className="w-3.5 h-3.5" />
               </Link>
