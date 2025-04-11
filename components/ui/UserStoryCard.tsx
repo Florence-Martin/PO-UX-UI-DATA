@@ -5,7 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "./button";
-import { ChevronDown, ChevronUp, PencilLine } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  PencilLine,
+  Pin,
+  PinOff,
+  SquareArrowOutUpRight,
+} from "lucide-react";
+import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
 
 type Props = {
   story: UserStory;
@@ -15,6 +23,7 @@ export function UserStoryCard({ story }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isTargeted, setIsTargeted] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [linkedTasks, setLinkedTasks] = useState<any[]>([]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -22,6 +31,22 @@ export function UserStoryCard({ story }: Props) {
       setIsTargeted(true);
       ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+  }, [story.id]);
+
+  // Récupère les tâches liées à la User Story
+  useEffect(() => {
+    const fetchLinkedTasks = async () => {
+      if (!story.id) return; // ⛔ stop si l'id est undefined
+
+      const allTasks = await getAllBacklogTasks();
+      const tasksForStory = allTasks.filter((task) =>
+        task.userStoryIds?.includes(story.id as string)
+      );
+
+      setLinkedTasks(tasksForStory);
+    };
+
+    fetchLinkedTasks();
   }, [story.id]);
 
   return (
@@ -81,6 +106,38 @@ export function UserStoryCard({ story }: Props) {
           {story.storyPoints} pts
         </span>
       </div>
+
+      {/* 🔗 Tâches liées */}
+      {linkedTasks.length > 0 ? (
+        <div className="text-xs text-muted-foreground space-y-1 mt-4">
+          <p className="font-medium text-sm">Tâches liées :</p>
+          {linkedTasks.map((task) => (
+            <div
+              key={task.id}
+              className="flex justify-between items-start border-b pb-2 mb-2"
+            >
+              <span className="font-medium text-[11px] tracking-wide flex items-center gap-1">
+                <Pin className="w-3 h-3 text-red-500" />
+                <span>{task.title}</span>
+              </span>
+              <Link
+                href={`/backlog#${task.id}`}
+                title="Voir la tâche"
+                className="text-muted-foreground hover:text-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SquareArrowOutUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-xs text-red-500 italic flex items-center gap-1 mt-4">
+          <PinOff className="w-3 h-3" />
+          Aucune tâche liée
+        </div>
+      )}
 
       {/* Critères d’acceptation */}
       <p

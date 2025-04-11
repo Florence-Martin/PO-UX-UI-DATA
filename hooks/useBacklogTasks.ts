@@ -47,11 +47,9 @@ export const useBacklogTasks = () => {
     try {
       if (!task.id) throw new Error("ID manquant pour la mise à jour");
 
-      // ✅ Envoie uniquement les champs modifiés à Firestore
       const { id, ...data } = task;
-      await updateBacklogTask(id, data); // data est de type Partial<BacklogTask>
+      await updateBacklogTask(id, data);
 
-      // 🟢 Met à jour localement
       setTasks((prev) =>
         prev.map((t) => (t.id === id ? { ...t, ...data } : t))
       );
@@ -82,6 +80,7 @@ export const useBacklogTasks = () => {
       toast.error("Erreur : Impossible de changer le statut.");
     }
   };
+
   const deleteTask = async (taskId: string) => {
     try {
       await deleteBacklogTask(taskId);
@@ -92,6 +91,9 @@ export const useBacklogTasks = () => {
       toast.error("Erreur : Impossible de supprimer la tâche.");
     }
   };
+
+  const getTasksByUserStoryId = (userStoryId: string) =>
+    tasks.filter((task) => task.userStoryIds?.includes(userStoryId));
 
   const todo = tasks.filter((s) => s.status === "todo");
   const inProgress = tasks.filter((s) => s.status === "in-progress");
@@ -107,6 +109,7 @@ export const useBacklogTasks = () => {
     updateTask,
     deleteTask,
     updateTaskStatus,
+    getTasksByUserStoryId,
     error,
     loading,
   };

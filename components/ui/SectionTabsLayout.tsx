@@ -31,19 +31,7 @@ export default function SectionTabsLayout({
 
     // Vérifie si l’onglet est valide
     const matchedTab = tabs.find((tab) => tab.value === tabParam);
-    // if (matchedTab) {
-    //   setActiveTab(tabParam);
 
-    //   // Si onglet "documentation", scroll vers l'ancre
-    //   if (tabParam === "documentation") {
-    //     const el = document.querySelector("#user-stories-list");
-    //     if (el) {
-    //       setTimeout(() => {
-    //         el.scrollIntoView({ behavior: "smooth", block: "start" });
-    //       }, 150);
-    //     }
-    //   }
-    // }
     if (matchedTab) {
       setActiveTab(tabParam);
 

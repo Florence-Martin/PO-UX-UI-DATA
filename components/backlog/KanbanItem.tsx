@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
 import { Grip, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import {
   Tooltip,
@@ -12,7 +13,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getAllUserStories } from "@/lib/services/userStoryService";
 import { UserStory } from "@/lib/types/userStory";
 
@@ -23,6 +24,7 @@ interface KanbanItemProps {
 
 export function KanbanItem({ task, onClick }: KanbanItemProps) {
   const [userStory, setUserStory] = useState<UserStory | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const {
     attributes,
@@ -48,14 +50,30 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
 
   useEffect(() => {
     const fetchLinkedUserStory = async () => {
-      const all = await getAllUserStories();
-      const firstLinked = all.find((s) => s.id === task.userStoryIds?.[0]);
-      setUserStory(firstLinked || null);
+      const allUserStories = await getAllUserStories();
+      const linkedStory = allUserStories.find(
+        (story) => story.id === task.userStoryIds?.[0]
+      );
+      setUserStory(linkedStory || null);
     };
+
     if (task.userStoryIds?.length) {
       fetchLinkedUserStory();
     }
   }, [task.userStoryIds]);
+
+  // 👇 Scroll automatique si l'URL contient le hash correspondant à cette tâche
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.replace("#", "");
+      if (hash === task.id) {
+        ref.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [task.id]);
 
   return (
     <div ref={setNodeRef} style={style}>
@@ -75,11 +93,11 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
                   <span>[{userStory.code}]</span>
                 </span>
                 <Link
-                  href={`/user-stories#${userStory.id}`}
-                  title="Voir la fiche complète"
+                  href={`/backlog?tab=user-stories#${userStory.id}`}
+                  title="Voir la User Story liée"
                   className="text-muted-foreground hover:text-primary"
-                  target="_blank"
                   rel="noopener noreferrer"
+                  scroll={false}
                 >
                   <SquareArrowOutUpRight className="w-3.5 h-3.5" />
                 </Link>
@@ -95,6 +113,7 @@ export function KanbanItem({ task, onClick }: KanbanItemProps) {
               Aucune User Story liée
             </div>
           )}
+
           {/* 🔤 Titre de la tâche */}
           <div className="flex justify-between items-start">
             <div className="font-medium text-xs">{task.title}</div>
