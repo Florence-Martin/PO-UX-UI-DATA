@@ -14,6 +14,7 @@ import {
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
+import { updateUserStory } from "@/lib/services/userStoryService";
 
 type Props = {
   story: UserStory;
@@ -24,6 +25,7 @@ export function UserStoryCard({ story }: Props) {
   const [isTargeted, setIsTargeted] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [linkedTasks, setLinkedTasks] = useState<any[]>([]);
+  const [moscow, setMoscow] = useState<string>(story.moscow || "");
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -49,6 +51,21 @@ export function UserStoryCard({ story }: Props) {
     fetchLinkedTasks();
   }, [story.id]);
 
+  // Met à jour la priorité de la User Story
+  const handleMoscowChange = async (newValue: string) => {
+    try {
+      setMoscow(newValue); // Met à jour l'état local
+      if (story.id) {
+        await updateUserStory(story.id, { moscow: newValue }); // Met à jour dans Firebase
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la mise à jour de la priorisation MoSCoW :",
+        error
+      );
+    }
+  };
+
   return (
     <motion.div
       ref={ref}
@@ -73,20 +90,45 @@ export function UserStoryCard({ story }: Props) {
           </h3>
         </div>
 
-        {/* Badge de priorité */}
-        <div className="sm:self-start">
+        {/* Badges priorité + MoSCoW */}
+        <div className="sm:self-start justify-end flex gap-2 flex-wrap">
+          {/* Badge de priorité */}
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium w-fit
-              ${
-                story.priority === "high"
-                  ? "bg-red-100 text-red-700"
-                  : story.priority === "medium"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-green-100 text-green-700"
-              }`}
+      ${
+        story.priority === "high"
+          ? "bg-red-100 text-red-700"
+          : story.priority === "medium"
+          ? "bg-yellow-100 text-yellow-700"
+          : "bg-green-100 text-green-700"
+      }`}
           >
             {story.priority}
           </span>
+
+          {/* Select inline MoSCoW stylisé comme un badge */}
+          <select
+            value={moscow}
+            onChange={(e) => handleMoscowChange(e.target.value)}
+            className={`text-xs px-2 py-0.5 rounded-full font-medium w-fit border-none outline-none appearance-none bg-opacity-80 cursor-pointer
+      ${
+        moscow === "mustHave"
+          ? "bg-green-100 text-green-700"
+          : moscow === "shouldHave"
+          ? "bg-yellow-100 text-yellow-700"
+          : moscow === "couldHave"
+          ? "bg-blue-100 text-blue-700"
+          : moscow === "wontHave"
+          ? "bg-gray-200 text-gray-500"
+          : "bg-muted text-muted-foreground"
+      }`}
+          >
+            <option value="">Non priorisé</option>
+            <option value="mustHave">Must Have</option>
+            <option value="shouldHave">Should Have</option>
+            <option value="couldHave">Could Have</option>
+            <option value="wontHave">Won’t Have</option>
+          </select>
         </div>
       </div>
 
@@ -100,7 +142,7 @@ export function UserStoryCard({ story }: Props) {
       </p>
 
       {/* Points */}
-      <div className="text-sm text-yellow-500 flex items-center gap-1 mt-3">
+      <div className="text-sm justify-end text-yellow-500 flex items-center gap-1 mt-3">
         ⭐{" "}
         <span className="text-foreground font-medium">
           {story.storyPoints} pts

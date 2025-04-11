@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 
 import { KanbanBoard } from "@/components/backlog/KanbanBoard";
-import { MoscowPrioritization } from "@/components/backlog/MoscowPrioritization";
+import { MoscowPrioritization } from "@/components/prioritization/MoscowPrioritization";
 import { SprintPlanning } from "@/components/backlog/SprintPlanning";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";

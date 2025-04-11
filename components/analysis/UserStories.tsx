@@ -29,6 +29,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+const moscowOptions = ["Must have", "Should have", "Could have", "Won't have"];
+
 export function UserStories() {
   const {
     title,
@@ -50,6 +52,8 @@ export function UserStories() {
     filteredStories,
     filterByPriority,
     setUserStorySearchTerm,
+    moscow,
+    setMoscow,
   } = useUserStories();
 
   const searchParams = useSearchParams();
@@ -233,8 +237,8 @@ export function UserStories() {
                       </TooltipTrigger>
                       <TooltipContent side="right" className="max-w-xs">
                         <p>
-                          Estimation de l’effort à fournir. Plus le chiffre est
-                          grand, plus tu vas avoir besoin de café ☕️ !
+                          Estimation de l&apos;effort à fournir. Plus le chiffre
+                          est grand, plus tu vas avoir besoin de café ☕️ !
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -257,6 +261,44 @@ export function UserStories() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1">
+                Priorisation (MoSCow)
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p>Méthode MoSCoW pour prioriser les user stories :</p>
+                      <ul className="list-disc pl-4">
+                        <li>Must have</li>
+                        <li>Should have</li>
+                        <li>Could have</li>
+                        <li>Won&apos;t have</li>
+                      </ul>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
+
+              <Select
+                value={moscow}
+                onValueChange={(val) => setMoscow(val as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un critère" />
+                </SelectTrigger>
+                <SelectContent>
+                  {moscowOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

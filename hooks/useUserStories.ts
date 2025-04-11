@@ -27,6 +27,9 @@ export function useUserStories() {
   const [prioritySearchTerm, setPrioritySearchTerm] = useState("");
   const [editingCode, setEditingCode] = useState<string | null>(null);
   const [userStorySearchTerm, setUserStorySearchTerm] = useState("");
+  const [moscow, setMoscow] = useState<
+    "mustHave" | "shouldHave" | "couldHave" | "wontHave" | ""
+  >("");
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -86,6 +89,7 @@ export function useUserStories() {
       priority,
       storyPoints,
       acceptanceCriteria,
+      moscow,
       status: "todo" as "todo",
     };
 
@@ -124,6 +128,7 @@ export function useUserStories() {
     setPriority(story.priority);
     setStoryPoints(story.storyPoints);
     setAcceptanceCriteria(story.acceptanceCriteria);
+    setMoscow(story.moscow) || "";
   };
 
   const handleDelete = async (id?: string) => {
@@ -176,5 +181,7 @@ export function useUserStories() {
     loading,
     userStorySearchTerm,
     setUserStorySearchTerm,
+    moscow,
+    setMoscow,
   };
 }

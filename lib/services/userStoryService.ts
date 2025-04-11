@@ -79,3 +79,14 @@ export const getUsedUserStoryIds = async (): Promise<string[]> => {
   });
   return Array.from(usedIds);
 };
+
+// Récupère les user stories filtrées par Moscow
+export const getUserStoriesByMoscow = async () => {
+  const stories = await getAllUserStories();
+  return {
+    mustHave: stories.filter((s) => s.moscow === "mustHave"),
+    shouldHave: stories.filter((s) => s.moscow === "shouldHave"),
+    couldHave: stories.filter((s) => s.moscow === "couldHave"),
+    wontHave: stories.filter((s) => s.moscow === "wontHave"),
+  };
+};
