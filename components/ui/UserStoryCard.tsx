@@ -136,20 +136,26 @@ export function UserStoryCard({ story }: Props) {
       {/* Trait horizontal */}
       <hr className="border-t border-border my-3" />
 
-      {/* Description */}
-      <ExpandableSection
-        content={story.description}
-        isLong={isDescriptionLong}
-        clampClass="line-clamp-2"
-      />
+      <div className="flex flex-col justify-between min-h-[100px]">
+        {/* Zone de texte (expandable) */}
+        <ExpandableSection
+          content={story.description}
+          isLong={isDescriptionLong}
+          clampClass="line-clamp-2 text-muted-foreground italic transition-all"
+          fullClass="text-muted-foreground italic transition-all"
+        />
 
-      {/* Points */}
-      <div className="text-sm justify-end text-yellow-500 flex items-center gap-1 mt-3">
-        ⭐{" "}
-        <span className="text-foreground font-medium">
-          {story.storyPoints} pts
-        </span>
+        {/* Points alignés en bas */}
+        <div className="mt-auto pt-2 flex justify-end items-center text-sm text-yellow-500 gap-1">
+          ⭐{" "}
+          <span className="text-foreground font-medium">
+            {story.storyPoints} pts
+          </span>
+        </div>
       </div>
+
+      {/* Trait horizontal */}
+      <hr className="border-t border-border my-3" />
 
       {/* 🔗 Tâches liées */}
       {linkedTasks.length > 0 ? (
@@ -187,6 +193,7 @@ export function UserStoryCard({ story }: Props) {
         content={story.acceptanceCriteria}
         isLong={isAcceptanceCriteriaLong}
         clampClass="line-clamp-3"
+        fullClass="text-muted-foreground italic transition-all"
       />
 
       {/* Bouton modifier */}
