@@ -15,13 +15,11 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 
+// Définition du type des clés MoSCoW
+export type MoscowKey = "mustHave" | "shouldHave" | "couldHave" | "wontHave";
+
 export function MoscowPrioritization() {
-  const [data, setData] = useState<{
-    mustHave: UserStory[];
-    shouldHave: UserStory[];
-    couldHave: UserStory[];
-    wontHave: UserStory[];
-  }>({
+  const [data, setData] = useState<Record<MoscowKey, UserStory[]>>({
     mustHave: [],
     shouldHave: [],
     couldHave: [],
