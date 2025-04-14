@@ -1,4 +1,5 @@
 // types/userStory.ts
+export type MoscowKey = "mustHave" | "shouldHave" | "couldHave" | "wontHave";
 
 import { TaskStoryBase } from "./taskStoryBase";
 
@@ -7,5 +8,5 @@ export interface UserStory extends TaskStoryBase {
   code?: string; // ex: "US-001"
   acceptanceCriteria: string;
   taskIds?: string[];
-  moscow?: "mustHave" | "shouldHave" | "couldHave" | "wontHave";
+  moscow?: MoscowKey;
 }
