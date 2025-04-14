@@ -56,7 +56,7 @@ export function UserStoryCard({ story }: Props) {
     try {
       setMoscow(newValue); // Met à jour l'état local
       if (story.id) {
-        await updateUserStory(story.id, { moscow: newValue as MoscowKey }); // Met à jour dans Firebase
+        await updateUserStory(story.id, { moscow: newValue }); // Met à jour dans Firebase
       }
     } catch (error) {
       console.error(
