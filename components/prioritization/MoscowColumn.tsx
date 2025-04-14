@@ -27,7 +27,7 @@ export function MoscowColumn({ label, stories, columnId }: Props) {
       ) : (
         <SortableContext
           id={columnId}
-          items={stories.map((story) => story.id)}
+          items={stories.map((story) => story.id).filter(Boolean)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-2">
