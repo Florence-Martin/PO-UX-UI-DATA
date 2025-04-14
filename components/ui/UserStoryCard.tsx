@@ -5,16 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "./button";
-import {
-  ChevronDown,
-  ChevronUp,
-  PencilLine,
-  Pin,
-  PinOff,
-  SquareArrowOutUpRight,
-} from "lucide-react";
+import { PencilLine, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
 import { updateUserStory } from "@/lib/services/userStoryService";
+import { ExpandableSection } from "../backlog/ExpandableSection";
 
 type Props = {
   story: UserStory;
@@ -23,9 +17,12 @@ type Props = {
 export function UserStoryCard({ story }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isTargeted, setIsTargeted] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [linkedTasks, setLinkedTasks] = useState<any[]>([]);
   const [moscow, setMoscow] = useState<string>(story.moscow || "");
+
+  const isTitleLong = story.title?.length > 50;
+  const isDescriptionLong = story.description?.length > 160;
+  const isAcceptanceCriteriaLong = story.acceptanceCriteria?.length > 160;
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -38,7 +35,7 @@ export function UserStoryCard({ story }: Props) {
   // Récupère les tâches liées à la User Story
   useEffect(() => {
     const fetchLinkedTasks = async () => {
-      if (!story.id) return; // ⛔ stop si l'id est undefined
+      if (!story.id) return;
 
       const allTasks = await getAllBacklogTasks();
       const tasksForStory = allTasks.filter((task) =>
@@ -81,29 +78,31 @@ export function UserStoryCard({ story }: Props) {
           : "border-border shadow-sm hover:shadow-md"
       }`}
     >
-      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-2">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-2 min-h-[100px]">
         {/* Code + titre */}
         <div className="flex flex-col">
           {story.code && (
             <span className="text-muted-foreground text-sm">{story.code}</span>
           )}
-          <h3 className="text-base font-semibold text-foreground">
-            {story.title}
-          </h3>
+          <ExpandableSection
+            content={story.title}
+            isLong={isTitleLong}
+            clampClass="line-clamp-2"
+          />
         </div>
 
         {/* Badges priorité + MoSCoW */}
-        <div className="sm:self-start justify-end flex gap-2 flex-wrap">
+        <div className="flex flex-row sm:flex-col sm:items-end gap-2">
           {/* Badge de priorité */}
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium w-fit
-      ${
-        story.priority === "high"
-          ? "bg-red-100 text-red-700"
-          : story.priority === "medium"
-          ? "bg-yellow-100 text-yellow-700"
-          : "bg-green-100 text-green-700"
-      }`}
+              ${
+                story.priority === "high"
+                  ? "bg-red-100 text-red-700"
+                  : story.priority === "medium"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700"
+              }`}
           >
             {story.priority}
           </span>
@@ -113,17 +112,17 @@ export function UserStoryCard({ story }: Props) {
             value={moscow}
             onChange={(e) => handleMoscowChange(e.target.value)}
             className={`text-xs px-2 py-0.5 rounded-full font-medium w-fit border-none outline-none appearance-none bg-opacity-80 cursor-pointer
-      ${
-        moscow === "mustHave"
-          ? "bg-green-100 text-green-700"
-          : moscow === "shouldHave"
-          ? "bg-yellow-100 text-yellow-700"
-          : moscow === "couldHave"
-          ? "bg-blue-100 text-blue-700"
-          : moscow === "wontHave"
-          ? "bg-gray-200 text-gray-500"
-          : "bg-muted text-muted-foreground"
-      }`}
+              ${
+                moscow === "mustHave"
+                  ? "bg-green-100 text-green-700"
+                  : moscow === "shouldHave"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : moscow === "couldHave"
+                  ? "bg-blue-100 text-blue-700"
+                  : moscow === "wontHave"
+                  ? "bg-gray-200 text-gray-500"
+                  : "bg-muted text-muted-foreground"
+              }`}
           >
             <option value="">Non priorisée</option>
             <option value="mustHave">Must Have</option>
@@ -134,14 +133,15 @@ export function UserStoryCard({ story }: Props) {
         </div>
       </div>
 
+      {/* Trait horizontal */}
+      <hr className="border-t border-border my-3" />
+
       {/* Description */}
-      <p
-        className={`text-sm text-muted-foreground italic transition-all ${
-          expanded ? "" : "line-clamp-3"
-        }`}
-      >
-        {story.description}
-      </p>
+      <ExpandableSection
+        content={story.description}
+        isLong={isDescriptionLong}
+        clampClass="line-clamp-2"
+      />
 
       {/* Points */}
       <div className="text-sm justify-end text-yellow-500 flex items-center gap-1 mt-3">
@@ -183,31 +183,11 @@ export function UserStoryCard({ story }: Props) {
       )}
 
       {/* Critères d’acceptation */}
-      <p
-        className={`text-sm text-foreground mt-2 whitespace-pre-line transition-all ${
-          expanded ? "" : "line-clamp-3"
-        }`}
-      >
-        {story.acceptanceCriteria}
-      </p>
-
-      {/* Bouton voir plus / moins */}
-      {(story.description.length > 160 ||
-        story.acceptanceCriteria.length > 160) && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-2 text-xs font-medium text-blue-500 hover:underline transition duration-200"
-        >
-          <span className="flex items-center gap-1">
-            {expanded ? "Voir moins" : "Voir plus"}
-            {expanded ? (
-              <ChevronUp className="w-3 h-3" />
-            ) : (
-              <ChevronDown className="w-3 h-3" />
-            )}
-          </span>
-        </button>
-      )}
+      <ExpandableSection
+        content={story.acceptanceCriteria}
+        isLong={isAcceptanceCriteriaLong}
+        clampClass="line-clamp-3"
+      />
 
       {/* Bouton modifier */}
       {isTargeted && (
