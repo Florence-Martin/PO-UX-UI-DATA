@@ -56,7 +56,7 @@ export const PriorityFilterSelect = ({
   return (
     <>
       {/* Filtre + reset */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2 w-full sm:w-auto">
+      <div className="flex sm:flex-row items-start sm:items-end gap-2 w-full sm:w-auto sm:justify-between">
         <div className="w-full sm:w-auto">
           <Label htmlFor="priority" className="sr-only">
             Filtrer par priorité
@@ -82,10 +82,10 @@ export const PriorityFilterSelect = ({
         <Button
           variant={"outline"}
           onClick={handleReset}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition w-full sm:w-auto"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition w-full sm:w-auto sm:ml-2"
+          aria-label="Réinitialiser les filtres"
         >
-          <RotateCcw className="w-4 h-4" />
-          Réinitialiser
+          <RotateCcw className="w-4 h-4" aria-hidden="true" />
         </Button>
       </div>
     </>

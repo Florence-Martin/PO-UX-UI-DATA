@@ -6,14 +6,19 @@ import { UserStoryCard } from "@/components/ui/UserStoryCard";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStoriesList() {
-  const { filteredStories, filterByPriority, setUserStorySearchTerm } =
-    useUserStories();
+  const {
+    filteredStories,
+    filterByPriority,
+    filterByMoscow,
+    setUserStorySearchTerm,
+  } = useUserStories();
 
   return (
-    <Card>
+    <Card className="mt-20 md:mt-0">
       <CardHeader className="space-y-4">
         <UserStorySearchBar
           onFilterChange={filterByPriority}
+          onMoscowFilterChange={filterByMoscow}
           onSearchChange={setUserStorySearchTerm}
         />
       </CardHeader>

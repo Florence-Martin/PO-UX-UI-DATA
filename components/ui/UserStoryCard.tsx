@@ -125,7 +125,7 @@ export function UserStoryCard({ story }: Props) {
           : "bg-muted text-muted-foreground"
       }`}
           >
-            <option value="">Non priorisé</option>
+            <option value="">Non priorisée</option>
             <option value="mustHave">Must Have</option>
             <option value="shouldHave">Should Have</option>
             <option value="couldHave">Could Have</option>

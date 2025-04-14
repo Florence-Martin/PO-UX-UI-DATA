@@ -30,6 +30,7 @@ export function useUserStories() {
   const [moscow, setMoscow] = useState<
     "mustHave" | "shouldHave" | "couldHave" | "wontHave" | ""
   >("");
+  const [selectedMoscowPriority, setSelectedMoscowPriority] = useState("all");
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -53,19 +54,39 @@ export function useUserStories() {
     const filtered = userStories.filter((story) => {
       const matchesPriority =
         selectedPriority === "all" || story.priority === selectedPriority;
+
+      const matchesMoscow =
+        selectedMoscowPriority === "all" ||
+        (selectedMoscowPriority === "unprioritized" && !story.moscow) ||
+        story.moscow === selectedMoscowPriority;
+
       const matchesPrioritySearch = story.priority
         .toLowerCase()
         .includes(prioritySearchTerm.toLowerCase());
+
       const matchesUserStorySearch =
         story.title.toLowerCase().includes(userStorySearchTerm.toLowerCase()) ||
         story.description
           .toLowerCase()
           .includes(userStorySearchTerm.toLowerCase()) ||
-        story.code?.toLowerCase().includes(userStorySearchTerm.toLowerCase()); // Recherche par code
-      return matchesPriority && matchesPrioritySearch && matchesUserStorySearch;
+        story.code?.toLowerCase().includes(userStorySearchTerm.toLowerCase());
+
+      return (
+        matchesPriority &&
+        matchesMoscow &&
+        matchesPrioritySearch &&
+        matchesUserStorySearch
+      );
     });
+
     setFilteredStories(filtered);
-  }, [userStories, selectedPriority, prioritySearchTerm, userStorySearchTerm]);
+  }, [
+    userStories,
+    selectedPriority,
+    selectedMoscowPriority,
+    prioritySearchTerm,
+    userStorySearchTerm,
+  ]);
 
   const resetForm = () => {
     setIsEditing(false);
@@ -183,5 +204,8 @@ export function useUserStories() {
     setUserStorySearchTerm,
     moscow,
     setMoscow,
+    selectedMoscowPriority,
+    setSelectedMoscowPriority,
+    filterByMoscow: (moscow: string) => setSelectedMoscowPriority(moscow),
   };
 }
