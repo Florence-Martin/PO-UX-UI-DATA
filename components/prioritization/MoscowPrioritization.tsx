@@ -62,7 +62,7 @@ export function MoscowPrioritization() {
     const newMoscow = over.id.toString() as MoscowKey;
 
     try {
-      await updateUserStory(activeId, { moscow: newMoscow });
+      await updateUserStory(activeId, { moscow: newMoscow as MoscowKey });
       const updated = await getUserStoriesByMoscow();
       setData(updated);
     } catch (error) {
