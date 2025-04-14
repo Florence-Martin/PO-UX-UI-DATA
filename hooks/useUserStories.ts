@@ -89,7 +89,7 @@ export function useUserStories() {
       priority,
       storyPoints,
       acceptanceCriteria,
-      moscow,
+      moscow: moscow || undefined,
       status: "todo" as "todo",
     };
 
@@ -128,7 +128,7 @@ export function useUserStories() {
     setPriority(story.priority);
     setStoryPoints(story.storyPoints);
     setAcceptanceCriteria(story.acceptanceCriteria);
-    setMoscow(story.moscow) || "";
+    setMoscow(story.moscow ?? "");
   };
 
   const handleDelete = async (id?: string) => {
