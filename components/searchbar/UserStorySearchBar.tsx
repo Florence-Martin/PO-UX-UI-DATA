@@ -5,9 +5,17 @@ import { PriorityFilterSelect } from "./PriorityFilterSelect";
 import { SearchUserStoryInput } from "./SearchUserStoryInput";
 import { MoscowFilterSelect } from "./MoscowFilterSelect";
 
+type MoscowType =
+  | "mustHave"
+  | "shouldHave"
+  | "couldHave"
+  | "wontHave"
+  | "unprioritized"
+  | "all";
+
 interface UserStorySearchBarProps {
   onFilterChange: (priority: string) => void;
-  onMoscowFilterChange: (moscow: string) => void;
+  onMoscowFilterChange?: (moscow: MoscowType) => void;
   onSearchChange?: (search: string) => void;
   searchValue?: string;
 }
@@ -20,30 +28,36 @@ export const UserStorySearchBar = ({
 }: UserStorySearchBarProps) => {
   const [prioritySearch, setPrioritySearch] = useState("all");
   const [userStorySearch, setUserStorySearch] = useState(searchValue);
-  const [moscowFilter, setMoscowFilter] = useState("all");
+  const [moscowFilter, setMoscowFilter] = useState<MoscowType>("all");
 
   // Déclenche le changement de priorité
   useEffect(() => {
     onFilterChange(prioritySearch);
   }, [prioritySearch, onFilterChange]);
 
-  // Déclenche le changement de recherche
+  // Déclenche le changement MoSCoW (si fourni)
+  useEffect(() => {
+    if (onMoscowFilterChange) {
+      onMoscowFilterChange(moscowFilter);
+    }
+  }, [moscowFilter, onMoscowFilterChange]);
+
+  // Déclenche la recherche
   useEffect(() => {
     const debounce = setTimeout(() => {
       onSearchChange?.(userStorySearch.trim().toLowerCase());
     }, 300);
-
     return () => clearTimeout(debounce);
   }, [userStorySearch, onSearchChange]);
 
   const handleResetSearch = () => {
     setUserStorySearch("");
-    onSearchChange?.(""); // Réinitialise la recherche
+    onSearchChange?.("");
   };
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-4">
-      {/* Input de recherche à gauche */}
+      {/* Zone de recherche à gauche */}
       <div className="w-full md:max-w-md">
         <SearchUserStoryInput
           value={userStorySearch}
@@ -59,8 +73,9 @@ export const UserStorySearchBar = ({
           onSearchChange={onSearchChange}
         />
         <MoscowFilterSelect
-          onMoscowFilterChange={onMoscowFilterChange}
+          onMoscowFilterChange={setMoscowFilter}
           onSearchChange={setUserStorySearch}
+          searchValue={userStorySearch}
         />
       </div>
     </div>
