@@ -7,6 +7,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { useCombinedRefs } from "@/hooks/useCombinedRefs";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 type Props = {
   story: UserStory;
@@ -22,10 +23,8 @@ export function PrioritisedUserStoryCard({ story }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: story.id!, // ✅ fix: use story.id, not task.id
-    data: {
-      story,
-    },
+    id: story.id!,
+    data: { story, columnId: story.moscow },
   });
 
   const localRef = useRef<HTMLDivElement>(null);
@@ -38,23 +37,6 @@ export function PrioritisedUserStoryCard({ story }: Props) {
     cursor: "grab",
   };
 
-  // Gestion du scroll vers l'élément si le hash correspond
-  useEffect(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (hash === `us-${story.id}` && localRef.current) {
-      setTimeout(() => {
-        localRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-        localRef.current?.classList.add("highlight-ring");
-        setTimeout(() => {
-          localRef.current?.classList.remove("highlight-ring");
-        }, 3000);
-      }, 150);
-    }
-  }, [story.id]);
-
   return (
     <div
       ref={combinedRef}
@@ -65,19 +47,15 @@ export function PrioritisedUserStoryCard({ story }: Props) {
     >
       <Card className="hover:shadow-md border border-border rounded-xl transition-all">
         <CardContent className="p-4 space-y-2 text-sm">
-          <p className="text-muted-foreground text-xs font-mono">
-            {story.code}
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground text-xs font-mono">
+              {story.code}
+            </p>
+          </div>
           <h4 className="font-semibold">{story.title}</h4>
           <p className="text-muted-foreground line-clamp-3 text-sm italic">
             {story.description}
           </p>
-          <Link
-            href={`/backlog?tab=user-stories#us-${story.id}`}
-            className="text-blue-500 hover:underline text-xs"
-          >
-            Modifier
-          </Link>
         </CardContent>
       </Card>
     </div>

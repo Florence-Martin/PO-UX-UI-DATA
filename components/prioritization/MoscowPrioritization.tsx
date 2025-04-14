@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { getUserStoriesByMoscow } from "@/lib/services/userStoryService";
+import { updateUserStory } from "@/lib/services/userStoryService";
 import { UserStory } from "@/lib/types/userStory";
 import { MoscowColumn } from "./MoscowColumn";
+import { PrioritisedUserStoryCard } from "./PrioritisedUserStoryCard";
 
 import {
   DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
+  DragOverlay,
   closestCenter,
+  DragStartEvent,
   DragEndEvent,
 } from "@dnd-kit/core";
 
@@ -28,6 +29,7 @@ export function MoscowPrioritization() {
   });
 
   const [hash, setHash] = useState<string>("");
+  const [activeStory, setActiveStory] = useState<UserStory | null>(null);
 
   // Met à jour le hash si l’URL change (ex: #us-xxx)
   useEffect(() => {
@@ -42,16 +44,32 @@ export function MoscowPrioritization() {
     getUserStoriesByMoscow().then(setData);
   }, []);
 
-  // Sensors pour le drag
-  const sensors = useSensors(useSensor(PointerSensor));
+  // Gestion du drag
 
-  // À implémenter plus tard : logique de mise à jour après un drag
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragStart = (event: DragStartEvent) => {
+    const storyId = event.active.id as string;
+    const story = Object.values(data)
+      .flat()
+      .find((s) => s.id === storyId);
+    if (story) setActiveStory(story);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveStory(null);
+
     if (!over || active.id === over.id) return;
 
-    console.log("Déplacé :", active.id, "vers", over.id);
-    // Ici, tu pourras mettre à jour le statut moscow de la US
+    const activeId = active.id.toString();
+    const newMoscow = over.id.toString(); // On utilise l’id de la colonne comme clé MoSCoW
+
+    try {
+      await updateUserStory(activeId, { moscow: newMoscow });
+      const updated = await getUserStoriesByMoscow();
+      setData(updated);
+    } catch (error) {
+      console.error("Erreur lors du déplacement :", error);
+    }
   };
 
   const columns = [
@@ -63,8 +81,8 @@ export function MoscowPrioritization() {
 
   return (
     <DndContext
-      sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -72,10 +90,18 @@ export function MoscowPrioritization() {
           <MoscowColumn
             key={`${key}-${hash}`} // Permet de déclencher un re-render si hash change
             label={label}
+            columnId={key}
             stories={data[key]}
           />
         ))}
       </div>
+      <DragOverlay>
+        {activeStory && (
+          <div className="w-[300px]">
+            <PrioritisedUserStoryCard story={activeStory} />
+          </div>
+        )}
+      </DragOverlay>
     </DndContext>
   );
 }
