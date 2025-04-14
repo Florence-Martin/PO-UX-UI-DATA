@@ -59,7 +59,7 @@ export function MoscowPrioritization() {
     if (!over || active.id === over.id) return;
 
     const activeId = active.id.toString();
-    const newMoscow = over.id.toString() as MoscowKey;
+    const newMoscow = over.id as MoscowKey;
 
     try {
       await updateUserStory(activeId, { moscow: newMoscow as MoscowKey });
