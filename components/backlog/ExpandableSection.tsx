@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface ExpandableSectionProps {
+  label?: string;
   content: string;
   isLong: boolean;
   clampClass?: string;
@@ -12,6 +13,7 @@ interface ExpandableSectionProps {
 }
 
 export const ExpandableSection = ({
+  label,
   content,
   isLong,
   clampClass = "line-clamp-2",
@@ -22,6 +24,9 @@ export const ExpandableSection = ({
 
   return (
     <div className={`${className} relative`}>
+      <p className="text-xs font-semibold text-blue-400 uppercase tracking-wide py-1">
+        {label}
+      </p>
       <p
         className={`text-sm whitespace-pre-line ${
           expanded ? fullClass : clampClass
@@ -33,7 +38,7 @@ export const ExpandableSection = ({
       {isLong && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="mt-2 text-xs font-medium text-blue-500 hover:underline transition duration-200"
+          className="text-xs font-medium text-blue-500 hover:underline transition duration-200"
         >
           <span className="flex items-center gap-1">
             {expanded ? "Voir moins" : "Voir plus"}

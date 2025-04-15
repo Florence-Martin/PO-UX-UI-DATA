@@ -4,7 +4,7 @@ import { UserStory } from "@/lib/types/userStory";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "./button";
+import { Button } from "../ui/button";
 import { PencilLine, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
 import { updateUserStory } from "@/lib/services/userStoryService";
@@ -159,7 +159,7 @@ export function UserStoryCard({ story }: Props) {
 
       {/* 🔗 Tâches liées */}
       {linkedTasks.length > 0 ? (
-        <div className="text-xs text-muted-foreground space-y-1 mt-4">
+        <div className="text-xs text-muted-foreground space-y-1">
           <p className="font-medium text-sm">Tâches liées :</p>
           {linkedTasks.map((task) => (
             <div
@@ -182,7 +182,7 @@ export function UserStoryCard({ story }: Props) {
           ))}
         </div>
       ) : (
-        <div className="text-xs text-red-500 italic flex items-center gap-1 mt-4">
+        <div className="text-xs text-red-500 italic flex items-center gap-1">
           <PinOff className="w-3 h-3" />
           Aucune tâche liée
         </div>
@@ -190,6 +190,7 @@ export function UserStoryCard({ story }: Props) {
 
       {/* Critères d’acceptation */}
       <ExpandableSection
+        label="Critères d'acceptation"
         content={story.acceptanceCriteria}
         isLong={isAcceptanceCriteriaLong}
         clampClass="line-clamp-3"

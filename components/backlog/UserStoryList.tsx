@@ -2,7 +2,7 @@
 
 import { useUserStories } from "@/hooks/useUserStories";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { UserStoryCard } from "@/components/ui/UserStoryCard";
+import { UserStoryCard } from "@/components/analysis/UserStoryCard";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStoriesList() {
