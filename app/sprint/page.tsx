@@ -10,10 +10,10 @@ import { SprintVelocity } from "@/components/sprint/SprintVelocity";
 const tabs = [
   {
     value: "timeline",
-    label: "Sprint Timeline",
+    label: "Planning Scrum",
     component: <SprintTimeline />,
   },
-  { value: "board", label: "Sprint Board", component: <SprintBoard /> },
+  { value: "board", label: "Sprint actif", component: <SprintBoard /> },
   { value: "metrics", label: "Vélocité", component: <SprintVelocity /> },
 ];
 
@@ -24,7 +24,7 @@ export default function SprintPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Sprint"
-          description="Planifie, exécute et mesure les sprints avec une vue complète : timeline Scrum, tableau d’avancement des tâches et indicateurs de vélocité."
+          description="Planifie, exécute et mesure les sprints avec une vue complète : Planning Scrum (planning prévisionnel), Sprint actif (vue Kanban du sprint en cours) et suivi de la performance (burndown chart / feedback)."
           tabs={tabs}
         />
       </Suspense>

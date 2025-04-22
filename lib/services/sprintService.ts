@@ -14,10 +14,13 @@ import { Sprint } from "@/lib/types/sprint";
 const sprintCollection = collection(db, "sprints");
 
 //  Créer un sprint
-export const createSprint = async (data: Omit<Sprint, "id" | "progress">) => {
+export const createSprint = async (
+  data: Omit<Sprint, "id" | "progress" | "status">
+) => {
   const docRef = await addDoc(sprintCollection, {
     ...data,
     progress: 0,
+    status: "planned",
     startDate:
       data.startDate instanceof Date
         ? Timestamp.fromDate(data.startDate)
