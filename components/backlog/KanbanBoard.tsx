@@ -18,6 +18,7 @@ import { KanbanItem } from "./KanbanItem";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { EditTaskModal } from "./EditTaskModal";
 import { BacklogTask } from "@/lib/types/backlogTask";
+import { useSprints } from "@/hooks/useSprints";
 
 export function KanbanBoard() {
   const {
@@ -33,6 +34,7 @@ export function KanbanBoard() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
+  const { sprints } = useSprints();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -110,30 +112,34 @@ export function KanbanBoard() {
             tasks={todo}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
+            sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "in-progress", title: "En Cours" }}
             tasks={inProgress}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
+            sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "in-testing", title: "A tester" }}
             tasks={inTesting}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
+            sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "done", title: "Terminé" }}
             tasks={done}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
+            sprints={sprints}
           />
         </div>
         <DragOverlay>
           {activeId && (
             <div className="w-[300px]">
-              <KanbanItem task={findTask(activeId)!} />
+              <KanbanItem task={findTask(activeId)!} sprints={sprints} />
             </div>
           )}
         </DragOverlay>

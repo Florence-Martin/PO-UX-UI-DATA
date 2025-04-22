@@ -4,10 +4,10 @@ import { Suspense } from "react";
 
 import { KanbanBoard } from "@/components/backlog/KanbanBoard";
 import { MoscowPrioritization } from "@/components/prioritization/MoscowPrioritization";
-import { SprintPlanning } from "@/components/backlog/SprintPlanning";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { UserStoriesList } from "@/components/backlog/UserStoryList";
+import { SprintList } from "@/components/sprint/SprintList";
 
 const tabs = [
   {
@@ -20,12 +20,12 @@ const tabs = [
     label: "Priorisation (MoSCoW)",
     component: <MoscowPrioritization />,
   },
+  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
   {
     value: "sprints",
     label: "Sprint Planning",
-    component: <SprintPlanning />,
+    component: <SprintList />,
   },
-  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
 ];
 
 export default function BacklogPage() {
@@ -35,7 +35,7 @@ export default function BacklogPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Backlog & Organisation Agile"
-          description="De la vision au delivery agile : commence par définir tes user stories (besoin métier), hiérarchise leur valeur avec MoSCoW, planifie les stories à livrer dans le sprint, puis pilote l’avancement des tâches dans ton backlog Kanban."
+          description="De la vision au delivery agile : commence par définir tes user stories (besoin métier), hiérarchise leur valeur avec MoSCoW, planifie les stories à livrer dans le sprint (regroupement métier et planification), puis pilote l’avancement des tâches dans ton backlog Kanban ( gestion technique des tâches par US)."
           tabs={tabs}
         />
       </Suspense>

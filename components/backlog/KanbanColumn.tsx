@@ -10,6 +10,7 @@ import {
 } from "@dnd-kit/sortable";
 import { KanbanItem } from "./KanbanItem";
 import { BacklogTask } from "@/lib/types/backlogTask";
+import { Sprint } from "@/lib/types/sprint";
 
 interface KanbanColumnProps {
   column: {
@@ -19,6 +20,7 @@ interface KanbanColumnProps {
   tasks: BacklogTask[];
   onAddTask: (status: BacklogTask["status"]) => void;
   onTaskClick?: (task: BacklogTask) => void;
+  sprints: Sprint[];
 }
 
 export function KanbanColumn({
@@ -26,6 +28,7 @@ export function KanbanColumn({
   tasks,
   onAddTask,
   onTaskClick,
+  sprints,
 }: KanbanColumnProps) {
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -57,6 +60,7 @@ export function KanbanColumn({
                 key={task.id}
                 task={task}
                 onClick={() => onTaskClick?.(task)}
+                sprints={sprints}
               />
             ))}
           </div>

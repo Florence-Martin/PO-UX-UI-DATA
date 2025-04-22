@@ -7,9 +7,9 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { SortableSprintItem } from "@/components/sprint/SortableSprintItem";
 import { SprintCard } from "@/components/sprint/SprintCard";
 import { useDnDSortable } from "@/hooks/useDnDSortable";
+import { SortableSprintItem } from "./SortableSprintItem";
 
 interface TimelineItem {
   id: string;

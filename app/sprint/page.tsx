@@ -1,11 +1,11 @@
 // # Vue sprint active (stories sélectionnées, timeline)
 
 import { Suspense } from "react";
-import SprintTimeline from "@/components/sprint/SprintTimeline";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
+import { BannerInfo } from "@/components/banner/BannerInfo";
+import SprintTimeline from "@/components/sprint/SprintTimeline";
 import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
-import { BannerInfo } from "@/components/banner/BannerInfo";
 
 const tabs = [
   {

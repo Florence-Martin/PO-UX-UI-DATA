@@ -90,3 +90,16 @@ export const getUserStoriesByMoscow = async () => {
     wontHave: stories.filter((s) => s.moscow === "wontHave"),
   };
 };
+
+export const updateUserStorySprint = async (
+  userStoryId: string,
+  sprintId: string | null
+) => {
+  const ref = doc(db, "user_stories", userStoryId);
+  await updateDoc(ref, { sprintId });
+};
+
+export const deleteSprint = async (sprintId: string) => {
+  const sprintRef = doc(db, "sprints", sprintId);
+  await deleteDoc(sprintRef);
+};

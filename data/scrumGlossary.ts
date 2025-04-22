@@ -253,4 +253,64 @@ export const glossary: GlossaryItem[] = [
       "Référent technique de l'équipe de développement, garant des choix d’architecture et des bonnes pratiques.",
     phase: "Rôles clés",
   },
+  {
+    term: "agent",
+    definition:
+      "Un composant ou programme qui agit en tant qu’intermédiaire ou représentant pour accomplir une tâche spécifique.",
+    phase: "Vision Produit",
+  },
+  {
+    term: "rag",
+    definition:
+      "Dans le contexte de l’IA, RAG (Retrieve and Generate) désigne une approche combinant la récupération d’informations pertinentes dans une base de données (Retrieve) avec la génération de réponses textuelles à l’aide d’un modèle de langage (Generate).",
+    phase: "Exécution Agile (Scrum/Kanban)",
+  },
+  {
+    term: "orchestration",
+    definition:
+      "La coordination et la gestion de plusieurs processus ou services pour qu’ils fonctionnent ensemble de manière harmonieuse, souvent dans des environnements complexes.",
+    phase: "Planification & Estimation",
+  },
+  {
+    term: "llm vecteur",
+    definition:
+      "Un vecteur généré par un modèle de langage de grande taille (Large Language Model), utilisé pour représenter des mots, des phrases ou des documents dans un espace numérique afin de faciliter des comparaisons ou des recherches.",
+    phase: "Discovery",
+  },
+  {
+    term: "discovery design",
+    definition:
+      "Une phase initiale dans le développement de produits ou services où l’objectif est de comprendre les besoins des utilisateurs, d’identifier les opportunités et de définir les priorités avant de passer à la conception détaillée.",
+    phase: "Discovery",
+  },
+  {
+    term: "design thinking",
+    definition:
+      "Une approche centrée sur l’humain pour résoudre des problèmes en encourageant la créativité, l’expérimentation, et une compréhension approfondie des besoins des utilisateurs à travers des étapes comme l’empathie, la définition, l’idéation, le prototypage, et le test.",
+    phase: "Design & Cadrage",
+  },
+  {
+    term: "shurn",
+    definition:
+      "Ce terme est peu courant et pourrait être une variante ou une erreur typographique d’un mot tel que ‘churn’ ou ‘turn’. Si vous faisiez référence à ‘churn’, il désigne souvent le taux de perte de clients ou d’utilisateurs dans un service ou une plateforme.",
+    phase: "Suivi, validation & amélioration continue",
+  },
+  {
+    term: "verbatim",
+    definition:
+      "Le mot à mot ou la transcription exacte des propos ou contenus exprimés, souvent utilisé dans le contexte d’entretiens ou d’enquêtes pour représenter fidèlement les réponses ou commentaires des participants.",
+    phase: "Discovery",
+  },
+  {
+    term: "interview",
+    definition:
+      "Une méthode de collecte d’informations ou d’opinions impliquant une interaction directe entre un interviewer et un interviewé.",
+    phase: "Discovery",
+  },
+  {
+    term: "feedback",
+    definition:
+      "Les commentaires, observations ou informations donnés en retour par un utilisateur, un client ou un pair afin d’évaluer, améliorer ou ajuster un produit, un service ou une performance.",
+    phase: "Suivi, validation & amélioration continue",
+  },
 ];

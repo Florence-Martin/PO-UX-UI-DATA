@@ -175,6 +175,11 @@ export function useUserStories() {
     setSelectedPriority(priority);
   };
 
+  const refetch = async () => {
+    const stories = await getAllUserStories();
+    setUserStories(stories);
+  };
+
   return {
     title,
     setTitle,
@@ -207,5 +212,6 @@ export function useUserStories() {
     selectedMoscowPriority,
     setSelectedMoscowPriority,
     filterByMoscow: (moscow: string) => setSelectedMoscowPriority(moscow),
+    refetch,
   };
 }

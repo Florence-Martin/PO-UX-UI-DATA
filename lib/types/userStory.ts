@@ -15,4 +15,5 @@ export interface UserStory extends TaskStoryBase {
   acceptanceCriteria: string;
   taskIds?: string[];
   moscow?: MoscowKey;
+  sprintId?: string;
 }
