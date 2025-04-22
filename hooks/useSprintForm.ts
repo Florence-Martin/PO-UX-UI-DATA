@@ -65,6 +65,7 @@ export function useSprintForm() {
         endDate: Timestamp.fromDate(endDate),
         userStoryIds,
         velocity: 0,
+        status: "planned",
       };
 
       await createSprint(newSprint);
