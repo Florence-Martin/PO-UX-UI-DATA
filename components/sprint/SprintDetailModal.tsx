@@ -160,6 +160,7 @@ export function SprintDetailModal({
             <input
               ref={titleRef}
               defaultValue={sprint?.title || ""}
+              placeholder="Exemple : Sprint 24 - Avril"
               className="w-full border rounded p-2"
               required
             />
@@ -194,22 +195,6 @@ export function SprintDetailModal({
               User Stories à inclure
             </label>
 
-            {/* {edited.userStoryIds.length > 0 && (
-              <ul className="list-disc ml-4 text-muted-foreground mb-2 space-y-1">
-                {userStories
-                  .filter((us) => edited.userStoryIds.includes(us.id))
-                  .map((us) => (
-                    <li key={us.id}>
-                      <Link
-                        href={`/backlog?tab=user-stories#${us.id}`}
-                        className="text-primary hover:underline"
-                      >
-                        [{us.code}] - {us.title}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            )} */}
             {edited.userStoryIds.length > 0 && (
               <div className="mb-2 space-y-2">
                 {userStories

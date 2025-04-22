@@ -20,12 +20,12 @@ const tabs = [
     label: "Priorisation (MoSCoW)",
     component: <MoscowPrioritization />,
   },
-  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
   {
     value: "sprints",
     label: "Sprint Planning",
     component: <SprintList />,
   },
+  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
 ];
 
 export default function BacklogPage() {
