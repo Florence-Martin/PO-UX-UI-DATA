@@ -17,6 +17,9 @@ export default function GlossaryCard({ item }: { item: GlossaryItem }) {
       </CardHeader>
       <CardContent className="text-sm text-muted-foreground">
         {item.definition}
+        {item.example && (
+          <div className="italic mt-2">Exemple : {item.example}</div>
+        )}
       </CardContent>
     </Card>
   );
