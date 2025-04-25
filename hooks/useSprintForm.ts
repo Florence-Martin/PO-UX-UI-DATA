@@ -87,5 +87,6 @@ export function useSprintForm() {
     handleDateChange,
     handleCheckboxChange,
     handleSubmit,
+    resetForm,
   };
 }

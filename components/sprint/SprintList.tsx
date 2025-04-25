@@ -1,86 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { deleteSprint } from "@/lib/services/sprintService";
-import {
-  getAllUserStories,
-  updateUserStorySprint,
-} from "@/lib/services/userStoryService";
-import { Sprint } from "@/lib/types/sprint";
-import { UserStory } from "@/lib/types/userStory";
-import { SprintDetailModal } from "./SprintDetailModal";
-import { Button } from "../ui/button";
-import { SprintPlanningCard } from "./SprintPlanningCard";
 import { useSprints } from "@/hooks/useSprints";
+import { useSprintList } from "@/hooks/useSprintList";
+import { SprintDetailModal } from "./SprintDetailModal";
+import { SprintPlanningCard } from "./SprintPlanningCard";
+import { Button } from "../ui/button";
 
 export function SprintList() {
   const { sprints, refetch } = useSprints();
-  const [userStories, setUserStories] = useState<UserStory[]>([]);
-  const [selectedSprint, setSelectedSprint] = useState<Sprint | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    userStories,
+    selectedSprint,
+    setSelectedSprint,
+    isModalOpen,
+    openModal,
+    closeModal,
+    handleEdit,
+    handleDelete,
+  } = useSprintList(refetch);
 
-  // Fonction pour charger les User Stories
-  const fetchUserStories = async () => {
-    try {
-      const userStoryData = await getAllUserStories();
-      setUserStories(userStoryData);
-    } catch (error) {
-      console.error("Erreur lors du chargement des User Stories :", error);
-    }
-  };
-
-  // Charger les User Stories au montage du composant
-  useEffect(() => {
-    fetchUserStories();
-  }, []);
-
-  const handleEdit = (sprint: Sprint) => {
-    setSelectedSprint(sprint); // ouvrir modale d’édition
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      // Mettre à jour les User Stories associées au sprint supprimé
-      const userStoriesToUpdate = userStories.filter(
-        (story) => story.sprintId === id
-      );
-      for (const story of userStoriesToUpdate) {
-        await updateUserStorySprint(story.id, null); // Supprime l'association avec le sprint
-      }
-
-      // Supprimer le sprint
-      await deleteSprint(id);
-
-      // Actualiser les données (sprint et US)
-      await refetch();
-      fetchUserStories();
-
-      console.log("Sprint supprimé avec succès :", id);
-    } catch (error) {
-      console.error("Erreur lors de la suppression du sprint :", error);
-    }
-  };
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const sortedSprints = [...sprints].sort((a, b) => {
+    const aDate =
+      a.startDate instanceof Date ? a.startDate : a.startDate.toDate();
+    const bDate =
+      b.startDate instanceof Date ? b.startDate : b.startDate.toDate();
+    return aDate.getTime() - bDate.getTime();
+  });
 
   return (
     <div className="space-y-6">
-      {/* Bouton pour créer un sprint */}
       <Button onClick={openModal} className="ml-auto mb-4">
         + Créer un sprint
       </Button>
 
-      {sprints.map((sprint) => (
+      {sortedSprints.map((sprint) => (
         <SprintPlanningCard
           key={sprint.id}
           sprint={sprint}
+          userStories={userStories}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
       ))}
 
-      {/* Modale de détail ou d'édition */}
       {selectedSprint && (
         <SprintDetailModal
           sprint={selectedSprint}
@@ -88,12 +50,11 @@ export function SprintList() {
           open={!!selectedSprint}
           onClose={() => {
             setSelectedSprint(null);
-            refetch(); // Recharge les données après modification
+            refetch();
           }}
         />
       )}
 
-      {/* Modale pour créer un sprint */}
       {isModalOpen && (
         <SprintDetailModal
           sprint={null}
@@ -101,7 +62,7 @@ export function SprintList() {
           open={isModalOpen}
           onClose={() => {
             closeModal();
-            refetch(); // Recharge les données après création
+            refetch();
           }}
         />
       )}

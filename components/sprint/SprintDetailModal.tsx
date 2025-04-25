@@ -11,13 +11,10 @@ import { UserStory } from "@/lib/types/userStory";
 import { format } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
-import { toast } from "sonner";
-import { createSprint, updateSprint } from "@/lib/services/sprintService";
 import { Timestamp } from "firebase/firestore";
 import { Button } from "../ui/button";
-import { updateUserStorySprint } from "@/lib/services/userStoryService";
 import { useSprints } from "@/hooks/useSprints";
+import { useSprintDetail } from "@/hooks/useSprintDetail";
 
 const getDate = (value: Date | Timestamp): Date =>
   value instanceof Timestamp ? value.toDate() : value;
@@ -35,113 +32,22 @@ export function SprintDetailModal({
   open,
   onClose,
 }: Props) {
-  const isCreating = sprint === null;
-
-  const titleRef = useRef<HTMLInputElement>(null);
-  const startDateRef = useRef<HTMLInputElement>(null);
-  const endDateRef = useRef<HTMLInputElement>(null);
-
-  const [showStoryList, setShowStoryList] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [edited, setEdited] = useState<{ userStoryIds: string[] }>({
-    userStoryIds: [],
-  });
   const { refetch } = useSprints();
-
-  useEffect(() => {
-    if (sprint) {
-      setEdited({
-        userStoryIds: userStories
-          .filter((us) => us.sprintId === sprint.id)
-          .map((us) => us.id),
-      });
-    }
-  }, [sprint, userStories]);
-
-  const toggleUserStorySelection = (storyId: string) => {
-    setEdited((prev) => ({
-      userStoryIds: prev.userStoryIds.includes(storyId)
-        ? prev.userStoryIds.filter((id) => id !== storyId)
-        : [...prev.userStoryIds, storyId],
-    }));
-  };
-
-  const usedUserStoryIds = userStories
-    .filter((us) => us.sprintId && us.sprintId !== sprint?.id)
-    .map((us) => us.id);
-
-  const filteredStories = userStories.filter(
-    (story) =>
-      story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      story.code?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const title = titleRef.current?.value.trim() || "";
-    const startDateStr = startDateRef.current?.value;
-    const endDateStr = endDateRef.current?.value;
-
-    if (!title || !startDateStr || !endDateStr) {
-      toast.error("Tous les champs doivent être remplis.");
-      return;
-    }
-
-    const startDate = new Date(startDateStr);
-    const endDate = new Date(endDateStr);
-
-    if (startDate > endDate) {
-      toast.error("La date de début doit être antérieure à la date de fin.");
-      return;
-    }
-
-    try {
-      if (isCreating) {
-        const newSprintId = await createSprint({
-          title,
-          startDate: Timestamp.fromDate(startDate),
-          endDate: Timestamp.fromDate(endDate),
-          userStoryIds: edited.userStoryIds,
-          velocity: 0,
-        });
-
-        for (const storyId of edited.userStoryIds) {
-          await updateUserStorySprint(storyId, newSprintId);
-        }
-
-        toast.success("Sprint créé avec succès !");
-      } else {
-        // Mettre à jour le Sprint lui-même (titre, dates, userStoryIds)
-        await updateSprint(sprint.id, {
-          title,
-          startDate: Timestamp.fromDate(startDate),
-          endDate: Timestamp.fromDate(endDate),
-          userStoryIds: edited.userStoryIds,
-        });
-
-        // Puis mettre à jour chaque user story
-        for (const story of userStories) {
-          const shouldBeLinked = edited.userStoryIds.includes(story.id);
-          const alreadyLinked = story.sprintId === sprint.id;
-
-          if (shouldBeLinked && !alreadyLinked) {
-            await updateUserStorySprint(story.id, sprint.id);
-          } else if (!shouldBeLinked && alreadyLinked) {
-            await updateUserStorySprint(story.id, null);
-          }
-        }
-
-        toast.success("Sprint modifié avec succès !");
-      }
-
-      await refetch(); // met à jour l’interface automatiquement
-      onClose();
-    } catch (err) {
-      console.error("Erreur lors de l'enregistrement du sprint", err);
-      toast.error("Erreur lors de l'enregistrement du sprint.");
-    }
-  };
+  const {
+    isCreating,
+    titleRef,
+    startDateRef,
+    endDateRef,
+    showStoryList,
+    setShowStoryList,
+    searchTerm,
+    setSearchTerm,
+    edited,
+    toggleUserStorySelection,
+    handleSubmit,
+    usedUserStoryIds,
+    filteredStories,
+  } = useSprintDetail(sprint, userStories, onClose, refetch);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

@@ -1,12 +1,12 @@
-// hooks/useSprints.ts
+// juste pour les données
 
 import { useEffect, useState } from "react";
 import { getAllSprints } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
 
 /**
- * Custom hook to fetch and manage sprints.
- * @returns {Object} - An object containing the sprints and a refetch function.
+ * Hook personnalisé pour récupérer et gérer les sprints.
+ * @returns {Object} - Un objet contenant les sprints et une fonction de rafraîchissement.
  */
 export function useSprints() {
   const [sprints, setSprints] = useState<Sprint[]>([]);

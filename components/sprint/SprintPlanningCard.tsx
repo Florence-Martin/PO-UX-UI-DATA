@@ -18,18 +18,23 @@ import {
 import { Sprint } from "@/lib/types/sprint";
 import { Timestamp } from "firebase/firestore";
 import { useUserStories } from "@/hooks/useUserStories";
+import { UserStory } from "@/lib/types/userStory";
 
 type Props = {
   sprint: Sprint;
+  userStories: UserStory[];
   onEdit: (sprint: Sprint) => void;
   onDelete: (id: string) => void;
 };
 
-export function SprintPlanningCard({ sprint, onEdit, onDelete }: Props) {
+export function SprintPlanningCard({
+  sprint,
+  userStories,
+  onEdit,
+  onDelete,
+}: Props) {
   const getDate = (value: Date | Timestamp): Date =>
     value instanceof Timestamp ? value.toDate() : value;
-
-  const { userStories } = useUserStories();
 
   const linkedStories = userStories.filter(
     (story) => story.sprintId === sprint.id

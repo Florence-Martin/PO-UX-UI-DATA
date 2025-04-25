@@ -432,4 +432,44 @@ export const glossary: GlossaryItem[] = [
     example:
       "Les user stories sont rédigées dans Jira et détaillées dans Confluence, avec un lien vers les wireframes Figma.",
   },
+  {
+    term: "Wireframe (Zoning ↦ Wireframe ↦ Mockup ↦ Prototype)",
+    definition:
+      "Représentation visuelle simplifiée d’une interface utilisateur, montrant la structure, la disposition et les éléments clés sans se soucier des détails graphiques (style visuel ou des couleurs).",
+    phase: "Design & Cadrage",
+    example:
+      "Le wireframe de la page d'accueil montre l'emplacement du menu, du hero (avec CAT) du contenu principal et du pied de page.",
+  },
+  {
+    term: "Prototype (Zoning ↦ Wireframe ↦ Mockup ↦ Prototype)",
+    definition:
+      "Modèle interactif d’un produit ou d’une fonctionnalité, permettant de tester et valider des concepts avant le développement final, à travers des interactions simulées",
+    phase: "Design & Cadrage",
+    example:
+      "Nous avons créé un prototype interactif pour tester la navigation de l'application avant de commencer le développement.",
+  },
+  {
+    term: "Product D&E (Development & Engineering)",
+    definition:
+      "Processus de développement et d'ingénierie du produit, englobant la conception, le développement, les tests et la mise en production.",
+    phase: "Exécution Agile (Scrum/Kanban)",
+    example:
+      "L'équipe de D&E a travaillé sur l'intégration de la nouvelle API pour améliorer les performances de l'application.",
+  },
+  {
+    term: "Zoning (Zoning ↦ Wireframe ↦ Mockup ↦ Prototype)",
+    definition:
+      "Processus de planification et de conception d'un espace ou d'une interface, en définissant les zones fonctionnelles et leur agencement. Le zoning est souvent basse fidélité (gris, blocs)",
+    phase: "Design & Cadrage",
+    example:
+      "Le zoning de la page d'accueil a été réalisé pour déterminer l'emplacement des sections principales : header, contenu, sidebar et footer.",
+  },
+  {
+    term: "Mockup (Zoning ↦ Wireframe ↦ Mockup ↦ Prototype)",
+    definition:
+      "Représentation visuelle statique d’un produit ou d’une interface, montrant le design final, les couleurs, les polices et les éléments graphiques sans interactivité.",
+    phase: "Design & Cadrage",
+    example:
+      "Le mockup de la page d'accueil montre le design final avec les couleurs et les polices choisies.",
+  },
 ];
