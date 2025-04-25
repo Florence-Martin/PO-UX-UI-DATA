@@ -5,6 +5,7 @@ import { createSprint, updateSprint } from "@/lib/services/sprintService";
 import { updateUserStorySprint } from "@/lib/services/userStoryService";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
+import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema";
 
 export function useSprintDetail(
   sprint: Sprint | null,
@@ -45,29 +46,33 @@ export function useSprintDetail(
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const title = titleRef.current?.value.trim() || "";
+    const rawTitle = titleRef.current?.value || "";
+    const sanitizedTitle = sanitize(rawTitle); //Assainissement du title via DOMPurify (sanitize(title))
     const startDateStr = startDateRef.current?.value;
     const endDateStr = endDateRef.current?.value;
 
-    if (!title || !startDateStr || !endDateStr) {
-      toast.error("Tous les champs doivent être remplis.");
-      return;
-    }
+    const startDate = startDateStr ? new Date(startDateStr) : undefined;
+    const endDate = endDateStr ? new Date(endDateStr) : undefined;
 
-    const startDate = new Date(startDateStr);
-    const endDate = new Date(endDateStr);
+    // Validation via Joi
+    const validationResult = sprintSchema.validate({
+      title: sanitizedTitle,
+      startDate,
+      endDate,
+      userStoryIds: edited.userStoryIds,
+    });
 
-    if (startDate > endDate) {
-      toast.error("La date de début doit être antérieure à la date de fin.");
+    if (validationResult.error) {
+      toast.error(validationResult.error.message);
       return;
     }
 
     try {
       if (isCreating) {
         const newSprintId = await createSprint({
-          title,
-          startDate: Timestamp.fromDate(startDate),
-          endDate: Timestamp.fromDate(endDate),
+          title: sanitizedTitle,
+          startDate: Timestamp.fromDate(startDate!),
+          endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
           velocity: 0,
         });
@@ -79,9 +84,9 @@ export function useSprintDetail(
         toast.success("Sprint créé avec succès !");
       } else {
         await updateSprint(sprint.id, {
-          title,
-          startDate: Timestamp.fromDate(startDate),
-          endDate: Timestamp.fromDate(endDate),
+          title: sanitizedTitle,
+          startDate: Timestamp.fromDate(startDate!),
+          endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
         });
 

@@ -4,6 +4,7 @@ import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { createSprint } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
+import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema"; // Joi + DOMPurify
 
 export function useSprintForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,18 +52,29 @@ export function useSprintForm() {
   };
 
   const handleSubmit = async () => {
-    const { title, startDate, endDate, userStoryIds } = formValues;
+    // Assainissement du title via DOMPurify (sanitize(title))
+    const sanitizedTitle = sanitize(formValues.title);
 
-    if (!title || !startDate || !endDate || userStoryIds.length === 0) {
-      toast.error("Veuillez remplir tous les champs.");
+    // Validation via Joi (sprintSchema.validate(...))
+    const validationResult = sprintSchema.validate({
+      title: sanitizedTitle,
+      startDate: formValues.startDate,
+      endDate: formValues.endDate,
+      userStoryIds: formValues.userStoryIds,
+    });
+
+    if (validationResult.error) {
+      toast.error(validationResult.error.message);
       return;
     }
 
+    const { startDate, endDate, userStoryIds } = formValues;
+
     try {
       const newSprint: Omit<Sprint, "id" | "progress"> = {
-        title,
-        startDate: Timestamp.fromDate(startDate),
-        endDate: Timestamp.fromDate(endDate),
+        title: sanitizedTitle,
+        startDate: Timestamp.fromDate(startDate!),
+        endDate: Timestamp.fromDate(endDate!),
         userStoryIds,
         velocity: 0,
         status: "planned",

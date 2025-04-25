@@ -13,10 +13,31 @@ import { Sprint } from "@/lib/types/sprint";
 
 const sprintCollection = collection(db, "sprints");
 
+// Validation des entrées de sprint
+//  Vérifier que le titre du sprint est valide et que les dates sont correctes
+export const validateSprintInput = (data: Partial<Sprint>) => {
+  if (!data.title || data.title.trim().length < 3) {
+    throw new Error(
+      "Sprint title is required and must be at least 3 characters long."
+    );
+  }
+  if (!data.startDate || !data.endDate) {
+    throw new Error("Start and end dates are required.");
+  }
+  const start =
+    data.startDate instanceof Date ? data.startDate : data.startDate.toDate();
+  const end =
+    data.endDate instanceof Date ? data.endDate : data.endDate.toDate();
+  if (start > end) {
+    throw new Error("Start date must be before end date.");
+  }
+};
+
 //  Créer un sprint
 export const createSprint = async (
   data: Omit<Sprint, "id" | "progress" | "status">
 ) => {
+  validateSprintInput(data);
   const docRef = await addDoc(sprintCollection, {
     ...data,
     progress: 0,
@@ -64,6 +85,7 @@ export const updateSprint = async (
   id: string,
   data: Partial<Omit<Sprint, "id">>
 ) => {
+  validateSprintInput(data);
   const docRef = doc(sprintCollection, id);
   await updateDoc(docRef, {
     ...data,
