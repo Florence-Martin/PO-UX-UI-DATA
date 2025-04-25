@@ -7,7 +7,7 @@ import {
 } from "@/lib/services/backlogTasksService";
 import { toast } from "sonner";
 import { BacklogTask } from "@/lib/types/backlogTask";
-import { Task } from "@/lib/types/task";
+import { taskSchema, sanitize } from "@/lib/utils/taskSchema";
 
 export const useBacklogTasks = () => {
   const [tasks, setTasks] = useState<BacklogTask[]>([]);
@@ -41,8 +41,21 @@ export const useBacklogTasks = () => {
 
   const addTask = async (task: Omit<BacklogTask, "id">) => {
     try {
-      const docRef = await createBacklogTask(task);
-      setTasks((prev) => [{ ...task, id: docRef.id }, ...prev]);
+      const sanitizedTask = {
+        ...task,
+        title: sanitize(task.title),
+        description: sanitize(task.description),
+      };
+
+      const { error: validationError, value } =
+        taskSchema.validate(sanitizedTask);
+      if (validationError) {
+        toast.error(validationError.message);
+        return;
+      }
+
+      const docRef = await createBacklogTask(value);
+      setTasks((prev) => [{ ...value, id: docRef.id }, ...prev]);
       toast.success("Tâche ajoutée avec succès !");
     } catch (err) {
       console.error("Erreur lors de l'ajout de la tâche :", err);
@@ -55,10 +68,22 @@ export const useBacklogTasks = () => {
       if (!task.id) throw new Error("ID manquant pour la mise à jour");
 
       const { id, ...data } = task;
-      await updateBacklogTask(id, data);
+      const sanitized = {
+        ...data,
+        title: sanitize(data.title || ""),
+        description: sanitize(data.description || ""),
+      };
+
+      const { error: validationError, value } = taskSchema.validate(sanitized);
+      if (validationError) {
+        toast.error(validationError.message);
+        return;
+      }
+
+      await updateBacklogTask(id, value);
 
       setTasks((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, ...data } : t))
+        prev.map((t) => (t.id === id ? { ...t, ...value } : t))
       );
 
       toast.success("Tâche mise à jour.");
@@ -107,7 +132,6 @@ export const useBacklogTasks = () => {
   const inTesting = tasks.filter((s) => s.status === "in-testing");
   const done = tasks.filter((s) => s.status === "done");
 
-  // Fonction pour initier l’édition d’une tâche
   const handleEdit = (task: BacklogTask) => {
     setIsEditing(true);
     setEditingId(task.id || null);
@@ -117,7 +141,6 @@ export const useBacklogTasks = () => {
     setStoryPoints(task.storyPoints);
   };
 
-  // Fonction pour supprimer une tâche (avec toast et état local)
   const handleDelete = async (id?: string) => {
     if (!id) return;
 

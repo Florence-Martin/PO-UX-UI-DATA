@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { BacklogTask } from "../types/backlogTask";
+import { taskSchema, sanitize } from "@/lib/utils/taskSchema";
 
 const COLLECTION_NAME = "backlog_tasks";
 
@@ -24,9 +25,16 @@ export const getAllBacklogTasks = async (): Promise<BacklogTask[]> => {
 };
 
 export const createBacklogTask = async (task: Omit<BacklogTask, "id">) => {
+  const { error } = taskSchema.validate(task);
+  if (error) {
+    throw new Error(`Invalid backlog task: ${error.message}`);
+  }
+
   const now = Timestamp.now();
   const newTask = {
     ...task,
+    title: sanitize(task.title),
+    description: sanitize(task.description || ""),
     createdAt: now,
     updatedAt: now,
   };
@@ -42,9 +50,21 @@ export const updateBacklogTask = async (
     throw new Error(
       "L'identifiant de la tâche est requis pour la mise à jour."
     );
+
+  const { error } = taskSchema.validate(updates);
+  if (error) {
+    throw new Error(`Invalid update: ${error.message}`);
+  }
+
+  const sanitizedUpdates = {
+    ...updates,
+    title: sanitize(updates.title || ""),
+    description: sanitize(updates.description || ""),
+  };
+
   const taskRef = doc(db, COLLECTION_NAME, id);
   await updateDoc(taskRef, {
-    ...updates,
+    ...sanitizedUpdates,
     updatedAt: Timestamp.now(),
   });
 };

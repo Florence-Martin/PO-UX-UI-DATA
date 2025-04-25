@@ -174,6 +174,7 @@ export function UserStories() {
               <Label>Titre</Label>
 
               <Input
+                id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="En tant que [rôle], je veux [action] afin de [bénéfice]"
@@ -183,6 +184,7 @@ export function UserStories() {
             <div className="space-y-2">
               <Label>Description</Label>
               <Textarea
+                id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description détaillée de la user story..."
@@ -282,6 +284,7 @@ export function UserStories() {
               </Label>
 
               <Textarea
+                id="acceptance-criteria"
                 value={acceptanceCriteria}
                 onChange={(e) => setAcceptanceCriteria(e.target.value)}
                 placeholder="1. Étant donné [contexte], quand [action], alors [résultat attendu]"

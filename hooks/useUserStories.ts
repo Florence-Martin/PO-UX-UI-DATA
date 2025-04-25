@@ -9,8 +9,8 @@ import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { UserStory } from "@/lib/types/userStory";
 import { removeUserStoryIdFromTasks } from "@/lib/services/backlogTasksService";
+import { userStorySchema, sanitize } from "@/lib/utils/userStorySchema";
 
-// Hook pour gérer les user stories
 export function useUserStories() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -105,14 +105,20 @@ export function useUserStories() {
     }
 
     const payload = {
-      title,
-      description,
+      title: sanitize(title),
+      description: sanitize(description),
       priority,
       storyPoints,
-      acceptanceCriteria,
+      acceptanceCriteria: sanitize(acceptanceCriteria),
       moscow: moscow || undefined,
       status: "todo" as "todo",
     };
+
+    const { error: validationError } = userStorySchema.validate(payload);
+    if (validationError) {
+      toast.error(validationError.message);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -139,7 +145,6 @@ export function useUserStories() {
     }
   };
 
-  // Fonction pour gérer l'édition d'une user story
   const handleEdit = (story: UserStory) => {
     setIsEditing(true);
     setEditingId(story.id || null);

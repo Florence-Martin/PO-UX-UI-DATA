@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { FilterUserStoryList } from "../searchbar/FilterUserStoryList";
+import { taskSchema, sanitize } from "@/lib/utils/taskSchema";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -262,7 +263,26 @@ export function EditTaskModal({
           <Button
             className="bg-gray-800 dark:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors"
             onClick={() => {
-              onSave(edited);
+              // Assainissement des données
+              const sanitizedTask = {
+                ...edited,
+                title: sanitize(edited.title),
+                description: sanitize(edited.description),
+              };
+
+              // Validation des données
+              const validationResult = taskSchema.validate(sanitizedTask);
+              if (validationResult.error) {
+                toast({
+                  title: "Erreur de validation",
+                  description: validationResult.error.message,
+                  variant: "destructive",
+                });
+                return;
+              }
+
+              // Enregistrement de la tâche
+              onSave(sanitizedTask);
               onClose();
             }}
           >
