@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+import path from "path";
 import { Suspense } from "react";
 import { ValidationChecklists } from "@/components/validation/ValidationChecklists";
 import { ApiTesting } from "@/components/validation/ApiTesting";
@@ -5,8 +7,21 @@ import { ExternalTools } from "@/components/validation/ExternalTools";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { DatabaseDiagram } from "@/components/validation/DatabaseDiagram";
+import BusinessRules from "@/components/validation/BusinessRules";
 
-export default function ValidationPage() {
+async function getBusinessRulesContent() {
+  const filePath = path.join(
+    process.cwd(),
+    "documentation",
+    "business-rules.md"
+  );
+  const fileContent = await fs.readFile(filePath, "utf-8");
+  return fileContent;
+}
+
+export default async function ValidationPage() {
+  const businessRulesContent = await getBusinessRulesContent();
+
   const tabs = [
     {
       value: "checklists",
@@ -27,6 +42,11 @@ export default function ValidationPage() {
           <DatabaseDiagram />
         </div>
       ),
+    },
+    {
+      value: "business-rules",
+      label: "Règles de gestion",
+      component: <BusinessRules content={businessRulesContent} />,
     },
   ];
 
