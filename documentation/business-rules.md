@@ -6,9 +6,7 @@ Ce document constitue la référence fonctionnelle des règles métier de l’ap
 
 - **RG0.1** – Le dashboard affiche la progression globale par section : Analyse des besoins, Wireframes, User Stories, Backlog, Livrables.
 - **RG0.2** – Chaque indicateur de progression est calculé à partir des éléments renseignés dans l’application (ex : nombre de user stories créées, taux de complétion des checklists).
-- **RG0.3** – Les métriques affichées incluent les taux clés :
-  taux de conversion, taux de rebond, taux de scroll, taux d’engagement.
-  Ces données sont synchronisées avec les KPIs renseignés dans la documentation.
+- **RG0.3** – Les métriques affichées incluent les taux clés : taux de conversion, taux de rebond, taux de scroll, taux d’engagement. Ces données sont synchronisées avec les KPIs renseignés dans la documentation.
 - **RG0.4** – Un tableau d’activité récente affiche les dernières actions effectuées sur les pages (type, statut, date).
 - **RG0.5** – Les graphes sont mis à jour dynamiquement pour refléter les tendances mensuelles sur les KPIs suivis.
 - **RG0.6** – L’interface est responsive, accessible et utilisable en dark mode.
@@ -113,36 +111,34 @@ Ce document constitue la référence fonctionnelle des règles métier de l’ap
 
 ⸻
 
-### 9. Glossaire & Méthodologie Scrum
-
-#### 9.1 – Glossaire Produit
+### 9. Glossaire
 
 - **RG9.1** – Chaque terme du glossaire appartient à une catégorie (ex : Discovery, Delivery, Analyse, UX).
 - **RG9.2** – Un terme contient obligatoirement : un titre, une définition claire, et une étiquette de catégorie.
 - **RG9.3** – Le glossaire est filtrable dynamiquement via une barre de recherche.
 - **❌ RG9.4** – Deux termes ne peuvent pas avoir le même titre (unicité obligatoire).
 
-#### 9.2 – Processus Scrum
+### 10. Processus Scrum
 
-- **RG9.5** – Les étapes Scrum sont affichées de manière séquentielle et pédagogique (Backlog → Sprint → Daily → Review → Retrospective).
-- **RG9.6** – Chaque étape contient une courte explication illustrée pour faciliter la compréhension du PO.
-- **RG9.7** – Les étapes peuvent être enrichies ou modifiées par l’administrateur du kit.
+- **RG10.1** – Les étapes Scrum sont affichées de manière séquentielle et pédagogique (Backlog → Sprint → Daily → Review → Retrospective).
+- **RG10.2** – Chaque étape contient une courte explication illustrée pour faciliter la compréhension du PO.
+- **RG10.3** – Les étapes peuvent être enrichies ou modifiées par l’administrateur du kit.
 
-#### 9.3 – PO Journey
+### 11. PO Journey
 
-- **RG9.8** – La journée type d’un Product Owner UX/UI est représentée sous forme de frise (timeline ou zigzag).
-- **RG9.9** – Chaque étape de la journée contient : un titre, une icône, une période (matin/après-midi/soirée) et une intensité.
-- **RG9.10** – L’intensité est exprimée visuellement via des emojis standardisés.
-- **❌ RG9.11** – Aucune étape ne peut être ajoutée sans période ni intensité.
+- **RG11.1** – La journée type d’un Product Owner UX/UI est représentée sous forme de frise (timeline ou zigzag).
+- **RG11.2** – Chaque étape de la journée contient : un titre, une icône, une période (matin/après-midi/soirée) et une intensité.
+- **RG11.3** – L’intensité est exprimée visuellement via des emojis standardisés.
+- **❌ RG11.4** – Aucune étape ne peut être ajoutée sans période ni intensité.
 
 ⸻
 
-10. Sécurité & Authentification
+### 12. Sécurité & Authentification
 
-- **RG10.1** – Seuls les utilisateurs authentifiés peuvent créer, éditer ou supprimer des données dans Firestore.
-- **RG10.2** – Les données en lecture sont publiques pour consultation.
-- **❌ RG10.3** – Un utilisateur non connecté ne peut pas modifier de document, y compris via requête API.
-- **RG10.4** – Les opérations sensibles sont auditées et enregistrées (ex : suppression de persona, tâches, user stories).
+- **RG12.1** – Seuls les utilisateurs authentifiés peuvent créer, éditer ou supprimer des données dans Firestore.
+- **RG12.2** – Les données en lecture sont publiques pour consultation.
+- **❌ RG12.3** – Un utilisateur non connecté ne peut pas modifier de document, y compris via requête API.
+- **RG12.4** – Les opérations sensibles sont auditées et enregistrées (ex : suppression de persona, tâches, user stories).
 
 ⸻
 
