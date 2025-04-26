@@ -33,11 +33,11 @@ export function DeliverableTracking() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed":
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+        return <CheckCircle2 className="h-6 w-6 text-green-500" />;
       case "in_progress":
-        return <Clock className="h-4 w-4 text-blue-500" />;
+        return <Clock className="h-6 w-6 text-blue-500" />;
       case "delayed":
-        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+        return <AlertTriangle className="h-6 w-6 text-red-500" />;
       default:
         return null;
     }
@@ -57,22 +57,29 @@ export function DeliverableTracking() {
   };
 
   return (
-    <ScrollArea className="h-[400px]">
+    <ScrollArea className="h-[400px] sm:h-[500px]">
       <div className="space-y-4">
         {deliverables.map((deliverable) => (
-          <Card key={deliverable.id}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col">
+          <Card
+            key={deliverable.id}
+            className="sm:flex sm:items-center sm:justify-between"
+          >
+            <CardContent className="p-4 w-full">
+              <div className="flex flex-col sm:flex-row sm:justify-between w-full">
+                <div className="flex items-start space-x-4 w-full sm:w-auto">
                   {getStatusIcon(deliverable.status)}
-                  <div>
-                    <h4 className="font-semibold">{deliverable.name}</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-sm sm:text-base">
+                      {deliverable.name}
+                    </h4>
+                    <p className="text-xs text-muted-foreground sm:text-sm">
                       {deliverable.owner} • Échéance : {deliverable.dueDate}
                     </p>
                   </div>
                 </div>
-                {getStatusBadge(deliverable.status)}
+                <div className="mt-2 sm:mt-0 sm:flex-shrink-0">
+                  {getStatusBadge(deliverable.status)}
+                </div>
               </div>
             </CardContent>
           </Card>
