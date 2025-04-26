@@ -31,7 +31,7 @@ export default function BusinessRules({ content }: { content: string }) {
           .split(/(RG\d+\.\d+)/)
           .map((part, index) =>
             part.startsWith("RG") ? (
-              <span key={index} className="font-bold text-blue-600">
+              <span key={index} className="font-bold text-blue-200">
                 {part}
               </span>
             ) : (
@@ -40,7 +40,7 @@ export default function BusinessRules({ content }: { content: string }) {
           );
 
         elements.push(
-          <Card key={line} className="mb-4 border-l-4 border-blue-600">
+          <Card key={line} className="mb-4 border-l-4 border-blue-200">
             <CardContent className="p-4">
               <p className="text-sm text-muted-foreground">{styledText}</p>
             </CardContent>
