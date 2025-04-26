@@ -1,7 +1,3 @@
-# RÈGLES DE GESTION
-
-## Projet : PO-UX-UI-DATA
-
 Ce document constitue la référence fonctionnelle des règles métier de l’application, dans un contexte de gestion produit orienté UX/UI/Data avec méthodologie Scrum.
 
 ⸻
