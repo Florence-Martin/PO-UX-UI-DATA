@@ -3,9 +3,9 @@
 import { Suspense } from "react";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { BannerInfo } from "@/components/banner/BannerInfo";
-import SprintTimeline from "@/components/sprint/SprintTimeline";
 import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
+import SprintTimeline from "@/components/sprint/SprintTimeline";
 
 const tabs = [
   {

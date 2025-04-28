@@ -1,25 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Rocket, BarChart2, RefreshCw } from "lucide-react";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { SprintCard } from "@/components/sprint/SprintCard";
-import { useDnDSortable } from "@/hooks/useDnDSortable";
-import { SortableSprintItem } from "./SortableSprintItem";
 
-interface TimelineItem {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  section: string;
-}
+import { SprintCard } from "@/components/sprint/SprintCard";
+
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
+import { BacklogTask } from "@/lib/types/backlogTask";
+
+import { getAllUserStories } from "@/lib/services/userStoryService";
+import { getAllSprints } from "@/lib/services/sprintService";
+import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
+
+import {
+  buildTimelineItemsUserStories,
+  TimelineItem,
+} from "@/lib/utils/buildTimelineItemsUserStories";
 
 export default function SprintTimeline() {
+  const [sprint, setSprint] = useState<Sprint | null>(null);
+  const [userStories, setUserStories] = useState<UserStory[]>([]);
+  const [tasks, setTasks] = useState<BacklogTask[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [userStoriesData, sprintsData, backlogTasksData] =
+          await Promise.all([
+            getAllUserStories(),
+            getAllSprints(),
+            getAllBacklogTasks(),
+          ]);
+        setUserStories(userStoriesData);
+        setSprint(sprintsData[0]);
+        setTasks(backlogTasksData);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading || !sprint) {
+    return <div>Chargement du planning du sprint...</div>;
+  }
+
   const sections = [
     {
       icon: <Calendar className="w-5 h-5 text-primary" />,
@@ -43,99 +70,16 @@ export default function SprintTimeline() {
     },
   ];
 
-  const [items, setItems] = useState<TimelineItem[]>([
-    {
-      id: "1",
-      title: "Gather User Stories",
-      date: "Mar 28-29",
-      description: "Collect and document user requirements",
-      section: "planning",
-    },
-    {
-      id: "2",
-      title: "Estimate User Stories",
-      date: "Mar 29-30",
-      description: "Team estimation and planning",
-      section: "planning",
-    },
-    {
-      id: "3",
-      title: "Create Sprint Backlog",
-      date: "Mar 30-31",
-      description: "Prioritize and finalize sprint items",
-      section: "planning",
-    },
-    {
-      id: "4",
-      title: "Develop User Stories",
-      date: "Mar 30 - Apr 4",
-      description: "Implementation of planned features",
-      section: "execution",
-    },
-    {
-      id: "5",
-      title: "Daily Standup Meetings",
-      date: "Mar 31 - Apr 3",
-      description: "Team sync and progress updates",
-      section: "execution",
-    },
-    {
-      id: "6",
-      title: "Code Review and Testing",
-      date: "Apr 1-4",
-      description: "Quality assurance and validation",
-      section: "execution",
-    },
-    {
-      id: "7",
-      title: "Demo Completed",
-      date: "Apr 3-4",
-      description: "Present sprint achievements",
-      section: "review",
-    },
-    {
-      id: "8",
-      title: "Collect Feedback",
-      date: "Apr 3-4",
-      description: "Stakeholder feedback gathering",
-      section: "review",
-    },
-    {
-      id: "9",
-      title: "Reflect on Sprint",
-      date: "Apr 3-4",
-      description: "Team reflection and discussion",
-      section: "retro",
-    },
-    {
-      id: "10",
-      title: "Identify Improvements",
-      date: "Apr 3-4",
-      description: "Action items for next sprint",
-      section: "retro",
-    },
-  ]);
-
-  const {
-    activeId,
-    sensors,
-    collisionDetection,
-    handleDragStart,
-    handleDragEnd,
-  } = useDnDSortable({
-    items,
-    setItems,
-    getItemId: (item) => item.id,
-    getItemSection: (item) => item.section, // Ajout de la gestion des sections
-  });
+  // Construire les éléments de la timeline
+  const items: TimelineItem[] = buildTimelineItemsUserStories(
+    sprint,
+    userStories,
+    tasks
+  );
 
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-left mb-6">
-          <p className="mt-2 text-muted-foreground">Mars - Avril 2024</p>
-        </div>
-
         <div className="space-y-8">
           {sections.map((section) => (
             <div key={section.id} className="relative">
@@ -148,39 +92,12 @@ export default function SprintTimeline() {
                 </h2>
               </div>
 
-              <div className="ml-5">
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={collisionDetection}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext
-                    items={items
-                      .filter((item) => item.section === section.id)
-                      .map((item) => item.id)}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    <div className="flex gap-4 overflow-x-auto pb-4">
-                      {items
-                        .filter((item) => item.section === section.id)
-                        .map((item) => (
-                          <SortableSprintItem key={item.id} id={item.id}>
-                            <SprintCard item={item} />
-                          </SortableSprintItem>
-                        ))}
-                    </div>
-                  </SortableContext>
-
-                  <DragOverlay>
-                    {activeId ? (
-                      <SprintCard
-                        item={items.find((item) => item.id === activeId)!}
-                        overlay
-                      />
-                    ) : null}
-                  </DragOverlay>
-                </DndContext>
+              <div className="flex gap-4 flex-wrap ml-5 pb-4">
+                {items
+                  .filter((item) => item.section === section.id)
+                  .map((item) => (
+                    <SprintCard key={item.id} item={item} />
+                  ))}
               </div>
             </div>
           ))}

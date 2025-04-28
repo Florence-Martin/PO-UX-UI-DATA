@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import {
   createUserStory,
@@ -5,65 +7,71 @@ import {
   getAllUserStories,
   updateUserStory,
 } from "@/lib/services/userStoryService";
-import { Timestamp } from "firebase/firestore";
-import { toast } from "sonner";
-import { UserStory } from "@/lib/types/userStory";
 import { removeUserStoryIdFromTasks } from "@/lib/services/backlogTasksService";
-import { userStorySchema, sanitize } from "@/lib/utils/userStorySchema";
+import { UserStory } from "@/lib/types/userStory";
+import { toast } from "sonner";
+import { Timestamp } from "firebase/firestore";
 
 export function useUserStories() {
+  // Formulaire
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<"high" | "medium" | "low" | "">("");
+  const [priority, setPriority] = useState<"low" | "medium" | "high" | "">("");
   const [storyPoints, setStoryPoints] = useState<number | null>(null);
   const [acceptanceCriteria, setAcceptanceCriteria] = useState("");
-  const [userStories, setUserStories] = useState<UserStory[]>([]);
-  const [filteredStories, setFilteredStories] = useState<UserStory[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [selectedPriority, setSelectedPriority] = useState("all");
-  const [prioritySearchTerm, setPrioritySearchTerm] = useState("");
-  const [editingCode, setEditingCode] = useState<string | null>(null);
-  const [userStorySearchTerm, setUserStorySearchTerm] = useState("");
   const [moscow, setMoscow] = useState<
     "mustHave" | "shouldHave" | "couldHave" | "wontHave" | ""
   >("");
-  const [selectedMoscowPriority, setSelectedMoscowPriority] = useState("all");
 
+  // Édition
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingCode, setEditingCode] = useState<string | null>(null);
+
+  // Données
+  const [userStories, setUserStories] = useState<UserStory[]>([]);
+  const [filteredStories, setFilteredStories] = useState<UserStory[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filtres
+  const [selectedPriority, setSelectedPriority] = useState("all");
+  const [selectedMoscowPriority, setSelectedMoscowPriority] = useState("all");
+  const [prioritySearchTerm, setPrioritySearchTerm] = useState("");
+  const [userStorySearchTerm, setUserStorySearchTerm] = useState("");
+
+  // Chargement initial
   useEffect(() => {
-    const fetchStories = async () => {
-      try {
-        setLoading(true);
-        const stories = await getAllUserStories();
-        setUserStories(stories);
-        setError(null);
-      } catch (err) {
-        console.error("Erreur lors de la récupération des user stories :", err);
-        setError("Impossible de charger les user stories. Veuillez réessayer.");
-        toast.error("Erreur : Impossible de charger les user stories.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStories();
+    refetch();
   }, []);
 
+  const refetch = async () => {
+    try {
+      setLoading(true);
+      const stories = await getAllUserStories();
+      setUserStories(stories);
+      setError(null);
+    } catch (err) {
+      console.error("Erreur lors du chargement des user stories :", err);
+      setError("Impossible de charger les user stories.");
+      toast.error("Erreur lors du chargement.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filtrage dynamique
   useEffect(() => {
     const filtered = userStories.filter((story) => {
       const matchesPriority =
         selectedPriority === "all" || story.priority === selectedPriority;
-
       const matchesMoscow =
         selectedMoscowPriority === "all" ||
         (selectedMoscowPriority === "unprioritized" && !story.moscow) ||
         story.moscow === selectedMoscowPriority;
-
       const matchesPrioritySearch = story.priority
         .toLowerCase()
         .includes(prioritySearchTerm.toLowerCase());
-
       const matchesUserStorySearch =
         story.title.toLowerCase().includes(userStorySearchTerm.toLowerCase()) ||
         story.description
@@ -88,104 +96,120 @@ export function useUserStories() {
     userStorySearchTerm,
   ]);
 
+  // Reset du formulaire
   const resetForm = () => {
-    setIsEditing(false);
-    setEditingId(null);
     setTitle("");
     setDescription("");
     setPriority("");
     setStoryPoints(null);
     setAcceptanceCriteria("");
+    setMoscow("");
+    setIsEditing(false);
+    setEditingId(null);
+    setEditingCode(null);
   };
 
+  // Sauvegarde / Mise à jour
   const handleSave = async () => {
-    if (!title || !priority || storyPoints === null) {
+    console.log("Payload:", { title, priority, storyPoints });
+    if (!title.trim() || !priority || storyPoints === null) {
       toast.error("Veuillez remplir tous les champs obligatoires.");
-      return;
-    }
-
-    const payload = {
-      title: sanitize(title),
-      description: sanitize(description),
-      priority,
-      storyPoints,
-      acceptanceCriteria: sanitize(acceptanceCriteria),
-      moscow: moscow || undefined,
-      status: "todo" as "todo",
-    };
-
-    const { error: validationError } = userStorySchema.validate(payload);
-    if (validationError) {
-      toast.error(validationError.message);
       return;
     }
 
     try {
       setLoading(true);
+
       if (isEditing && editingId) {
-        await updateUserStory(editingId, payload);
-        toast.success("User story mise à jour ✏️");
+        const existingStory = userStories.find((s) => s.id === editingId);
+        if (!existingStory) {
+          toast.error("User Story introuvable.");
+          return;
+        }
+
+        const updatedStory: Partial<UserStory> = {
+          ...existingStory, // 🛠 garde l'existant (code, createdAt, etc.)
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          storyPoints,
+          acceptanceCriteria: acceptanceCriteria.trim(),
+          moscow: moscow || undefined, // Remplace undefined par null
+          updatedAt: Timestamp.now(),
+        };
+
+        // Supprime les champs undefined
+        Object.keys(updatedStory).forEach(
+          (key) =>
+            updatedStory[key as keyof UserStory] === undefined &&
+            delete updatedStory[key as keyof UserStory]
+        );
+
+        await updateUserStory(editingId, updatedStory);
+        toast.success("User Story mise à jour ✏️");
       } else {
-        await createUserStory({
-          ...payload,
+        const newStory: Omit<UserStory, "id" | "code"> = {
+          title: title.trim(),
+          description: description.trim(),
+          priority,
+          storyPoints,
+          acceptanceCriteria: acceptanceCriteria.trim(),
+          moscow: moscow || undefined,
+          status: "todo",
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
-        });
-        toast.success("User story sauvegardée ✅");
+        };
+
+        await createUserStory(newStory);
+        toast.success("User Story créée ✅");
       }
+
       resetForm();
-      const updatedStories = await getAllUserStories();
-      setUserStories(updatedStories);
+      await refetch();
     } catch (err) {
-      console.error("Erreur lors de la sauvegarde de la user story :", err);
-      setError("Impossible de sauvegarder la user story. Veuillez réessayer.");
-      toast.error("Erreur : Impossible de sauvegarder la user story.");
+      console.error("Erreur lors de la sauvegarde :", err);
+      toast.error("Erreur : Impossible de sauvegarder la User Story.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Chargement en édition
   const handleEdit = (story: UserStory) => {
     setIsEditing(true);
-    setEditingId(story.id || null);
-    setEditingCode(story.code || null);
+    setEditingId(story.id ?? null);
+    setEditingCode(story.code ?? null);
     setTitle(story.title);
     setDescription(story.description);
     setPriority(story.priority);
     setStoryPoints(story.storyPoints);
-    setAcceptanceCriteria(story.acceptanceCriteria);
+    setAcceptanceCriteria(story.acceptanceCriteria ?? "");
     setMoscow(story.moscow ?? "");
   };
 
+  // Suppression
   const handleDelete = async (id?: string) => {
     if (!id) return;
-
     try {
       setLoading(true);
       await deleteUserStory(id);
       await removeUserStoryIdFromTasks(id);
       setUserStories((prev) => prev.filter((story) => story.id !== id));
-      toast.success("User story supprimée ❌");
-      setError(null);
+      toast.success("User Story supprimée ❌");
     } catch (err) {
-      console.error("Erreur lors de la suppression de la user story :", err);
-      setError("Impossible de supprimer la user story. Veuillez réessayer.");
-      toast.error("Erreur : Impossible de supprimer la user story.");
+      console.error("Erreur lors de la suppression :", err);
+      toast.error("Erreur lors de la suppression.");
     } finally {
       setLoading(false);
     }
   };
 
-  const filterByPriority = (priority: string) => {
-    setSelectedPriority(priority);
-  };
-
-  const refetch = async () => {
-    const stories = await getAllUserStories();
-    setUserStories(stories);
-  };
+  // Filtres manuels
+  const filterByPriority = (priority: string) => setSelectedPriority(priority);
+  const filterByMoscow = (moscow: string) => setSelectedMoscowPriority(moscow);
 
   return {
+    // Formulaire
     title,
     setTitle,
     description,
@@ -196,27 +220,36 @@ export function useUserStories() {
     setStoryPoints,
     acceptanceCriteria,
     setAcceptanceCriteria,
+    moscow,
+    setMoscow,
+
+    // Données
     userStories,
     filteredStories,
-    filterByPriority,
-    prioritySearchTerm,
-    setPrioritySearchTerm,
+    loading,
+    error,
+
+    // Edition
     isEditing,
     editingCode,
-    setEditingCode,
     handleSave,
     handleEdit,
     handleDelete,
     resetForm,
-    error,
-    loading,
-    userStorySearchTerm,
-    setUserStorySearchTerm,
-    moscow,
-    setMoscow,
+
+    // Filtres
+    selectedPriority,
+    setSelectedPriority,
     selectedMoscowPriority,
     setSelectedMoscowPriority,
-    filterByMoscow: (moscow: string) => setSelectedMoscowPriority(moscow),
+    prioritySearchTerm,
+    setPrioritySearchTerm,
+    userStorySearchTerm,
+    setUserStorySearchTerm,
+    filterByPriority,
+    filterByMoscow,
+
+    // Rechargement
     refetch,
   };
 }

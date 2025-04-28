@@ -5,8 +5,8 @@ import {
   DndContext,
   DragOverlay,
   closestCorners,
-  KeyboardSensor,
   PointerSensor,
+  KeyboardSensor,
   useSensor,
   useSensors,
   DragStartEvent,
@@ -15,10 +15,10 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { KanbanColumn } from "./KanbanColumn";
 import { KanbanItem } from "./KanbanItem";
-import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { EditTaskModal } from "./EditTaskModal";
-import { BacklogTask } from "@/lib/types/backlogTask";
+import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useSprints } from "@/hooks/useSprints";
+import { BacklogTask } from "@/lib/types/backlogTask";
 
 export function KanbanBoard() {
   const {
@@ -31,10 +31,10 @@ export function KanbanBoard() {
     deleteTask,
     updateTaskStatus,
   } = useBacklogTasks();
+  const { sprints } = useSprints();
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
-  const { sprints } = useSprints();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -42,6 +42,10 @@ export function KanbanBoard() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
+
+  const findTask = (id: string) => allTasks.find((task) => task.id === id);
 
   const handleAddTask = (status: BacklogTask["status"]) => {
     addTask({
@@ -59,42 +63,34 @@ export function KanbanBoard() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) {
       setActiveId(null);
       return;
     }
 
-    const task = findTask(active.id as string);
-    const newStatus = over?.data?.current?.columnId as BacklogTask["status"]; // Récupère la colonne cible
+    const draggedTask = findTask(active.id as string);
+    const newStatus = over?.data?.current?.columnId as BacklogTask["status"];
 
-    if (task && task.status !== newStatus) {
-      updateTaskStatus(task.id!, newStatus); // Met à jour le statut de la tâche
+    if (draggedTask && draggedTask.status !== newStatus) {
+      updateTaskStatus(draggedTask.id!, newStatus);
     }
 
     setActiveId(null);
-  };
-
-  const findTask = (taskId: string): BacklogTask | undefined => {
-    const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
-    const task = allTasks.find((task) => task.id === taskId);
-
-    return task;
   };
 
   const handleClickTask = (task: BacklogTask) => {
     setTaskToEdit(task);
   };
 
-  const handleSaveEdit = (updated: BacklogTask) => {
-    if (updated.id) {
-      updateTask(updated);
+  const handleSaveEdit = (updatedTask: BacklogTask) => {
+    if (updatedTask.id) {
+      updateTask(updatedTask);
       setTaskToEdit(null);
     }
   };
 
-  const handleDelete = (taskId: string) => {
-    deleteTask(taskId);
+  const handleDeleteTask = (id: string) => {
+    deleteTask(id);
     setTaskToEdit(null);
   };
 
@@ -122,7 +118,7 @@ export function KanbanBoard() {
             sprints={sprints}
           />
           <KanbanColumn
-            column={{ id: "in-testing", title: "A tester" }}
+            column={{ id: "in-testing", title: "À Tester" }}
             tasks={inTesting}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
@@ -136,10 +132,13 @@ export function KanbanBoard() {
             sprints={sprints}
           />
         </div>
+
         <DragOverlay>
           {activeId && (
             <div className="w-[300px]">
-              <KanbanItem task={findTask(activeId)!} sprints={sprints} />
+              {findTask(activeId) && (
+                <KanbanItem task={findTask(activeId)!} sprints={sprints} />
+              )}
             </div>
           )}
         </DragOverlay>
@@ -151,7 +150,7 @@ export function KanbanBoard() {
           isOpen={!!taskToEdit}
           onClose={() => setTaskToEdit(null)}
           onSave={handleSaveEdit}
-          onDelete={handleDelete}
+          onDelete={handleDeleteTask}
         />
       )}
     </>

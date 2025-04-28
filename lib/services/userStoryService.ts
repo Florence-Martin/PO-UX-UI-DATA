@@ -9,7 +9,6 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { UserStory } from "../types/userStory";
-import { userStorySchema, sanitize } from "@/lib/utils/userStorySchema";
 
 const COLLECTION_NAME = "user_stories";
 
@@ -24,18 +23,16 @@ export const getAllUserStories = async (): Promise<UserStory[]> => {
 
 // Création d'une nouvelle user story
 export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
-  const { error } = userStorySchema.validate(data);
-  if (error) {
-    throw new Error(`Invalid user story: ${error.message}`);
-  }
+  const colRef = collection(db, "user_stories");
 
-  const colRef = collection(db, COLLECTION_NAME);
+  // Récupère tous les codes existants pour éviter les doublons
   const snapshot = await getDocs(colRef);
   const existingCodes = snapshot.docs.map((doc) => doc.data()?.code || "");
 
   let nextNumber = 1;
   let code = "";
 
+  // Génère un code unique du type US-001, US-002, ...
   do {
     code = `US-${String(nextNumber).padStart(3, "0")}`;
     nextNumber++;
@@ -46,9 +43,6 @@ export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
     id: docRef.id,
     code,
     ...data,
-    title: sanitize(data.title),
-    description: sanitize(data.description || ""),
-    acceptanceCriteria: sanitize(data.acceptanceCriteria || ""),
     createdAt: Timestamp.fromDate(new Date()),
     updatedAt: Timestamp.fromDate(new Date()),
   };
@@ -62,21 +56,9 @@ export const updateUserStory = async (
   id: string,
   story: Partial<UserStory>
 ) => {
-  const { error } = userStorySchema.validate(story);
-  if (error) {
-    throw new Error(`Invalid update: ${error.message}`);
-  }
-
-  const sanitizedUpdate = {
-    ...story,
-    title: sanitize(story.title || ""),
-    description: sanitize(story.description || ""),
-    acceptanceCriteria: sanitize(story.acceptanceCriteria || ""),
-  };
-
   const storyRef = doc(db, COLLECTION_NAME, id);
   await updateDoc(storyRef, {
-    ...sanitizedUpdate,
+    ...story,
     updatedAt: Timestamp.now(),
   });
 };

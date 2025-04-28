@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, FilePenLine, X, Ban } from "lucide-react";
+import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { UserStory } from "@/lib/types/userStory";
 import {
@@ -12,7 +12,6 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { FilterUserStoryList } from "../searchbar/FilterUserStoryList";
-import { taskSchema, sanitize } from "@/lib/utils/taskSchema";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -57,7 +56,6 @@ export function EditTaskModal({
   if (!isOpen || !edited) return null;
 
   const toggleUserStorySelection = (storyId: string) => {
-    // Vérifie si une User Story est déjà liée
     if (
       (edited.userStoryIds?.length ?? 0) > 0 &&
       !edited.userStoryIds?.includes(storyId)
@@ -83,10 +81,24 @@ export function EditTaskModal({
       story.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleSave = () => {
+    if (!edited) return;
+
+    // Nettoyage des données
+    const sanitizedTask = {
+      ...edited,
+      title: edited.title.trim(),
+      description: edited.description.trim(),
+    };
+
+    // Enregistrement de la tâche
+    onSave(sanitizedTask);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center">
       <div className="relative w-full mx-4 max-w-md sm:max-w-xl lg:max-w-2xl bg-white dark:bg-neutral-900 text-black dark:text-white border-4 border-gray-200 border-t-gray-500 rounded-xl shadow-lg overflow-hidden">
-        {/* Scrollable content */}
         <div className="max-h-[80vh] overflow-y-auto p-6 space-y-4">
           <button
             onClick={onClose}
@@ -251,7 +263,6 @@ export function EditTaskModal({
           </div>
         </div>
 
-        {/* Footer actions fixé en bas */}
         <div className="flex justify-between px-6 py-4 border-t dark:border-neutral-800 bg-white dark:bg-neutral-900 sticky bottom-0 z-10">
           <Button
             variant="destructive"
@@ -262,29 +273,7 @@ export function EditTaskModal({
           </Button>
           <Button
             className="bg-gray-800 dark:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition-colors"
-            onClick={() => {
-              // Assainissement des données
-              const sanitizedTask = {
-                ...edited,
-                title: sanitize(edited.title),
-                description: sanitize(edited.description),
-              };
-
-              // Validation des données
-              const validationResult = taskSchema.validate(sanitizedTask);
-              if (validationResult.error) {
-                toast({
-                  title: "Erreur de validation",
-                  description: validationResult.error.message,
-                  variant: "destructive",
-                });
-                return;
-              }
-
-              // Enregistrement de la tâche
-              onSave(sanitizedTask);
-              onClose();
-            }}
+            onClick={handleSave}
           >
             Enregistrer
           </Button>

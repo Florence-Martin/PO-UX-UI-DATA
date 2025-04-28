@@ -29,8 +29,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const moscowOptions = ["Must have", "Should have", "Could have", "Won't have"];
-
 export function UserStories() {
   const {
     title,
@@ -40,11 +38,13 @@ export function UserStories() {
     acceptanceCriteria,
     isEditing,
     editingCode,
+    moscow,
     setTitle,
     setDescription,
     setPriority,
     setStoryPoints,
     setAcceptanceCriteria,
+    setMoscow,
     handleSave,
     handleEdit,
     handleDelete,
@@ -52,8 +52,6 @@ export function UserStories() {
     filteredStories,
     filterByPriority,
     setUserStorySearchTerm,
-    moscow,
-    setMoscow,
   } = useUserStories();
 
   const searchParams = useSearchParams();
@@ -68,8 +66,6 @@ export function UserStories() {
     const matched = filteredStories.find((s) => s.id === storyIdToEdit);
     if (matched) {
       handleEdit(matched);
-
-      // Nettoie l’URL après édition
       router.replace("/analysis?tab=documentation", { scroll: false });
 
       setTimeout(() => {
@@ -79,7 +75,7 @@ export function UserStories() {
     }
   }, [storyIdToEdit, filteredStories]);
 
-  // Effet de surlignage temporaire lors de la modification
+  // Surlignage temporaire
   useEffect(() => {
     if (isEditing && cardRef.current) {
       const el = cardRef.current;
@@ -87,10 +83,10 @@ export function UserStories() {
       setTimeout(() => el.classList.remove("ring-2", "ring-primary"), 3000);
     }
   }, [isEditing]);
+
   return (
     <div className="grid gap-6 sm:px-6 lg:px-8">
-      {/* Formulaire + liens */}
-      <div className="grid grid-cols-1  gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Formulaire */}
         <Card id="edit-user-story" ref={cardRef}>
           <CardHeader>
@@ -131,7 +127,7 @@ export function UserStories() {
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Ouvrir le board Jira du projet</p>
+                      Ouvrir le board Jira du projet
                     </TooltipContent>
                   </Tooltip>
 
@@ -144,7 +140,7 @@ export function UserStories() {
                       >
                         <Image
                           src="/confluence.svg"
-                          alt="Jira Logo"
+                          alt="Confluence Logo"
                           width={10}
                           height={10}
                           className="mr-1 h-4 w-4"
@@ -153,7 +149,7 @@ export function UserStories() {
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Accéder à la documentation Confluence</p>
+                      Accéder à la documentation Confluence
                     </TooltipContent>
                   </Tooltip>
 
@@ -170,9 +166,9 @@ export function UserStories() {
           </CardHeader>
 
           <CardContent className="space-y-4">
+            {/* Titre */}
             <div className="space-y-2">
               <Label>Titre</Label>
-
               <Input
                 id="title"
                 value={title}
@@ -181,6 +177,7 @@ export function UserStories() {
               />
             </div>
 
+            {/* Description */}
             <div className="space-y-2">
               <Label>Description</Label>
               <Textarea
@@ -191,29 +188,10 @@ export function UserStories() {
               />
             </div>
 
+            {/* Priorité & Story points */}
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div className="space-y-2">
-                <Label className="flex items-center gap-1">
-                  Priorité
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs">
-                        <ul className="list-disc pl-4">
-                          Indique l&apos;urgence ou l&apos;importance de la user
-                          story.
-                          <br />
-                          <li>Haute = 🚨 à faire ASAP</li>{" "}
-                          <li>Moyenne = important mais pas critique</li>{" "}
-                          <li>Basse = à faire... un jour 😅</li>
-                        </ul>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </Label>
-
+                <Label>Priorité</Label>
                 <Select
                   value={priority}
                   onValueChange={(val) => setPriority(val as any)}
@@ -230,23 +208,7 @@ export function UserStories() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Label>Story Points</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs">
-                        <p>
-                          Estimation de l&apos;effort à fournir. Plus le chiffre
-                          est grand, plus tu vas avoir besoin de café ☕️ !
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-
+                <Label>Story Points</Label>
                 <Select
                   value={storyPoints?.toString() || ""}
                   onValueChange={(val) => setStoryPoints(Number(val))}
@@ -265,33 +227,18 @@ export function UserStories() {
               </div>
             </div>
 
+            {/* Critères d'acceptation */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-1">
-                Critères d’Acceptation
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-xs">
-                      <p>
-                        Liste des conditions à remplir pour que la user story
-                        soit considérée comme terminée.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </Label>
-
+              <Label>Critères d’Acceptation</Label>
               <Textarea
                 id="acceptance-criteria"
                 value={acceptanceCriteria}
                 onChange={(e) => setAcceptanceCriteria(e.target.value)}
-                placeholder="1. Étant donné [contexte], quand [action], alors [résultat attendu]"
-                className="min-h-[150px]"
+                placeholder="Critères pour valider la user story"
               />
             </div>
 
+            {/* Boutons */}
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={resetForm}>
                 Annuler
@@ -303,24 +250,23 @@ export function UserStories() {
           </CardContent>
         </Card>
 
-        {/* Liste des user stories à droite */}
+        {/* Liste des User Stories */}
         <Card id="user-stories-list" className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <List className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="text-base sm:text-lg">
-                Liste de User Stories
-              </span>
+              <List className="w-5 h-5" />
+              <span>Liste de User Stories</span>
             </CardTitle>
             <UserStorySearchBar
               onFilterChange={filterByPriority}
-              onSearchChange={setUserStorySearchTerm} // Connecte la recherche
+              onSearchChange={setUserStorySearchTerm}
             />
           </CardHeader>
+
           <CardContent className="space-y-3">
             {filteredStories.length === 0 ? (
               <p className="text-sm text-muted-foreground italic">
-                Désolée, mais rien ne correspond à votre recherche!
+                Désolé, aucun résultat !
               </p>
             ) : (
               filteredStories.map((story) => (
@@ -331,68 +277,51 @@ export function UserStories() {
                   transition={{ duration: 0.3 }}
                   className="p-4 rounded-md border border-border bg-muted text-muted-foreground"
                 >
-                  <div className="mb-3">
-                    <div className="flex items-start justify-between">
-                      {/* Code de la User Story */}
-                      {story.code && (
-                        <span className="text-lg font-mono tracking-wide text-muted-foreground">
-                          {story.code}
-                        </span>
-                      )}
-
-                      {/* Badge de priorité */}
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                          story.priority === "high"
-                            ? "bg-red-500/10 text-red-500"
-                            : story.priority === "medium"
-                            ? "bg-yellow-500/10 text-yellow-500"
-                            : "bg-green-500/10 text-green-500"
-                        }`}
-                      >
-                        {story.priority}
+                  <div className="mb-3 flex justify-between">
+                    {story.code && (
+                      <span className="text-lg font-mono tracking-wide">
+                        {story.code}
                       </span>
-                    </div>
-
-                    {/* Titre de la User Story */}
-                    <h3 className="mt-1 text-base font-semibold text-foreground leading-snug">
-                      {story.title}
-                    </h3>
+                    )}
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        story.priority === "high"
+                          ? "bg-red-500/10 text-red-500"
+                          : story.priority === "medium"
+                          ? "bg-yellow-500/10 text-yellow-500"
+                          : "bg-green-500/10 text-green-500"
+                      }`}
+                    >
+                      {story.priority}
+                    </span>
                   </div>
-
-                  <p className="text-sm italic text-muted-foreground mb-2">
-                    {story.description}
-                  </p>
-
-                  <div className="text-sm text-yellow-500 flex items-center gap-1">
+                  <h3 className="mt-1 text-base font-semibold text-foreground">
+                    {story.title}
+                  </h3>
+                  <p className="text-sm italic">{story.description}</p>
+                  <div className="text-sm text-yellow-500 flex items-center gap-1 mt-2">
                     ⭐{" "}
                     <span className="text-foreground">
                       {story.storyPoints} points
                     </span>
                   </div>
-
-                  <p className="text-sm text-foreground whitespace-pre-line mt-2">
+                  <p className="text-sm mt-2 whitespace-pre-line">
                     {story.acceptanceCriteria}
                   </p>
-
-                  <div className="flex flex-wrap justify-end gap-2 pt-2">
+                  <div className="flex justify-end gap-2 pt-4">
                     <Button
-                      variant="secondary"
                       size="sm"
+                      variant="secondary"
                       onClick={() => {
                         handleEdit(story);
-                        toast.success("✅ Modification !");
-                        const form = document.getElementById("edit-user-story");
-                        if (form) {
-                          form.scrollIntoView({ behavior: "smooth" });
-                        }
+                        toast.success("✅ Modification");
                       }}
                     >
                       Modifier
                     </Button>
                     <Button
-                      variant="destructive"
                       size="sm"
+                      variant="destructive"
                       onClick={() => handleDelete(story.id)}
                     >
                       Supprimer

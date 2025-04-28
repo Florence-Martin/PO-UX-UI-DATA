@@ -39,7 +39,7 @@ export default function BusinessRulesTableOfContents({
     <div className="sticky top-24 flex flex-col justify-between h-[calc(100vh-8rem)] overflow-y-auto p-2 text-sm">
       {/* Sommaire */}
       <nav className="flex-1 space-y-2">
-        <h2 className="text-lg font-bold mb-4">Sommaire</h2>
+        <h2 className="text-lg font-bold  mb-4">Sommaire</h2>
         <ul className="space-y-1">
           {headings.map((heading) => (
             <li key={heading.id}>
