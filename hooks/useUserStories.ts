@@ -111,7 +111,6 @@ export function useUserStories() {
 
   // Sauvegarde / Mise à jour
   const handleSave = async () => {
-    console.log("Payload:", { title, priority, storyPoints });
     if (!title.trim() || !priority || storyPoints === null) {
       toast.error("Veuillez remplir tous les champs obligatoires.");
       return;
@@ -134,7 +133,7 @@ export function useUserStories() {
           priority,
           storyPoints,
           acceptanceCriteria: acceptanceCriteria.trim(),
-          moscow: moscow || undefined, // Remplace undefined par null
+          moscow: moscow !== "" ? moscow : null,
           updatedAt: Timestamp.now(),
         };
 
@@ -154,14 +153,14 @@ export function useUserStories() {
           priority,
           storyPoints,
           acceptanceCriteria: acceptanceCriteria.trim(),
-          moscow: moscow || undefined,
+          moscow: moscow !== "" ? moscow : null,
           status: "todo",
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
         };
 
-        await createUserStory(newStory);
-        toast.success("User Story créée ✅");
+        const created = await createUserStory(newStory);
+        toast.success("User Story créée ✅ (ID : " + created.id + ")");
       }
 
       resetForm();

@@ -10,6 +10,8 @@ export interface TimelineItem {
   code: string;
   description: string;
   date: string;
+  startDate?: string;
+  endDate?: string;
   section: string;
   userStory: {
     id: string;
@@ -22,30 +24,28 @@ function mapTaskStatusToSection(status?: string): string {
   if (status === "todo") return "planning";
   if (status === "in-progress" || status === "in-testing") return "execution";
   if (status === "done") return "review";
-  return "planning"; // fallback
+  return "planning";
 }
 
-function getFormattedDate(date?: string | Timestamp): string {
+function getFormattedDate(date?: string | Timestamp | Date): string {
   if (!date) return "";
   if (typeof date === "string") return formatDateToFrenchString(date);
+  if (date instanceof Date) return formatDateToFrenchString(date.toISOString());
   if (date instanceof Timestamp)
     return formatDateToFrenchString(date.toDate().toISOString());
   return "";
 }
 
 export function buildTimelineItemsUserStories(
-  sprint: Sprint,
+  sprints: Sprint[],
   userStories: UserStory[],
   backlogTasks: BacklogTask[]
 ): TimelineItem[] {
   const items: TimelineItem[] = [];
-  const addedUserStoryIds = new Set<string>(); // Set pour éviter les doublons
+  const addedUserStoryIds = new Set<string>();
 
   backlogTasks.forEach((task) => {
-    // ne prend que les tâches qui sont taguées "Sprint"
     if (task.badge !== "sprint") return;
-
-    // vérifie qu'elles sont liées à une userStory
     if (!task.userStoryIds || task.userStoryIds.length === 0) return;
 
     const userStoryId = task.userStoryIds[0];
@@ -56,12 +56,19 @@ export function buildTimelineItemsUserStories(
 
     const status = task.status ?? "todo";
 
+    const matchingSprint = sprints.find((sprint) =>
+      sprint.userStoryIds?.includes(userStoryId)
+    );
+
+    // ✅ Correction ici : bien formatter le startDate (Timestamp ou Date ou string)
+    const date = matchingSprint?.startDate || userStory.createdAt;
+
     items.push({
       id: userStory.id,
       title: userStory.title,
       code: userStory.code || "",
       description: userStory.description || "",
-      date: getFormattedDate(userStory.createdAt),
+      date: getFormattedDate(date),
       section: mapTaskStatusToSection(status),
       userStory: {
         id: userStory.id,

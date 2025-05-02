@@ -48,6 +48,7 @@ export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
   };
 
   await setDoc(docRef, story);
+
   return story;
 }
 

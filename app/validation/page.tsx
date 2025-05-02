@@ -48,6 +48,11 @@ export default async function ValidationPage() {
       label: "Règles de gestion",
       component: <BusinessRules content={businessRulesContent} />,
     },
+    // {
+    //   value: "data-dictionary",
+    //   label: "Dictionnaire de données",
+    //   component: <DataDictionary content={dataDictionaryContent} />,
+    // },
   ];
 
   return (

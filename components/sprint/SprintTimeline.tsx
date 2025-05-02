@@ -19,7 +19,7 @@ import {
 } from "@/lib/utils/buildTimelineItemsUserStories";
 
 export default function SprintTimeline() {
-  const [sprint, setSprint] = useState<Sprint | null>(null);
+  const [sprints, setSprints] = useState<Sprint[]>([]);
   const [userStories, setUserStories] = useState<UserStory[]>([]);
   const [tasks, setTasks] = useState<BacklogTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function SprintTimeline() {
             getAllBacklogTasks(),
           ]);
         setUserStories(userStoriesData);
-        setSprint(sprintsData[0]);
+        setSprints(sprintsData);
         setTasks(backlogTasksData);
       } finally {
         setLoading(false);
@@ -43,7 +43,7 @@ export default function SprintTimeline() {
     fetchData();
   }, []);
 
-  if (loading || !sprint) {
+  if (loading) {
     return <div>Chargement du planning du sprint...</div>;
   }
 
@@ -70,9 +70,9 @@ export default function SprintTimeline() {
     },
   ];
 
-  // Construire les éléments de la timeline
+  // Construire les éléments de la timeline à partir de TOUS les sprints
   const items: TimelineItem[] = buildTimelineItemsUserStories(
-    sprint,
+    sprints,
     userStories,
     tasks
   );

@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Sprint } from "@/lib/types/sprint";
 import { Timestamp } from "firebase/firestore";
-import { useUserStories } from "@/hooks/useUserStories";
 import { UserStory } from "@/lib/types/userStory";
 
 type Props = {
