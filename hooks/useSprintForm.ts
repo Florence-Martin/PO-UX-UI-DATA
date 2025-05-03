@@ -4,7 +4,12 @@ import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { createSprint } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
-import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema"; // Joi + DOMPurify
+import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema";
+import { addSprintToUserStory } from "@/lib/services/userStoryService"; // 🔥 ajout
+import {
+  getAllBacklogTasks,
+  updateBacklogTask,
+} from "@/lib/services/backlogTasksService";
 
 export function useSprintForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,10 +57,8 @@ export function useSprintForm() {
   };
 
   const handleSubmit = async () => {
-    // Assainissement du title via DOMPurify (sanitize(title))
     const sanitizedTitle = sanitize(formValues.title);
 
-    // Validation via Joi (sprintSchema.validate(...))
     const validationResult = sprintSchema.validate({
       title: sanitizedTitle,
       startDate: formValues.startDate,
@@ -80,12 +83,37 @@ export function useSprintForm() {
         status: "planned",
       };
 
-      await createSprint(newSprint);
+      const sprintId = await createSprint(newSprint);
+
+      // Mise à jour des US
+      await Promise.all(
+        userStoryIds.map((usId) => addSprintToUserStory(usId, sprintId))
+      );
+
+      // Mise à jour des tâches associées aux US
+      const allTasks = await getAllBacklogTasks();
+
+      const updates = userStoryIds.flatMap((usId) => {
+        return allTasks
+          .filter((task) => task.userStoryIds?.includes(usId))
+          .map((task) =>
+            updateBacklogTask(task.id!, {
+              ...task,
+              badge: "sprint",
+            })
+          );
+      });
+
+      await Promise.all(updates);
+
       toast.success("Sprint créé avec succès ✅");
       resetForm();
       closeModal();
     } catch (error) {
-      console.error("Erreur lors de la création du sprint :", error);
+      console.error(
+        "Erreur lors de la création du sprint ou de la mise à jour :",
+        error
+      );
       toast.error("Une erreur est survenue.");
     }
   };

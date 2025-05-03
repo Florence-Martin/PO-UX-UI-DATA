@@ -73,11 +73,16 @@ export function useUserStories() {
         .toLowerCase()
         .includes(prioritySearchTerm.toLowerCase());
       const matchesUserStorySearch =
-        story.title.toLowerCase().includes(userStorySearchTerm.toLowerCase()) ||
-        story.description
-          .toLowerCase()
+        story.title
+          ?.toLowerCase()
           .includes(userStorySearchTerm.toLowerCase()) ||
-        story.code?.toLowerCase().includes(userStorySearchTerm.toLowerCase());
+        "" ||
+        story.description
+          ?.toLowerCase()
+          .includes(userStorySearchTerm.toLowerCase()) ||
+        "" ||
+        story.code?.toLowerCase().includes(userStorySearchTerm.toLowerCase()) ||
+        "";
 
       return (
         matchesPriority &&

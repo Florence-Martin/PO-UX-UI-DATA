@@ -104,3 +104,13 @@ export const deleteSprint = async (sprintId: string) => {
   const sprintRef = doc(db, "sprints", sprintId);
   await deleteDoc(sprintRef);
 };
+
+export async function addSprintToUserStory(
+  userStoryId: string,
+  sprintId: string
+) {
+  const userStoryRef = doc(db, "user_stories", userStoryId);
+  await updateDoc(userStoryRef, {
+    sprintId: sprintId,
+  });
+}
