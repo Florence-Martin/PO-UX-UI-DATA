@@ -4,37 +4,47 @@ import { Sprint } from "@/lib/types/sprint";
 import { Timestamp } from "firebase/firestore";
 
 /**
+ * Convertit une date (string, Date ou Timestamp) en instance de Date.
+ */
+function parseDate(date: Date | string | Timestamp): Date {
+  if (date instanceof Timestamp) return date.toDate();
+  return new Date(date);
+}
+
+/**
  * Vérifie si le sprint est actif (en cours).
  */
 function isCurrentSprint(sprint: Sprint): boolean {
   const now = new Date();
-
-  const start =
-    sprint.startDate instanceof Timestamp
-      ? sprint.startDate.toDate()
-      : new Date(sprint.startDate);
-
-  const end =
-    sprint.endDate instanceof Timestamp
-      ? sprint.endDate.toDate()
-      : new Date(sprint.endDate);
-
+  const start = parseDate(sprint.startDate);
+  const end = parseDate(sprint.endDate);
   return now >= start && now <= end;
 }
 
 /**
- * Hook pour charger les sprints et identifier celui en cours.
+ * Hook pour charger les sprints, les trier et identifier celui en cours.
  */
 export function useSprints() {
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [currentSprint, setCurrentSprint] = useState<Sprint | null>(null);
 
   const refetch = async () => {
-    const data = await getAllSprints();
-    setSprints(data);
+    try {
+      const data = await getAllSprints();
 
-    const active = data.find(isCurrentSprint) || null;
-    setCurrentSprint(active);
+      // Tri ascendant par date de début
+      const sorted = [...data].sort(
+        (a, b) =>
+          parseDate(a.startDate).getTime() - parseDate(b.startDate).getTime()
+      );
+
+      setSprints(sorted);
+
+      const active = sorted.find(isCurrentSprint) || null;
+      setCurrentSprint(active);
+    } catch (error) {
+      console.error("Erreur lors du chargement des sprints :", error);
+    }
   };
 
   useEffect(() => {
