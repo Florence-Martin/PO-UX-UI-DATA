@@ -79,20 +79,21 @@ export default function SprintTimeline() {
 
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="space-y-8">
-          {sections.map((section) => (
-            <div key={section.id} className="relative">
-              <div className="flex items-center mb-4 space-x-3">
-                <div className="flex items-center justify-center w-10 h-10 bg-secondary rounded-full">
-                  {section.icon}
-                </div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  {section.title}
-                </h2>
+      <div className="space-y-8">
+        {sections.map((section) => (
+          <div key={section.id} className="relative">
+            <div className="flex items-center mb-4 space-x-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-secondary rounded-full">
+                {section.icon}
               </div>
+              <h2 className="text-xl font-semibold text-foreground">
+                {section.title}
+              </h2>
+            </div>
 
-              <div className="flex gap-4 flex-wrap ml-5 pb-4">
+            {/* Scroll horizontal complet */}
+            <div className="overflow-x-auto">
+              <div className="flex gap-4 ml-5 pb-4 w-max">
                 {items
                   .filter((item) => item.section === section.id)
                   .map((item) => (
@@ -100,8 +101,8 @@ export default function SprintTimeline() {
                   ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
