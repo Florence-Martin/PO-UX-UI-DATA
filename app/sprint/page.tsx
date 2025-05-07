@@ -1,5 +1,3 @@
-// # Vue sprint active (stories sélectionnées, timeline)
-
 import { Suspense } from "react";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { BannerInfo } from "@/components/banner/BannerInfo";
@@ -7,6 +5,7 @@ import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
 import SprintTimeline from "@/components/sprint/SprintTimeline";
 import { SprintList } from "@/components/sprint/SprintList";
+import SprintHistoryWrapper from "@/components/sprint/sprint-history/SprintHistoryWrapper.";
 
 const tabs = [
   {
@@ -20,7 +19,13 @@ const tabs = [
     component: <SprintTimeline />,
   },
   { value: "board", label: "Sprint actif", component: <SprintBoard /> },
+
   { value: "metrics", label: "Vélocité", component: <SprintVelocity /> },
+  {
+    value: "history",
+    label: "Historique",
+    component: <SprintHistoryWrapper />,
+  },
 ];
 
 export default function SprintPage() {

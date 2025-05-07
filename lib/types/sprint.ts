@@ -9,4 +9,6 @@ export interface Sprint {
   velocity: number; // Total des storyPoints
   progress: number; // % de progression, à calculer dynamiquement
   status: "planned" | "active" | "done"; // Statut du sprint
+  hasReview: boolean;
+  hasRetrospective: boolean;
 }

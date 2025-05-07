@@ -8,8 +8,8 @@ import {
   Timestamp,
   setDoc,
 } from "firebase/firestore";
-import { UserStory } from "../types/userStory";
 import { toast } from "sonner";
+import { UserStory } from "../types/userStory";
 
 const COLLECTION_NAME = "user_stories";
 

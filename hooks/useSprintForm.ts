@@ -78,6 +78,8 @@ export function useSprintForm() {
         userStoryIds,
         velocity: 0,
         status: "planned",
+        hasReview: false,
+        hasRetrospective: false,
       };
 
       await createSprint(newSprint);
