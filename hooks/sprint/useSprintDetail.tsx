@@ -78,6 +78,8 @@ export function useSprintDetail(
           endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
           velocity: 0,
+          hasReview: false,
+          hasRetrospective: false,
         });
 
         // Mise à jour des User Stories avec le nouvel ID de sprint
@@ -95,6 +97,8 @@ export function useSprintDetail(
           startDate: Timestamp.fromDate(startDate!),
           endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
+          hasReview: sprint.hasReview || false,
+          hasRetrospective: sprint.hasRetrospective || false,
         });
 
         for (const story of userStories) {
