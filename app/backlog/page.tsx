@@ -7,7 +7,6 @@ import { MoscowPrioritization } from "@/components/prioritization/MoscowPrioriti
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { UserStoriesList } from "@/components/backlog/UserStoryList";
-import { SprintList } from "@/components/sprint/SprintList";
 
 const tabs = [
   {
@@ -20,11 +19,7 @@ const tabs = [
     label: "Priorisation (MoSCoW)",
     component: <MoscowPrioritization />,
   },
-  {
-    value: "sprints",
-    label: "Sprint Planning",
-    component: <SprintList />,
-  },
+
   { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
 ];
 

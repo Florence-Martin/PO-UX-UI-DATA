@@ -6,8 +6,14 @@ import { BannerInfo } from "@/components/banner/BannerInfo";
 import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
 import SprintTimeline from "@/components/sprint/SprintTimeline";
+import { SprintList } from "@/components/sprint/SprintList";
 
 const tabs = [
+  {
+    value: "sprints",
+    label: "Sprint Planning",
+    component: <SprintList />,
+  },
   {
     value: "timeline",
     label: "Planning Scrum",
@@ -23,8 +29,9 @@ export default function SprintPage() {
       <BannerInfo />
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
-          title="Sprint"
-          description="Planifie, exécute et mesure les sprints avec une vue complète : Planning Scrum (planning prévisionnel), Sprint actif (vue Kanban du sprint en cours) et suivi de la performance (burndown chart / feedback)."
+          title="Gestion des Sprints"
+          description=" Visualiser, créer et organiser des sprints Scrum. Suivre l’ensemble des itérations passées, présentes et futures pour assurer un rythme de livraison régulier et une planification agile.
+"
           tabs={tabs}
         />
       </Suspense>

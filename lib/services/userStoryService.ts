@@ -9,6 +9,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { UserStory } from "../types/userStory";
+import { toast } from "sonner";
 
 const COLLECTION_NAME = "user_stories";
 
@@ -64,9 +65,17 @@ export const updateUserStory = async (
   });
 };
 
-// Supprime une user story par son ID
+// Supprime une user story par son ID si elle n'est pas liée à un sprint
 export const deleteUserStory = async (id: string) => {
   const storyRef = doc(db, COLLECTION_NAME, id);
+  const storySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+  const story = storySnapshot.docs.find((doc) => doc.id === id)?.data();
+  if (story?.sprintId) {
+    throw new Error(
+      "Impossible de supprimer cette User Story : elle est liée à un sprint."
+    );
+  }
+
   await deleteDoc(storyRef);
 };
 
@@ -102,7 +111,12 @@ export const updateUserStorySprint = async (
 
 export const deleteSprint = async (sprintId: string) => {
   const sprintRef = doc(db, "sprints", sprintId);
-  await deleteDoc(sprintRef);
+  try {
+    await deleteDoc(sprintRef);
+    toast.success("Sprint supprimé ✅");
+  } catch (err: any) {
+    toast.error(err.message || "Erreur lors de la suppression du sprint.");
+  }
 };
 
 export async function addSprintToUserStory(

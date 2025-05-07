@@ -14,10 +14,12 @@ export interface TimelineItem {
   endDate?: string;
   section: string;
   userStory: {
+    rawDate?: Date | string;
     id: string;
     code: string;
     title: string;
   };
+  rawDate?: Date; // Ajout pour garantir un tri précis
 }
 
 function mapTaskStatusToSection(status?: string): string {
@@ -50,100 +52,49 @@ export function buildTimelineItemsUserStories(
 
     const userStoryId = task.userStoryIds[0];
     const userStory = userStories.find((us) => us.id === userStoryId);
-    if (!userStory) return;
-
-    const status = task.status ?? "todo";
-    const uniqueKey = `${userStoryId}-${status}`;
-    if (addedKeys.has(uniqueKey)) return;
+    if (!userStory || addedKeys.has(userStoryId)) return;
 
     const matchingSprint = sprints.find((sprint) =>
       sprint.userStoryIds?.includes(userStoryId)
     );
 
-    const date = matchingSprint?.startDate || userStory.createdAt;
+    const rawDate = matchingSprint?.startDate || userStory.createdAt;
+    const formattedDate = getFormattedDate(rawDate);
+
+    const status = task.status ?? "todo";
+
+    const section =
+      status === "todo" ? "planning" : mapTaskStatusToSection(status);
 
     items.push({
       id: userStory.id,
       title: userStory.title,
       code: userStory.code || "",
       description: task.description || userStory.description || "",
-      date: getFormattedDate(date),
-      section: mapTaskStatusToSection(status),
+      date: formattedDate,
+      startDate: getFormattedDate(matchingSprint?.startDate),
+      endDate: getFormattedDate(matchingSprint?.endDate),
+      section,
       userStory: {
         id: userStory.id,
         code: userStory.code || "",
         title: userStory.title || "",
       },
+      rawDate: rawDate instanceof Timestamp ? rawDate.toDate() : rawDate,
     });
 
-    addedKeys.add(uniqueKey);
+    addedKeys.add(userStoryId);
   });
 
-  return items;
+  // Trier les éléments par section, puis par date brute (rawDate)
+  const sectionOrder = ["planning", "execution", "review"];
+  return items.sort((a, b) => {
+    // Trier par ordre des sections
+    const sectionComparison =
+      sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section);
+    if (sectionComparison !== 0) return sectionComparison;
+
+    // Si les sections sont identiques, trier par rawDate
+    return (a.rawDate?.getTime() || 0) - (b.rawDate?.getTime() || 0);
+  });
 }
-// export function buildTimelineItemsUserStories(
-//   sprints: Sprint[],
-//   userStories: UserStory[],
-//   backlogTasks: BacklogTask[]
-// ): TimelineItem[] {
-//   const items: TimelineItem[] = [];
-//   const processedUserStoryIds = new Set<string>();
-
-//   // Statuts prioritaires pour l'affichage dans la timeline
-//   const statusPriority = ["done", "in-progress", "in-testing", "todo"];
-
-//   // Grouper les tâches par userStoryId
-//   const tasksByUserStory: Record<string, BacklogTask[]> = {};
-
-//   backlogTasks.forEach((task) => {
-//     if (task.badge !== "sprint") return;
-//     if (!task.userStoryIds?.[0]) return;
-
-//     const userStoryId = task.userStoryIds[0];
-
-//     if (!tasksByUserStory[userStoryId]) {
-//       tasksByUserStory[userStoryId] = [];
-//     }
-
-//     tasksByUserStory[userStoryId].push(task);
-//   });
-
-//   Object.entries(tasksByUserStory).forEach(([userStoryId, tasks]) => {
-//     if (processedUserStoryIds.has(userStoryId)) return;
-
-//     const userStory = userStories.find((us) => us.id === userStoryId);
-//     if (!userStory) return;
-
-//     // Prendre le statut le plus avancé selon la priorité
-//     const sortedTasks = tasks.sort(
-//       (a, b) =>
-//         statusPriority.indexOf(a.status || "todo") -
-//         statusPriority.indexOf(b.status || "todo")
-//     );
-
-//     const mainTask = sortedTasks[0];
-//     const status = mainTask.status || "todo";
-
-//     const sprint = sprints.find((s) => s.userStoryIds?.includes(userStoryId));
-
-//     const date = sprint?.startDate || userStory.createdAt;
-
-//     items.push({
-//       id: userStory.id,
-//       title: userStory.title,
-//       code: userStory.code || "",
-//       description: userStory.description || "",
-//       date: getFormattedDate(date),
-//       section: mapTaskStatusToSection(status),
-//       userStory: {
-//         id: userStory.id,
-//         code: userStory.code || "",
-//         title: userStory.title || "",
-//       },
-//     });
-
-//     processedUserStoryIds.add(userStoryId);
-//   });
-
-//   return items;
-// }

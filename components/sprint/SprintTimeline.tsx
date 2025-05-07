@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Calendar, Rocket, BarChart2, RefreshCw } from "lucide-react";
+import { Rocket, BarChart2 } from "lucide-react";
 
 import { SprintCard } from "@/components/sprint/SprintCard";
 
@@ -49,11 +49,6 @@ export default function SprintTimeline() {
 
   const sections = [
     {
-      icon: <Calendar className="w-5 h-5 text-primary" />,
-      title: "Sprint Planning",
-      id: "planning",
-    },
-    {
       icon: <Rocket className="w-5 h-5 text-primary" />,
       title: "Sprint Execution",
       id: "execution",
@@ -62,11 +57,6 @@ export default function SprintTimeline() {
       icon: <BarChart2 className="w-5 h-5 text-primary" />,
       title: "Sprint Review",
       id: "review",
-    },
-    {
-      icon: <RefreshCw className="w-5 h-5 text-primary" />,
-      title: "Sprint Retrospective",
-      id: "retro",
     },
   ];
 

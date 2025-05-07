@@ -1,7 +1,7 @@
 "use client";
 
-import { useSprints } from "@/hooks/useSprints";
-import { useSprintList } from "@/hooks/useSprintList";
+import { useSprints } from "@/hooks/sprint/useSprints";
+import { useSprintList } from "@/hooks/sprint/useSprintList";
 import { SprintDetailModal } from "./SprintDetailModal";
 import { SprintPlanningCard } from "./SprintPlanningCard";
 import { Button } from "../ui/button";

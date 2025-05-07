@@ -17,7 +17,7 @@ import { KanbanColumn } from "./KanbanColumn";
 import { KanbanItem } from "./KanbanItem";
 import { EditTaskModal } from "./EditTaskModal";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
-import { useSprints } from "@/hooks/useSprints";
+import { useSprints } from "@/hooks/sprint/useSprints";
 import { BacklogTask } from "@/lib/types/backlogTask";
 
 export function KanbanBoard() {

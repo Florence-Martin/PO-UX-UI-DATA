@@ -199,10 +199,18 @@ export function useUserStories() {
       await deleteUserStory(id);
       await removeUserStoryIdFromTasks(id);
       setUserStories((prev) => prev.filter((story) => story.id !== id));
-      toast.success("User Story supprimée ❌");
-    } catch (err) {
+      toast.success("User Story supprimée ✅");
+    } catch (err: any) {
       console.error("Erreur lors de la suppression :", err);
-      toast.error("Erreur lors de la suppression.");
+
+      // Message spécifique si liée à un sprint
+      if (err instanceof Error && err.message.includes("liée à un sprint")) {
+        toast.error(
+          "Impossible de supprimer : cette User Story est liée à un sprint."
+        );
+      } else {
+        toast.error("Erreur lors de la suppression.");
+      }
     } finally {
       setLoading(false);
     }

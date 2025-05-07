@@ -36,17 +36,21 @@ export const createBacklogTask = async (task: Omit<BacklogTask, "id">) => {
 
 export const updateBacklogTask = async (
   id: string,
-  updates: Partial<BacklogTask>
+  updatedFields: Partial<BacklogTask>
 ) => {
-  if (!id)
-    throw new Error(
-      "L'identifiant de la tâche est requis pour la mise à jour."
-    );
-  const taskRef = doc(db, COLLECTION_NAME, id);
-  await updateDoc(taskRef, {
-    ...updates,
-    updatedAt: Timestamp.now(),
+  const taskRef = doc(db, "backlog_tasks", id);
+
+  // Nettoie les champs indésirables
+  const sanitizedData: any = { ...updatedFields };
+
+  // Supprime les champs undefined ou null explicite (si besoin)
+  Object.keys(sanitizedData).forEach((key) => {
+    if (sanitizedData[key] === undefined) {
+      delete sanitizedData[key];
+    }
   });
+
+  await updateDoc(taskRef, sanitizedData);
 };
 
 export const deleteBacklogTask = async (id: string) => {

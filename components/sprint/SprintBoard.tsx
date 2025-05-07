@@ -3,7 +3,7 @@
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useUserStories } from "@/hooks/useUserStories";
 import { SprintActiveCard } from "./SprintActiveCard";
-import { useActiveSprint } from "@/hooks/useActiveSprint";
+import { useActiveSprint } from "@/hooks/sprint/useActiveSprint";
 import {
   CircleDashed,
   LoaderCircle,

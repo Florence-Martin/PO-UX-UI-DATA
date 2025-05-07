@@ -6,7 +6,7 @@ interface TaskCardProps {
     title: string;
     code: string;
     date: string;
-    description: string;
+    // description: string;
     section?: string;
   };
   overlay?: boolean;
@@ -50,9 +50,9 @@ export function SprintCard({ item, overlay }: TaskCardProps) {
         </h3>
 
         {/* Description */}
-        <p className="text-xs text-muted-foreground mt-2 line-clamp-3">
+        {/* <p className="text-xs text-muted-foreground mt-2 line-clamp-3">
           {item.description}
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -107,5 +107,18 @@ export const updateSprint = async (
 //  Supprimer un sprint + nettoyer les user stories liées
 export const deleteSprint = async (sprintId: string) => {
   const sprintRef = doc(db, "sprints", sprintId);
+  const sprintSnap = await getDoc(sprintRef);
+
+  if (!sprintSnap.exists()) {
+    throw new Error("Sprint introuvable");
+  }
+
+  const sprintData = sprintSnap.data();
+  if (sprintData.userStoryIds && sprintData.userStoryIds.length > 0) {
+    throw new Error(
+      "Impossible de supprimer un sprint avec des user stories liées."
+    );
+  }
+
   await deleteDoc(sprintRef);
 };

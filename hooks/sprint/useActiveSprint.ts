@@ -1,3 +1,5 @@
+// uniquement le sprint actif.
+
 "use client";
 
 import { useEffect, useState } from "react";
