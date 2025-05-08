@@ -1,10 +1,9 @@
 "use client";
 
-import { useSprints } from "@/hooks/sprint/useSprints";
-import { useSprintList } from "@/hooks/sprint/useSprintList";
 import { SprintDetailModal } from "./SprintDetailModal";
 import { SprintPlanningCard } from "./SprintPlanningCard";
 import { Button } from "../ui/button";
+import { useSprintList, useSprints } from "@/hooks/sprint";
 
 export function SprintList() {
   const { sprints, refetch } = useSprints();

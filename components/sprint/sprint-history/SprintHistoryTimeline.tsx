@@ -5,7 +5,7 @@ import { History as HistoryIcon } from "lucide-react";
 import { Sprint } from "@/lib/types/sprint";
 import SprintFilter from "@/components/searchbar/SprintFilter";
 import { SprintHistoryCard } from "./SprintHistoryCard";
-import { useSprintList } from "@/hooks/useSprintList";
+import { useSprintList } from "@/hooks/sprint";
 
 interface SprintHistoryTimelineProps {
   sprints: Sprint[];

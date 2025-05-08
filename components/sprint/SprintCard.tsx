@@ -1,4 +1,4 @@
-import { CalendarDays } from "lucide-react";
+import { AlertTriangle, CalendarDays } from "lucide-react";
 import React from "react";
 
 interface TaskCardProps {
@@ -39,6 +39,14 @@ export function SprintCard({ item, overlay }: TaskCardProps) {
         <CalendarDays className="w-4 h-4" />
         {item.date}
       </div>
+
+      {/* Indicateur "Sprint planifié" */}
+      {item.section === "planning" && (
+        <div className="absolute top-4 right-4 flex items-center gap-1 animate-pulse">
+          <AlertTriangle className="w-5 h-5 text-yellow-500" />
+          <span className="text-yellow-500">A faire</span>
+        </div>
+      )}
 
       <div className="mt-8">
         {/* Code US */}

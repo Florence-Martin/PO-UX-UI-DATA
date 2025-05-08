@@ -13,8 +13,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { Timestamp } from "firebase/firestore";
 import { Button } from "../ui/button";
-import { useSprints } from "@/hooks/sprint/useSprints";
-import { useSprintDetail } from "@/hooks/sprint/useSprintDetail";
+import { useSprintDetail, useSprints } from "@/hooks/sprint";
 
 const getDate = (value: Date | Timestamp): Date =>
   value instanceof Timestamp ? value.toDate() : value;

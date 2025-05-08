@@ -22,7 +22,8 @@ function isCurrentSprint(sprint: Sprint): boolean {
 }
 
 /**
- * Hook pour charger les sprints, les trier et identifier celui en cours.
+ * Hook personnalisé pour récupérer et gérer les sprints.
+ * @returns {Object} - Un objet contenant les sprints et une fonction de rafraîchissement.
  */
 export function useSprints() {
   const [sprints, setSprints] = useState<Sprint[]>([]);

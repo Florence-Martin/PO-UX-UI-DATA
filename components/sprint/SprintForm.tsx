@@ -14,7 +14,7 @@ import { useUserStories } from "@/hooks/useUserStories";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { useSprintForm } from "@/hooks/sprint/useSprintForm";
+import { useSprintForm } from "@/hooks/sprint";
 
 export function SprintForm() {
   const {

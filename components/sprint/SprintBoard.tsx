@@ -3,7 +3,6 @@
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useUserStories } from "@/hooks/useUserStories";
 import { SprintActiveCard } from "./SprintActiveCard";
-import { useActiveSprint } from "@/hooks/sprint/useActiveSprint";
 import {
   CircleDashed,
   LoaderCircle,
@@ -19,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { useActiveSprint } from "@/hooks/sprint";
 
 const columns = [
   {

@@ -23,10 +23,10 @@ export interface TimelineItem {
 }
 
 function mapTaskStatusToSection(status?: string): string {
-  if (status === "todo") return "planning";
+  if (status === "todo") return "planned";
   if (status === "in-progress" || status === "in-testing") return "execution";
   if (status === "done") return "review";
-  return "planning";
+  return "planned";
 }
 
 function getFormattedDate(date?: string | Timestamp | Date): string {
@@ -46,13 +46,16 @@ export function buildTimelineItemsUserStories(
   const items: TimelineItem[] = [];
   const addedKeys = new Set<string>();
 
+  // à partir des tâches du backlog
   backlogTasks.forEach((task) => {
     if (task.badge !== "sprint") return;
     if (!task.userStoryIds || task.userStoryIds.length === 0) return;
 
     const userStoryId = task.userStoryIds[0];
+    if (addedKeys.has(userStoryId)) return;
+
     const userStory = userStories.find((us) => us.id === userStoryId);
-    if (!userStory || addedKeys.has(userStoryId)) return;
+    if (!userStory) return;
 
     const matchingSprint = sprints.find((sprint) =>
       sprint.userStoryIds?.includes(userStoryId)
@@ -60,11 +63,9 @@ export function buildTimelineItemsUserStories(
 
     const rawDate = matchingSprint?.startDate || userStory.createdAt;
     const formattedDate = getFormattedDate(rawDate);
-
     const status = task.status ?? "todo";
-
     const section =
-      status === "todo" ? "planning" : mapTaskStatusToSection(status);
+      status === "todo" ? "execution" : mapTaskStatusToSection(status);
 
     items.push({
       id: userStory.id,
@@ -75,6 +76,7 @@ export function buildTimelineItemsUserStories(
       startDate: getFormattedDate(matchingSprint?.startDate),
       endDate: getFormattedDate(matchingSprint?.endDate),
       section,
+
       userStory: {
         id: userStory.id,
         code: userStory.code || "",
@@ -86,15 +88,43 @@ export function buildTimelineItemsUserStories(
     addedKeys.add(userStoryId);
   });
 
-  // Trier les éléments par section, puis par date brute (rawDate)
+  // User Stories associées à un sprint mais ignorées car leur tâche ne les référence pas (relation inverse)
+  userStories.forEach((us) => {
+    if (!us.sprintId || addedKeys.has(us.id)) return;
+
+    const matchingSprint = sprints.find((s) => s.id === us.sprintId);
+    if (!matchingSprint) return;
+
+    const rawDate = matchingSprint.startDate || us.createdAt;
+    const formattedDate = getFormattedDate(rawDate);
+
+    items.push({
+      id: us.id,
+      title: us.title,
+      code: us.code || "",
+      description: us.description || "",
+      date: formattedDate,
+      startDate: getFormattedDate(matchingSprint.startDate),
+      endDate: getFormattedDate(matchingSprint.endDate),
+      section: "planning",
+
+      userStory: {
+        id: us.id,
+        code: us.code || "",
+        title: us.title || "",
+      },
+      rawDate: rawDate instanceof Timestamp ? rawDate.toDate() : rawDate,
+    });
+
+    addedKeys.add(us.id);
+  });
+
+  // Tri : section > date
   const sectionOrder = ["planning", "execution", "review"];
   return items.sort((a, b) => {
-    // Trier par ordre des sections
     const sectionComparison =
       sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section);
     if (sectionComparison !== 0) return sectionComparison;
-
-    // Si les sections sont identiques, trier par rawDate
     return (a.rawDate?.getTime() || 0) - (b.rawDate?.getTime() || 0);
   });
 }

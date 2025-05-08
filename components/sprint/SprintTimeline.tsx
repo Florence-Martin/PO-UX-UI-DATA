@@ -50,6 +50,11 @@ export default function SprintTimeline() {
   const sections = [
     {
       icon: <Rocket className="w-5 h-5 text-primary" />,
+      title: "Sprint Planifié",
+      id: "planning",
+    },
+    {
+      icon: <Rocket className="w-5 h-5 text-primary" />,
       title: "Sprint Execution",
       id: "execution",
     },
