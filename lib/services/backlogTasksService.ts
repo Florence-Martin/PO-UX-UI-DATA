@@ -15,6 +15,7 @@ import { BacklogTask } from "../types/backlogTask";
 
 const COLLECTION_NAME = "backlog_tasks";
 
+// 🔍 Récupère toutes les tâches
 export const getAllBacklogTasks = async (): Promise<BacklogTask[]> => {
   const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
   return querySnapshot.docs.map((docSnap) => ({
@@ -23,6 +24,7 @@ export const getAllBacklogTasks = async (): Promise<BacklogTask[]> => {
   }));
 };
 
+// ➕ Crée une nouvelle tâche
 export const createBacklogTask = async (task: Omit<BacklogTask, "id">) => {
   const now = Timestamp.now();
   const newTask = {
@@ -34,31 +36,31 @@ export const createBacklogTask = async (task: Omit<BacklogTask, "id">) => {
   return { id: docRef.id, ...newTask };
 };
 
+// ✏️ Met à jour une tâche (sans sanitization)
 export const updateBacklogTask = async (
   id: string,
   updatedFields: Partial<BacklogTask>
 ) => {
   const taskRef = doc(db, "backlog_tasks", id);
 
-  // Nettoie les champs indésirables
-  const sanitizedData: any = { ...updatedFields };
-
-  // Supprime les champs undefined ou null explicite (si besoin)
-  Object.keys(sanitizedData).forEach((key) => {
-    if (sanitizedData[key] === undefined) {
-      delete sanitizedData[key];
-    }
+  console.log("[DEBUG] 🔄 Firestore update payload :", {
+    id,
+    ...updatedFields,
   });
 
-  await updateDoc(taskRef, sanitizedData);
+  await updateDoc(taskRef, {
+    ...updatedFields,
+    updatedAt: new Date(),
+  });
 };
 
+// ❌ Supprime une tâche
 export const deleteBacklogTask = async (id: string) => {
   const taskRef = doc(db, COLLECTION_NAME, id);
   await deleteDoc(taskRef);
 };
 
-// Supprime l’ID d’une user story dans toutes les tâches qui la contiennent
+// 🔁 Supprime une userStoryId dans toutes les tâches concernées
 export const removeUserStoryIdFromTasks = async (userStoryId: string) => {
   const tasksRef = collection(db, COLLECTION_NAME);
   const snapshot = await getDocs(

@@ -1,47 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Rocket, BarChart2 } from "lucide-react";
-
 import { SprintCard } from "@/components/sprint/SprintCard";
-
-import { Sprint } from "@/lib/types/sprint";
-import { UserStory } from "@/lib/types/userStory";
-import { BacklogTask } from "@/lib/types/backlogTask";
-
-import { getAllUserStories } from "@/lib/services/userStoryService";
-import { getAllSprints } from "@/lib/services/sprintService";
-import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
-
 import {
   buildTimelineItemsUserStories,
   TimelineItem,
 } from "@/lib/utils/buildTimelineItemsUserStories";
+import { useTimeline } from "@/context/TimelineContext";
 
-export default function SprintTimeline() {
-  const [sprints, setSprints] = useState<Sprint[]>([]);
-  const [userStories, setUserStories] = useState<UserStory[]>([]);
-  const [tasks, setTasks] = useState<BacklogTask[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [userStoriesData, sprintsData, backlogTasksData] =
-          await Promise.all([
-            getAllUserStories(),
-            getAllSprints(),
-            getAllBacklogTasks(),
-          ]);
-        setUserStories(userStoriesData);
-        setSprints(sprintsData);
-        setTasks(backlogTasksData);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+export default function SprintPlanningTimeline() {
+  const { sprints, userStories, tasks, loading } = useTimeline();
 
   if (loading) {
     return <div>Chargement du planning du sprint...</div>;
@@ -49,18 +18,22 @@ export default function SprintTimeline() {
 
   const sections = [
     {
+      id: "planning",
+      title: "Sprint Planifié",
       icon: <Rocket className="w-5 h-5 text-primary" />,
-      title: "Sprint Execution",
-      id: "execution",
     },
     {
-      icon: <BarChart2 className="w-5 h-5 text-primary" />,
-      title: "Sprint Review",
+      id: "execution",
+      title: "Sprint Execution",
+      icon: <Rocket className="w-5 h-5 text-primary" />,
+    },
+    {
       id: "review",
+      title: "Sprint Review",
+      icon: <BarChart2 className="w-5 h-5 text-primary" />,
     },
   ];
 
-  // Construire les éléments de la timeline à partir de TOUS les sprints
   const items: TimelineItem[] = buildTimelineItemsUserStories(
     sprints,
     userStories,
@@ -80,8 +53,6 @@ export default function SprintTimeline() {
                 {section.title}
               </h2>
             </div>
-
-            {/* Scroll horizontal complet */}
             <div className="overflow-x-auto">
               <div className="flex gap-4 ml-5 pb-4 w-max">
                 {items

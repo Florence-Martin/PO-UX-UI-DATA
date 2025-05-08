@@ -75,14 +75,28 @@ export function useBacklogTasks() {
     newStatus: BacklogTask["status"]
   ) => {
     try {
-      await updateBacklogTask(taskId, { status: newStatus });
+      const task = tasks.find((t) => t.id === taskId);
+
+      const payload: Partial<BacklogTask> = {
+        status: newStatus,
+      };
+
+      // ✅ Si la tâche est liée à une userStory, on force le badge sprint
+      if (task?.userStoryIds && task.userStoryIds.length > 0) {
+        payload.badge = "sprint";
+      }
+
+      console.debug("[DEBUG] 🔄 updateTaskStatus payload", payload);
+
+      await updateBacklogTask(taskId, payload);
 
       setTasks((prev) =>
-        prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
+        prev.map((t) => (t.id === taskId ? { ...t, ...payload } : t))
       );
-      toast.success("Statut mis à jour !");
+
+      toast.success("✅ Statut mis à jour !");
     } catch (err) {
-      console.error("Erreur lors du changement de statut :", err);
+      console.error("❌ Erreur updateTaskStatus :", err);
       toast.error("Erreur : Impossible de changer le statut.");
     }
   };

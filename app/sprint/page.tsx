@@ -3,7 +3,7 @@ import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
-import SprintTimeline from "@/components/sprint/SprintTimeline";
+import SprintPlanningTimeline from "@/components/sprint/SprintPlanningTimeline";
 import { SprintList } from "@/components/sprint/SprintList";
 import SprintHistoryWrapper from "@/components/sprint/sprint-history/SprintHistoryWrapper.";
 
@@ -16,7 +16,7 @@ const tabs = [
   {
     value: "timeline",
     label: "Planning Scrum",
-    component: <SprintTimeline />,
+    component: <SprintPlanningTimeline />,
   },
   { value: "board", label: "Sprint actif", component: <SprintBoard /> },
 

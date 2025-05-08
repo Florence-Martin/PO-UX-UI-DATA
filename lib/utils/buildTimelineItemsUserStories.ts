@@ -23,10 +23,11 @@ export interface TimelineItem {
 }
 
 function mapTaskStatusToSection(status?: string): string {
-  if (status === "todo") return "planned";
+  if (status === "todo") return "planning";
   if (status === "in-progress" || status === "in-testing") return "execution";
   if (status === "done") return "review";
-  return "planned";
+
+  return "planning";
 }
 
 function getFormattedDate(date?: string | Timestamp | Date): string {
@@ -64,8 +65,9 @@ export function buildTimelineItemsUserStories(
     const rawDate = matchingSprint?.startDate || userStory.createdAt;
     const formattedDate = getFormattedDate(rawDate);
     const status = task.status ?? "todo";
-    const section =
-      status === "todo" ? "execution" : mapTaskStatusToSection(status);
+    console.log(`[DEBUG] Task: ${task.title} | Status: ${status}`);
+    const section = mapTaskStatusToSection(status);
+    console.log(`[DEBUG] Mapped Section: ${section} for Task ID: ${task.id}`);
 
     items.push({
       id: userStory.id,
@@ -85,11 +87,14 @@ export function buildTimelineItemsUserStories(
       rawDate: rawDate instanceof Timestamp ? rawDate.toDate() : rawDate,
     });
 
-    addedKeys.add(userStoryId);
+    addedKeys.add(userStory?.id ?? "");
   });
 
   // User Stories associées à un sprint mais ignorées car leur tâche ne les référence pas (relation inverse)
   userStories.forEach((us) => {
+    console.log(
+      `[DEBUG] US (fallback): ${us.title} | SprintID: ${us.sprintId}`
+    );
     if (!us.sprintId || addedKeys.has(us.id)) return;
 
     const matchingSprint = sprints.find((s) => s.id === us.sprintId);

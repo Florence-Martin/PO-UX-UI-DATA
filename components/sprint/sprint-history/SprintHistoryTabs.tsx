@@ -1,14 +1,18 @@
+"use client";
+
 import React, { useState } from "react";
 import { LayoutGrid, LineChart } from "lucide-react";
+
 import { SprintHistoryTimeline } from "./SprintHistoryTimeline";
-import { Sprint } from "@/lib/types/sprint";
+import { useTimeline } from "@/context/TimelineContext";
 
-interface SprintHistoryTabsProps {
-  sprints: Sprint[];
-}
-
-export function SprintHistoryTabs({ sprints }: SprintHistoryTabsProps) {
+export function SprintHistoryTabs() {
+  const { sprints, loading } = useTimeline();
   const [activeTab, setActiveTab] = useState<"cards" | "timeline">("cards");
+
+  if (loading) {
+    return <p className="text-muted-foreground">Chargement des sprints…</p>;
+  }
 
   return (
     <div className="w-full p-4 sm:p-6 rounded-lg">
@@ -39,7 +43,7 @@ export function SprintHistoryTabs({ sprints }: SprintHistoryTabsProps) {
 
       <div className="mt-4">
         {activeTab === "cards" ? (
-          <SprintHistoryTimeline sprints={sprints} />
+          <SprintHistoryTimeline />
         ) : (
           <p className="text-center sm:text-left">Timeline à implémenter</p>
         )}

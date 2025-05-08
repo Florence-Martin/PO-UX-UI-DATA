@@ -105,8 +105,7 @@ export const updateUserStorySprint = async (
   userStoryId: string,
   sprintId: string | null
 ) => {
-  const ref = doc(db, "user_stories", userStoryId);
-  await updateDoc(ref, { sprintId });
+  await updateSprintBadgeForUserStory(userStoryId, sprintId);
 };
 
 export const deleteSprint = async (sprintId: string) => {
@@ -123,8 +122,32 @@ export async function addSprintToUserStory(
   userStoryId: string,
   sprintId: string
 ) {
+  await updateSprintBadgeForUserStory(userStoryId, sprintId);
+}
+
+export async function updateSprintBadgeForUserStory(
+  userStoryId: string,
+  sprintId: string | null
+) {
   const userStoryRef = doc(db, "user_stories", userStoryId);
-  await updateDoc(userStoryRef, {
-    sprintId: sprintId,
-  });
+
+  // Si un sprintId est fourni, ajoute le badge "sprint"
+  if (sprintId) {
+    await updateDoc(userStoryRef, {
+      sprintId: sprintId,
+      badge: "sprint",
+      updatedAt: Timestamp.now(),
+    });
+    console.log(`[DEBUG] Badge "sprint" ajouté à la User Story ${userStoryId}`);
+  } else {
+    // Sinon, supprime le badge "sprint"
+    await updateDoc(userStoryRef, {
+      sprintId: null,
+      badge: null,
+      updatedAt: Timestamp.now(),
+    });
+    console.log(
+      `[DEBUG] Badge "sprint" supprimé de la User Story ${userStoryId}`
+    );
+  }
 }

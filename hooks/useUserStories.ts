@@ -159,7 +159,6 @@ export function useUserStories() {
           storyPoints,
           acceptanceCriteria: acceptanceCriteria.trim(),
           moscow: moscow !== "" ? moscow : null,
-          status: "todo",
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
         };

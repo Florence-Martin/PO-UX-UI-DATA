@@ -3,19 +3,22 @@
 import { Filter } from "lucide-react";
 import { useState } from "react";
 
+// 🔒 Typage strict des valeurs possibles
+export type SprintFilterValue = "all" | "last3" | "last6";
+
 type SprintFilterProps = {
-  onChange: (value: string) => void;
-  defaultValue?: string;
+  onChange: (value: SprintFilterValue) => void;
+  defaultValue?: SprintFilterValue;
 };
 
 export default function SprintFilter({
   onChange,
   defaultValue = "all",
 }: SprintFilterProps) {
-  const [filter, setFilter] = useState(defaultValue);
+  const [filter, setFilter] = useState<SprintFilterValue>(defaultValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+    const value = e.target.value as SprintFilterValue;
     setFilter(value);
     onChange(value);
   };

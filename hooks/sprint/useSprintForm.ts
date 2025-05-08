@@ -1,11 +1,13 @@
-// hooks/useSprintForm.ts
 import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { createSprint } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
 import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema";
-import { addSprintToUserStory } from "@/lib/services/userStoryService";
+import {
+  addSprintToUserStory,
+  updateUserStory,
+} from "@/lib/services/userStoryService";
 import { updateBadgesForSprintUserStories } from "@/lib/utils/updateSprintBadges";
 import {
   getAllBacklogTasks,
@@ -88,12 +90,14 @@ export function useSprintForm() {
 
       const sprintId = await createSprint(newSprint);
 
-      // Mise à jour des US
+      // Mise à jour des US (ajout sprintId + badge)
       await Promise.all(
-        userStoryIds.map((usId) => addSprintToUserStory(usId, sprintId))
+        userStoryIds.map(async (usId) => {
+          await addSprintToUserStory(usId, sprintId);
+          await updateUserStory(usId, { badge: "sprint" });
+        })
       );
 
-      // Snippet ajouté ici : Mise à jour des badges pour les User Stories
       await updateBadgesForSprintUserStories(userStoryIds);
 
       // Mise à jour des tâches associées aux US

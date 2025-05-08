@@ -6,5 +6,5 @@ import { SprintHistoryTabs } from "./SprintHistoryTabs";
 export default function SprintHistoryWrapper() {
   const { sprints } = useSprints();
 
-  return <SprintHistoryTabs sprints={sprints} />;
+  return <SprintHistoryTabs />;
 }

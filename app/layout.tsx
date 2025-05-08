@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
+import { TimelineProvider } from "@/context/TimelineContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,11 +49,13 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex h-screen">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto">{children}</main>
-          </div>
-          <Toaster />
+          <TimelineProvider>
+            <div className="flex h-screen">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </div>
+            <Toaster />
+          </TimelineProvider>
         </ThemeProvider>
       </body>
     </html>

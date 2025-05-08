@@ -1,29 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { History as HistoryIcon } from "lucide-react";
-import { Sprint } from "@/lib/types/sprint";
-import SprintFilter from "@/components/searchbar/SprintFilter";
+
 import { SprintHistoryCard } from "./SprintHistoryCard";
-import { useSprintList } from "@/hooks/sprint";
+import SprintFilter, {
+  SprintFilterValue,
+} from "@/components/searchbar/SprintFilter";
 
-interface SprintHistoryTimelineProps {
-  sprints: Sprint[];
-}
+import { useTimeline } from "@/context/TimelineContext";
 
-export function SprintHistoryTimeline({ sprints }: SprintHistoryTimelineProps) {
-  const [filter, setFilter] = React.useState("all");
+export function SprintHistoryTimeline() {
+  const { sprints, loading } = useTimeline();
+  const [filter, setFilter] = useState<SprintFilterValue>("all");
 
-  // Utiliser le hook pour récupérer les User Stories
-  const { userStories } = useSprintList(() => {});
-
-  const filteredSprints = React.useMemo(() => {
+  const filteredSprints = useMemo(() => {
     const pastSprints = sprints.filter((s) => s.status === "done");
-
     if (filter === "last3") return pastSprints.slice(-3).reverse();
     if (filter === "last6") return pastSprints.slice(-6).reverse();
-    return pastSprints.reverse(); // "all"
+    return pastSprints.reverse();
   }, [sprints, filter]);
+
+  if (loading) {
+    return <p className="text-muted-foreground">Chargement des sprints…</p>;
+  }
 
   return (
     <div className="w-full bg-muted rounded-md p-4 sm:p-6">
@@ -34,20 +34,13 @@ export function SprintHistoryTimeline({ sprints }: SprintHistoryTimelineProps) {
             Historique des Sprints
           </h2>
         </div>
-        <SprintFilter defaultValue="all" onChange={setFilter} />
+        <SprintFilter defaultValue="all" onChange={(v) => setFilter(v)} />
       </div>
 
       {filteredSprints.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredSprints.map((sprint) => (
-            <SprintHistoryCard
-              key={sprint.id}
-              sprint={sprint}
-              userStories={userStories.map((story) => ({
-                ...story,
-                code: story.code || "N/A",
-              }))}
-            />
+            <SprintHistoryCard key={sprint.id} sprint={sprint} />
           ))}
         </div>
       ) : (

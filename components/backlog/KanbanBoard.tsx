@@ -19,6 +19,7 @@ import { EditTaskModal } from "./EditTaskModal";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSprints } from "@/hooks/sprint";
+import { useTimeline } from "@/context/TimelineContext";
 
 export function KanbanBoard() {
   const {
@@ -35,6 +36,7 @@ export function KanbanBoard() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
+  const { refreshOnDemand } = useTimeline();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -61,7 +63,7 @@ export function KanbanBoard() {
     setActiveId(event.active.id as string);
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) {
       setActiveId(null);
@@ -69,10 +71,12 @@ export function KanbanBoard() {
     }
 
     const draggedTask = findTask(active.id as string);
+    console.debug("[DEBUG] draggedTask:", draggedTask);
     const newStatus = over?.data?.current?.columnId as BacklogTask["status"];
 
     if (draggedTask && draggedTask.status !== newStatus) {
-      updateTaskStatus(draggedTask.id!, newStatus);
+      await updateTaskStatus(draggedTask.id!, newStatus);
+      await refreshOnDemand(); // synchronisation du contexte Timeline
     }
 
     setActiveId(null);

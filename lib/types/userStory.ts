@@ -1,6 +1,4 @@
-// types/userStory.ts
-
-import { TaskStoryBase } from "./taskStoryBase";
+import { BaseWorkItem } from "./BaseWorkItem";
 
 export type MoscowKey =
   | "mustHave"
@@ -9,11 +7,12 @@ export type MoscowKey =
   | "wontHave"
   | "";
 
-export interface UserStory extends TaskStoryBase {
+export interface UserStory extends BaseWorkItem {
   id: string;
-  code?: string; // ex: "US-001"
+  code?: string;
   acceptanceCriteria: string;
   taskIds?: string[];
   moscow?: MoscowKey | null;
   sprintId?: string;
+  badge?: "sprint" | "" | null;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Calendar,
   FileText,
@@ -7,24 +9,18 @@ import {
 } from "lucide-react";
 import { Sprint } from "@/lib/types/sprint";
 import { formatDateToFrenchString } from "@/lib/utils/formatDateToFrenchString";
+import { useTimeline } from "@/context/TimelineContext";
 
-// Fonction utilitaire pour gérer les dates
+// Fonction utilitaire pour gérer les dates Firestore ou JS
 const getDate = (d: any) => d?.toDate?.() ?? new Date(d);
 
 interface SprintHistoryCardProps {
   sprint: Sprint;
-  userStories: {
-    id: string;
-    title: string;
-    code: string;
-    storyPoints: number;
-  }[];
 }
 
-export function SprintHistoryCard({
-  sprint,
-  userStories,
-}: SprintHistoryCardProps) {
+export function SprintHistoryCard({ sprint }: SprintHistoryCardProps) {
+  const { userStories } = useTimeline();
+
   const formattedStart = formatDateToFrenchString(
     getDate(sprint.startDate).toISOString()
   );
@@ -32,18 +28,16 @@ export function SprintHistoryCard({
     getDate(sprint.endDate).toISOString()
   );
 
-  // Récupérer les User Stories associées au sprint
+  // User stories livrées dans ce sprint
   const sprintUserStories = sprint.userStoryIds.map((id) => {
-    const userStory = userStories.find((us) => us.id === id);
-    return userStory
-      ? `${userStory.code || "Code inconnu"} - ${userStory.title}`
-      : "US inconnue";
+    const us = userStories.find((u) => u.id === id);
+    return us ? `${us.code || "Code inconnu"} - ${us.title}` : "US inconnue";
   });
 
-  // Calculer la vélocité à partir des User Stories
+  // Calcul de la vélocité
   const velocity = sprint.userStoryIds.reduce((total, id) => {
-    const userStory = userStories.find((us) => us.id === id);
-    return total + (userStory?.storyPoints || 0);
+    const us = userStories.find((u) => u.id === id);
+    return total + (us?.storyPoints || 0);
   }, 0);
 
   return (
@@ -58,13 +52,13 @@ export function SprintHistoryCard({
         </span>
       </div>
 
-      {/* Dates */}
+      {/* Dates du sprint */}
       <div className="flex items-center text-muted-foreground text-sm mb-2">
         <Calendar className="h-4 w-4 mr-2" />
         {formattedStart} → {formattedEnd}
       </div>
 
-      {/* User Stories */}
+      {/* US livrées */}
       <div className="mb-3">
         <div className="flex items-center text-sm font-medium text-muted-foreground mb-1">
           <Tags className="h-4 w-4 mr-2" />
@@ -72,9 +66,9 @@ export function SprintHistoryCard({
         </div>
         <div className="flex flex-wrap gap-1">
           {sprintUserStories.length > 0 ? (
-            sprintUserStories.map((us, index) => (
+            sprintUserStories.map((us, i) => (
               <span
-                key={index}
+                key={i}
                 className="px-2 py-1 bg-muted text-muted-foreground rounded-md text-xs"
               >
                 {us}
@@ -94,7 +88,7 @@ export function SprintHistoryCard({
         Vélocité : <span className="ml-1">{velocity} points</span>
       </div>
 
-      {/* Accès aux actions */}
+      {/* Liens complémentaires */}
       {(sprint.hasReview || sprint.hasRetrospective) && (
         <div className="border-t pt-3 mt-2">
           <div className="text-sm font-medium text-muted-foreground mb-2">
@@ -103,9 +97,8 @@ export function SprintHistoryCard({
           <div className="flex flex-col sm:flex-row gap-4 text-sm">
             {sprint.hasReview && (
               <a
-                // href={`/sprints/${sprint.id}/review`}
                 href={`/not-found`}
-                className="flex  text-blue-400 hover:underline"
+                className="flex text-blue-400 hover:underline"
               >
                 <MessageSquare className="h-4 w-4 mr-1" />
                 Review Summary
@@ -113,9 +106,8 @@ export function SprintHistoryCard({
             )}
             {sprint.hasRetrospective && (
               <a
-                // href={`/sprints/${sprint.id}/retrospective`}
                 href={`/not-found`}
-                className="flex  text-purple-400 hover:underline"
+                className="flex text-purple-400 hover:underline"
               >
                 <FileText className="h-4 w-4 mr-1" />
                 Retrospective Actions
