@@ -362,6 +362,14 @@ export const glossary: GlossaryItem[] = [
       "Le Product Owner a priorisé les User Stories pour le prochain sprint en fonction des retours des utilisateurs et des objectifs stratégiques.",
   },
   {
+    term: "Product Manager",
+    definition:
+      "Responsable de la stratégie produit, de la vision à long terme et de l'alignement avec les objectifs business. Il travaille en étroite collaboration avec le Product Owner pour s'assurer que le développement répond aux besoins du marché.",
+    phase: "Rôles clés",
+    example:
+      "Le Product Manager a organisé une réunion avec les parties prenantes pour discuter des priorités du produit et des prochaines étapes.",
+  },
+  {
     term: "Scrum Master",
     definition:
       "Facilitateur du cadre Scrum, veille à la bonne application des principes et au bon fonctionnement de l’équipe.",
