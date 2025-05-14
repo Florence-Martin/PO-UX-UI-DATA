@@ -53,7 +53,15 @@ export function SprintBoard() {
   const { activeSprint } = useActiveSprint();
 
   if (!activeSprint) {
-    return <p className="text-sm text-muted-foreground">Aucun sprint actif</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        Aucun sprint actif...
+        <br />
+        <span className="text-base text-orange-500 text-muted-foreground animate-pulse">
+          ne perdons pas de vue notre Sprint Goal !
+        </span>
+      </p>
+    );
   }
 
   const sprintUserStoryIds = activeSprint.userStoryIds ?? [];

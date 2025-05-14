@@ -129,12 +129,12 @@ export const glossary: GlossaryItem[] = [
       "Nous avons utilisé la méthode MoSCoW pour prioriser les fonctionnalités du MVP : 'Must have' pour les fonctionnalités essentielles, 'Should have' pour celles qui apportent une valeur ajoutée, 'Could have' pour les options intéressantes mais non critiques, et 'Won't have' pour celles à exclure.",
   },
   {
-    term: "Backlog Grooming",
+    term: "Backlog refinement",
     definition:
       "Processus d'affinage et de priorisation du Product Backlog, souvent réalisé en continu.",
     phase: "Design & Cadrage",
     example:
-      "Lors du backlog grooming, l'équipe a discuté des User Stories à venir et a ajusté les priorités en fonction des retours des utilisateurs.",
+      "Lors du refinement, l'équipe a discuté des User Stories à venir et a ajusté les priorités en fonction des retours des utilisateurs.",
   },
   {
     term: "Product Backlog",
@@ -143,6 +143,14 @@ export const glossary: GlossaryItem[] = [
     phase: "Design & Cadrage",
     example:
       "Le Product Backlog contient toutes les User Stories, bugs et améliorations à réaliser pour le produit.",
+  },
+  {
+    term: "Product Goal",
+    definition:
+      "Objectif principal du produit, définissant la direction et les résultats attendus à long terme.",
+    phase: "Design & Cadrage",
+    example:
+      "L'objectif produit est d'atteindre 10 000 utilisateurs actifs mensuels d'ici la fin de l'année.",
   },
   {
     term: "Definition of Done (DoD)",
@@ -208,6 +216,39 @@ export const glossary: GlossaryItem[] = [
     example:
       "Lors du Sprint Planning, nous avons sélectionné les User Stories prioritaires pour le sprint à venir et estimé leur complexité.",
   },
+  {
+    term: "Sprint Goal",
+    definition:
+      "Objectif spécifique à atteindre durant le sprint, servant de guide pour l'équipe.",
+    phase: "Planification & Estimation",
+    example:
+      "Le Sprint Goal de cette itération est d'améliorer la performance de l'application en optimisant le temps de chargement des pages.",
+  },
+  {
+    term: "WIP",
+    definition:
+      "Work In Progress : désigne les tâches ou fonctionnalités en cours de développement mais pas encore terminées.",
+    phase: "Exécution Agile (Scrum/Kanban)",
+    example:
+      "Nous avons limité le WIP à trois tâches par membre de l'équipe pour éviter la surcharge et améliorer la concentration.",
+  },
+  {
+    term: "Slack time",
+    definition:
+      "Temps tampon : période de temps non planifiée dans le calendrier d'un projet, souvent utilisée pour gérer les imprévus ou les retards.",
+    phase: "Exécution Agile (Scrum/Kanban)",
+    example:
+      "Nous avons ajouté une semaine de slack time à la fin du sprint pour gérer les imprévus et garantir la livraison des fonctionnalités.",
+  },
+  {
+    term: "Stock",
+    definition:
+      "Ensemble des tâches ou fonctionnalités en attente d'être traitées ou développées.",
+    phase: "Exécution Agile (Scrum/Kanban)",
+    example:
+      "Le stock de tâches a été réduit grâce à une meilleure priorisation et à l'achèvement des User Stories en cours.",
+  },
+
   {
     term: "Sprint Board",
     definition:

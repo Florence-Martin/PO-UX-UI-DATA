@@ -65,9 +65,8 @@ export function buildTimelineItemsUserStories(
     const rawDate = matchingSprint?.startDate || userStory.createdAt;
     const formattedDate = getFormattedDate(rawDate);
     const status = task.status ?? "todo";
-    console.log(`[DEBUG] Task: ${task.title} | Status: ${status}`);
+
     const section = mapTaskStatusToSection(status);
-    console.log(`[DEBUG] Mapped Section: ${section} for Task ID: ${task.id}`);
 
     items.push({
       id: userStory.id,
@@ -92,9 +91,6 @@ export function buildTimelineItemsUserStories(
 
   // User Stories associées à un sprint mais ignorées car leur tâche ne les référence pas (relation inverse)
   userStories.forEach((us) => {
-    console.log(
-      `[DEBUG] US (fallback): ${us.title} | SprintID: ${us.sprintId}`
-    );
     if (!us.sprintId || addedKeys.has(us.id)) return;
 
     const matchingSprint = sprints.find((s) => s.id === us.sprintId);
@@ -102,6 +98,16 @@ export function buildTimelineItemsUserStories(
 
     const rawDate = matchingSprint.startDate || us.createdAt;
     const formattedDate = getFormattedDate(rawDate);
+
+    // Si le sprint est actif, on force la section "execution"
+    let section: string;
+    if (matchingSprint.status === "active") {
+      section = "execution";
+    } else if (matchingSprint.status === "done") {
+      section = "review";
+    } else {
+      section = "planning";
+    }
 
     items.push({
       id: us.id,
@@ -111,7 +117,7 @@ export function buildTimelineItemsUserStories(
       date: formattedDate,
       startDate: getFormattedDate(matchingSprint.startDate),
       endDate: getFormattedDate(matchingSprint.endDate),
-      section: "planning",
+      section,
 
       userStory: {
         id: us.id,

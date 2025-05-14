@@ -7,6 +7,7 @@ import { ReactNode, useEffect, useState } from "react";
 export type TabItem = {
   value: string;
   label: string;
+  description?: string;
   component: ReactNode | (() => ReactNode);
 };
 
@@ -61,6 +62,18 @@ export default function SectionTabsLayout({
         <p className="text-muted-foreground text-sm sm:text-base max-w-3xl">
           {description}
         </p>
+      )}
+
+      {/* Description de l'onglet actif */}
+      {tabs.find((tab) => tab.value === activeTab)?.description && (
+        <div className="flex items-start gap-2 mt-2 mb-4">
+          <span className="inline-block px-2 py-0.5 bg-muted text-xs rounded font-semibold text-muted-foreground border border-muted-foreground/20 animate-pulse">
+            Onglet
+          </span>
+          <p className="text-muted-foreground text-xs sm:text-sm italic border-l-2 border-muted-foreground/20 pl-3">
+            {tabs.find((tab) => tab.value === activeTab)?.description}
+          </p>
+        </div>
       )}
 
       <Tabs

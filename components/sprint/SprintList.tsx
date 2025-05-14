@@ -23,7 +23,7 @@ export function SprintList() {
       a.startDate instanceof Date ? a.startDate : a.startDate.toDate();
     const bDate =
       b.startDate instanceof Date ? b.startDate : b.startDate.toDate();
-    return aDate.getTime() - bDate.getTime();
+    return bDate.getTime() - aDate.getTime();
   });
 
   return (

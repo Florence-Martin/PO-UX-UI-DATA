@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 
-import { KanbanBoard } from "@/components/backlog/KanbanBoard";
 import { MoscowPrioritization } from "@/components/prioritization/MoscowPrioritization";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
@@ -19,8 +18,6 @@ const tabs = [
     label: "Priorisation (MoSCoW)",
     component: <MoscowPrioritization />,
   },
-
-  { value: "kanban", label: "Backlog Kanban", component: <KanbanBoard /> },
 ];
 
 export default function BacklogPage() {
