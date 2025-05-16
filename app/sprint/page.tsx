@@ -62,7 +62,7 @@ export default function SprintPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Gestion des Sprints"
-          description="Visualiser, créer et organiser des sprints Scrum. Suivre l’ensemble des itérations passées, présentes et futures pour assurer un rythme de livraison régulier et une planification agile."
+          description="Visualiser, créer et organiser des sprints Scrum. Suivre l’ensemble des itérations passées, présentes et futures pour assurer un rythme de livraison régulier, une planification agile efficace et une complétion claire des livrables selon la Definition of Done (DoD)."
           tabs={tabs}
         />
       </Suspense>
