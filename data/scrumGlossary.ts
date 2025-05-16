@@ -155,10 +155,10 @@ export const glossary: GlossaryItem[] = [
   {
     term: "Definition of Done (DoD)",
     definition:
-      "Ensemble clair de critères que chaque User Story ou fonctionnalité doit remplir pour être considérée comme terminée et prête à être livrée. Cela inclut souvent des tests, la documentation, la validation par le Product Owner, et d'autres exigences spécifiques à l'équipe ou au projet.",
+      "Ensemble clair de critères que chaque fonctionnalité doit remplir pour être considérée comme terminée et prête à être livrée. Cela inclut souvent des tests, la documentation, la validation par le Product Owner, et d'autres exigences spécifiques à l'équipe ou au projet.",
     phase: "Design & Cadrage",
     example:
-      "La DoD pour cette User Story inclut : code revu, tests unitaires écrits, documentation mise à jour et validation par le Product Owner.",
+      "La DoD pour ce sprint inclut : code revu, tests unitaires écrits, documentation mise à jour et validation par le Product Owner.",
   },
   {
     term: "Story Points",
