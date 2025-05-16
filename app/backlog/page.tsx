@@ -27,7 +27,8 @@ export default function BacklogPage() {
       <Suspense fallback={<p>Loading tabs...</p>}>
         <SectionTabsLayout
           title="Backlog & Organisation Agile"
-          description="De la vision au delivery agile : commence par définir tes user stories (besoin métier), hiérarchise leur valeur avec MoSCoW, planifie les stories à livrer dans le sprint (regroupement métier et planification), puis pilote l’avancement des tâches dans ton backlog Kanban ( gestion technique des tâches par US)."
+          description="De la vision au delivery agile : commence par définir tes User Stories (besoins métier), hiérarchise leur valeur avec la méthode MoSCoW, planifie celles à livrer dans un sprint, puis associe les tâches techniques dans le Sprint Backlog.
+Le Product Backlog centralise les besoins métier, leur priorisation, et prépare leur exécution."
           tabs={tabs}
         />
       </Suspense>
