@@ -5,10 +5,10 @@ import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import { SprintBoard } from "@/components/sprint/SprintBoard";
 import { SprintVelocity } from "@/components/sprint/SprintVelocity";
-import SprintPlanningTimeline from "@/components/sprint/SprintPlanningTimeline";
 import { SprintList } from "@/components/sprint/SprintList";
 import SprintHistoryWrapper from "@/components/sprint/sprint-history/SprintHistoryWrapper.";
 import { KanbanBoard } from "@/components/backlog/KanbanBoard";
+import DefinitionOfDone from "@/components/definition-of-done/DefinitionOfDone";
 
 const tabs = [
   {
@@ -17,6 +17,13 @@ const tabs = [
     description:
       "Créer un sprint, sélectionner les User Stories, définir les dates. ✅ But : préparer le sprint à venir.",
     component: <SprintList />,
+  },
+  {
+    value: "dod",
+    label: "Definition of Done",
+    description:
+      "Liste des critères de complétion pour chaque User Story. ✅ But : garantir la qualité et la conformité des livrables.",
+    component: <DefinitionOfDone isAdmin={true} />,
   },
   {
     value: "kanban",
@@ -32,13 +39,7 @@ const tabs = [
       "Vue synthétique du sprint en cours (US assignées, statut global). ✅ But : vue centrée sur l’état global d’avancement.",
     component: <SprintBoard />,
   },
-  {
-    value: "timeline",
-    label: "Planning Scrum",
-    description:
-      "Timeline visuelle par section (Planifié, Exécution, Review). ✅ But : représentation globale des US dans le temps.",
-    component: <SprintPlanningTimeline />,
-  },
+
   {
     value: "metrics",
     label: "Vélocité",
