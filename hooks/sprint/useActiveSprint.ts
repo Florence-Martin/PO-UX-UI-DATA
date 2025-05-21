@@ -1,11 +1,10 @@
-// uniquement le sprint actif.
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { getAllSprints } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase"; // Assure-toi que ce chemin est correct
 
 /**
  * Convertit n'importe quel format de date en Date JS.
@@ -30,13 +29,15 @@ function isCurrentSprint(sprint: Sprint): boolean {
 }
 
 /**
- * Hook pour récupérer uniquement le sprint actif.
+ * Hook pour récupérer et écouter en temps réel le sprint actif.
  */
 export function useActiveSprint() {
   const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
 
   useEffect(() => {
-    const fetchActiveSprint = async () => {
+    let unsubscribe: (() => void) | null = null;
+
+    const fetchAndSubscribe = async () => {
       try {
         const sprints = await getAllSprints();
 
@@ -47,12 +48,31 @@ export function useActiveSprint() {
 
         const current = sorted.find(isCurrentSprint) || null;
         setActiveSprint(current);
+
+        // Abonnement temps réel si un sprint actif existe
+        if (current) {
+          unsubscribe = onSnapshot(
+            doc(db, "sprints", current.id),
+            (docSnap) => {
+              if (docSnap.exists()) {
+                setActiveSprint({
+                  id: docSnap.id,
+                  ...docSnap.data(),
+                } as Sprint);
+              }
+            }
+          );
+        }
       } catch (error) {
         console.error("Erreur lors du chargement du sprint actif :", error);
       }
     };
 
-    fetchActiveSprint();
+    fetchAndSubscribe();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   return { activeSprint };

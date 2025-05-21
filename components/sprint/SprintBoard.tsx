@@ -19,6 +19,11 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { useActiveSprint } from "@/hooks/sprint";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { updateSprint } from "@/lib/services/sprintService";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 const columns = [
   {
@@ -82,6 +87,28 @@ export function SprintBoard() {
   const percentDone =
     totalPoints > 0 ? Math.round((donePoints / totalPoints) * 100) : 0;
 
+  const isSprintDone =
+    sprintTasks.length > 0 &&
+    sprintTasks.every((task) => task.status === "done");
+
+  const handleCloseSprint = async () => {
+    if (!activeSprint) return;
+
+    try {
+      await updateSprint(activeSprint.id, {
+        status: "done",
+        hasReview: true,
+        hasRetrospective: true,
+        closedAt: new Date(),
+      });
+
+      toast.success("\u{1F389} Sprint clôturé avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de la clôture du sprint", error);
+      toast.error("Erreur lors de la clôture du sprint.");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <SprintActiveCard sprint={activeSprint} userStories={userStories} />
@@ -95,6 +122,77 @@ export function SprintBoard() {
             className="h-full bg-green-500 transition-all duration-500"
             style={{ width: `${percentDone}%` }}
           />
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-2 md:gap-6 w-full">
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Checkbox
+                    id="review"
+                    checked={activeSprint.hasReview}
+                    disabled={!isSprintDone}
+                    onCheckedChange={async (checked) => {
+                      await updateSprint(activeSprint.id, {
+                        hasReview: !!checked,
+                      });
+                      toast.success("Sprint Review effectuée!");
+                    }}
+                  />
+                </span>
+              </TooltipTrigger>
+              {!isSprintDone && (
+                <TooltipContent>
+                  Toutes les tâches doivent être terminées pour valider la
+                  Review.
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+          <Label htmlFor="review" className="text-sm flex items-center gap-1">
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            Sprint Review effectuée
+          </Label>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Checkbox
+                    id="retrospective"
+                    checked={activeSprint.hasRetrospective}
+                    disabled={!activeSprint.hasReview}
+                    onCheckedChange={async (checked) => {
+                      await updateSprint(activeSprint.id, {
+                        hasRetrospective: !!checked,
+                        // Si cochée, on passe le sprint en "done" et on ajoute la date de clôture
+                        ...(checked
+                          ? { status: "done", closedAt: new Date() }
+                          : {}),
+                      });
+                      toast.success("Sprint Rétrospective effectuée!");
+                    }}
+                  />
+                </span>
+              </TooltipTrigger>
+              {!activeSprint.hasReview && (
+                <TooltipContent>
+                  La Review doit être validée avant de cocher la Rétrospective.
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+          <Label
+            htmlFor="retrospective"
+            className="text-sm flex items-center gap-1"
+          >
+            <LoaderCircle className="w-4 h-4 text-blue-500" />
+            Rétrospective complétée
+          </Label>
         </div>
       </div>
 
@@ -140,7 +238,6 @@ export function SprintBoard() {
                           key={task.id}
                           className="p-4 rounded-lg bg-background border space-y-3 min-h-[140px] hover:shadow-md transition-all"
                         >
-                          {/* Ligne : code US + icône de lien */}
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span className="font-mono truncate">
                               {userStory?.code ?? "US-???"}
@@ -160,7 +257,6 @@ export function SprintBoard() {
                             </Tooltip>
                           </div>
 
-                          {/* Titre avec 2 lignes et élargissement */}
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <h4 className="font-medium text-sm leading-snug line-clamp-2 cursor-default">
@@ -172,11 +268,8 @@ export function SprintBoard() {
                             </TooltipContent>
                           </Tooltip>
 
-                          {/* Ligne points */}
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>Story Points : {task.storyPoints}</span>
-                            {/* Optionnel : badge de priorité, si disponible */}
-                            {/* <Badge variant="outline" className="text-[10px]">Medium</Badge> */}
                           </div>
                         </div>
                       );
@@ -188,6 +281,13 @@ export function SprintBoard() {
           })}
         </div>
       </TooltipProvider>
+      {isSprintDone && (
+        <div className="text-right mt-4">
+          <Button onClick={handleCloseSprint} variant="default">
+            ✅ Clôturer le sprint
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

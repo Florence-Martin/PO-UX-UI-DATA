@@ -18,6 +18,7 @@ export function useSprintForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [formValues, setFormValues] = useState({
     title: "",
+    goal: "",
     startDate: undefined as Date | undefined,
     endDate: undefined as Date | undefined,
     userStoryIds: [] as string[],
@@ -29,6 +30,7 @@ export function useSprintForm() {
   const resetForm = () => {
     setFormValues({
       title: "",
+      goal: "",
       startDate: undefined,
       endDate: undefined,
       userStoryIds: [],
@@ -79,6 +81,7 @@ export function useSprintForm() {
     try {
       const newSprint: Omit<Sprint, "id" | "progress"> = {
         title: sanitizedTitle,
+        goal: sanitize(formValues.goal),
         startDate: Timestamp.fromDate(startDate!),
         endDate: Timestamp.fromDate(endDate!),
         userStoryIds,

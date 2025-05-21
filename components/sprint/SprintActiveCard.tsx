@@ -22,10 +22,16 @@ export function SprintActiveCard({ sprint, userStories }: Props) {
   return (
     <div className="border rounded-xl p-4 bg-muted shadow-sm">
       <h2 className="text-xl font-semibold mb-1">{sprint.title}</h2>
+      {sprint.goal && (
+        <p className="text-sm italic text-muted-foreground mb-2">
+          🎯 Objectif : {sprint.goal}
+        </p>
+      )}
       <p className="text-sm text-muted-foreground mb-2">
         Du {format(getDate(sprint.startDate), "dd MMMM yyyy", { locale: fr })}{" "}
         au {format(getDate(sprint.endDate), "dd MMMM yyyy", { locale: fr })}
       </p>
+
       <p className="text-sm">
         📌 {sprintStories.length} US • {velocity} points
       </p>

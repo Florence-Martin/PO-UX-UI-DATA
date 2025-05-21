@@ -33,13 +33,15 @@ export function SprintList() {
       </Button>
 
       {sortedSprints.map((sprint) => (
-        <SprintPlanningCard
-          key={sprint.id}
-          sprint={sprint}
-          userStories={userStories}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <div key={sprint.id} id={sprint.id}>
+          <SprintPlanningCard
+            key={sprint.id}
+            sprint={sprint}
+            userStories={userStories}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
       ))}
 
       {selectedSprint && (

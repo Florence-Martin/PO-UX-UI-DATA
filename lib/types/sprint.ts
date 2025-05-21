@@ -11,4 +11,6 @@ export interface Sprint {
   status: "planned" | "active" | "done"; // Statut du sprint
   hasReview: boolean;
   hasRetrospective: boolean;
+  closedAt?: Timestamp | Date;
+  goal?: string; // Objectif du sprint
 }

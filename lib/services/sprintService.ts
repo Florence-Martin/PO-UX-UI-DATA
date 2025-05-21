@@ -15,21 +15,26 @@ const sprintCollection = collection(db, "sprints");
 
 // Validation des entrées de sprint
 //  Vérifier que le titre du sprint est valide et que les dates sont correctes
-export const validateSprintInput = (data: Partial<Sprint>) => {
-  if (!data.title || data.title.trim().length < 3) {
+export const validateSprintInput = (
+  data: Partial<Sprint>,
+  { requireTitle = true }: { requireTitle?: boolean } = {}
+) => {
+  if (
+    (requireTitle || data.title !== undefined) &&
+    (!data.title || data.title.trim().length < 3)
+  ) {
     throw new Error(
       "Sprint title is required and must be at least 3 characters long."
     );
   }
-  if (!data.startDate || !data.endDate) {
-    throw new Error("Start and end dates are required.");
-  }
-  const start =
-    data.startDate instanceof Date ? data.startDate : data.startDate.toDate();
-  const end =
-    data.endDate instanceof Date ? data.endDate : data.endDate.toDate();
-  if (start > end) {
-    throw new Error("Start date must be before end date.");
+  if (data.startDate !== undefined && data.endDate !== undefined) {
+    const start =
+      data.startDate instanceof Date ? data.startDate : data.startDate.toDate();
+    const end =
+      data.endDate instanceof Date ? data.endDate : data.endDate.toDate();
+    if (start > end) {
+      throw new Error("Start date must be before end date.");
+    }
   }
 };
 
@@ -85,7 +90,7 @@ export const updateSprint = async (
   id: string,
   data: Partial<Omit<Sprint, "id">>
 ) => {
-  validateSprintInput(data);
+  validateSprintInput(data, { requireTitle: false }); // titre optionnel
   const docRef = doc(sprintCollection, id);
   await updateDoc(docRef, {
     ...data,

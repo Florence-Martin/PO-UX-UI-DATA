@@ -71,6 +71,17 @@ export function SprintDetailModal({
             />
           </div>
           <div>
+            <label className="block text-sm font-medium">
+              🎯 Objectif du sprint
+            </label>
+            <input
+              type="text"
+              defaultValue={sprint?.goal || ""}
+              placeholder="Exemple : Améliorer la performance de l'application"
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div>
             <label className="block text-sm font-medium">Date de début</label>
             <input
               ref={startDateRef}

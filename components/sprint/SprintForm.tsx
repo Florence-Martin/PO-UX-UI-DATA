@@ -54,6 +54,17 @@ export function SprintForm() {
               placeholder="Sprint 24 - Avril"
             />
           </div>
+          {/* Objectif du sprint */}
+          <div>
+            <Label htmlFor="goal">Objectif du Sprint</Label>
+            <Input
+              id="goal"
+              name="goal"
+              value={formValues.goal}
+              onChange={handleInputChange}
+              placeholder="Améliorer la performance de l'application"
+            />
+          </div>
 
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
