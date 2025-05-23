@@ -1,3 +1,4 @@
+import BacklogGoal from "@/components/analysis/BacklogGoal";
 import { RoadmapFlow } from "@/components/analysis/RoadmapFlow";
 import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo.";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
@@ -11,8 +12,9 @@ export default function Home() {
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <DashboardBannerInfo />
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard UX/Data</h2>
+        <h2 className="text-3xl font-bold tracking-tight">PO Dashboard</h2>
       </div>
+      <BacklogGoal />
       <RoadmapFlow />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
