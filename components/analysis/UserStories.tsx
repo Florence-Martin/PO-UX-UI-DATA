@@ -313,8 +313,10 @@ export function UserStories() {
                       size="sm"
                       variant="secondary"
                       onClick={() => {
-                        handleEdit(story);
-                        toast.success("✅ Modification");
+                        router.push(
+                          `/analysis?tab=documentation&edit=${story.id}`,
+                          { scroll: false }
+                        );
                       }}
                     >
                       Modifier
