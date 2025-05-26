@@ -38,6 +38,13 @@ export const metadata: Metadata = {
       "Une application pour structurer une démarche produit centrée sur l’UX, les données et l’agilité.",
     images: ["https://po-ux-ui-data.vercel.app/og-cover.jpg"],
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any", type: "image/x-icon" },
+      { url: "/favicon-white-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-white-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({

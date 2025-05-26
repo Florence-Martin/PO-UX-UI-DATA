@@ -5,14 +5,22 @@ import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UserMetrics } from "@/components/dashboard/UserMetrics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 // import { Overview } from "@/components/dashboard/overview";
 
 export default function Home() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <DashboardBannerInfo />
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">PO Dashboard</h2>
+      <div className="flex items-center space-y-2">
+        <Image
+          src="/favicon-white-48x48.png"
+          alt="Logo"
+          className="rounded-full mr-3"
+          width={48}
+          height={48}
+        />
+        <h1 className="text-2xl font-bold mr-2">Dashboard</h1>
       </div>
       <BacklogGoal />
       <RoadmapFlow />
