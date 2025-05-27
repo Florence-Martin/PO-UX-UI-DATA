@@ -39,32 +39,21 @@ export default function BacklogGoal() {
 
         <div className="mt-2 bg-background/60 rounded-lg px-4 py-3">
           <p
-            className={`text-sm md:text-base leading-relaxed transition-all duration-300 ${
-              expanded
-                ? ""
-                : "overflow-hidden text-ellipsis md:overflow-visible"
+            className={`text-sm leading-relaxed transition-all duration-300 md:text-base ${
+              expanded ? "" : "line-clamp-2 md:line-clamp-none"
             }`}
-            style={
-              expanded
-                ? {}
-                : {
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    maxHeight: "3.2em",
-                  }
-            }
           >
             Cette application est le{" "}
             <strong className="text-primary">
               cockpit agile du Product Owner
             </strong>{" "}
             orienté{" "}
-            <strong className="text-primary">UX, données et delivery</strong>.
-            Elle structure les décisions produit de bout en bout — de l’analyse
-            des besoins aux user stories, du backlog aux sprints, jusqu’à la
-            validation qualité — pour garantir une livraison cohérente,
-            mesurable et centrée utilisateur.
+            <strong className="text-primary">UX, données et delivery</strong> -
+            Un side-project d’apprentissage pratique - Elle structure les
+            décisions produit de bout en bout — de l’analyse des besoins aux
+            user stories, du backlog aux sprints, jusqu’à la validation qualité
+            pour garantir une livraison cohérente, mesurable et centrée
+            utilisateur.
           </p>
           {/* Bouton voir plus/moins, visible uniquement sur mobile */}
           <button
