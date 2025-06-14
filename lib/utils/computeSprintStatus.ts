@@ -10,6 +10,11 @@ export type SprintStatus = "planned" | "active" | "review" | "retrospective";
  * @returns Le statut du sprint : "planned", "active", "review", ou "retrospective"
  */
 export function computeSprintStatus(tasks: BacklogTask[]): SprintStatus {
+  // Cas particulier: tableau vide
+  if (tasks.length === 0) {
+    return "planned";
+  }
+
   // Récupère les statuts des tâches en les mappant via `taskStatusMapping`
   const statuses = tasks.map((task) => taskStatusMapping[task.status]);
 
