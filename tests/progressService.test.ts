@@ -161,19 +161,20 @@ describe("progressService", () => {
       localStorage.setItem("wireframes-progress", "NaN");
       expect(() => setWireframesProgressLevel(2)).not.toThrow();
       expect(localStorage.getItem("wireframes-progress")).toBe("2");
-    });    test("should handle window.dispatchEvent errors gracefully", () => {
+    });
+    test("should handle window.dispatchEvent errors gracefully", () => {
       // Créer un mock local pour ce test spécifique
       const errorMock = jest.fn(() => {
         throw new Error("dispatchEvent error");
       });
-      
+
       // Remplacer temporairement le mock global
-      jest.spyOn(window, 'dispatchEvent').mockImplementation(errorMock);
-      
+      jest.spyOn(window, "dispatchEvent").mockImplementation(errorMock);
+
       expect(() => setWireframesProgressLevel(2)).toThrow();
-      
+
       // Restaurer le mock normal pour les autres tests
-      jest.spyOn(window, 'dispatchEvent').mockImplementation(mockDispatchEvent);
+      jest.spyOn(window, "dispatchEvent").mockImplementation(mockDispatchEvent);
       mockDispatchEvent.mockImplementation(() => true);
     });
   });
@@ -304,6 +305,46 @@ describe("progressService", () => {
       localStorage.setItem("wireframes-progress", "-5");
       const result = getWireframesProgressLevel();
       expect(result).toBe(0);
+    });
+  });
+
+  describe("server-side rendering (SSR) compatibility", () => {
+    test("getWireframesProgressLevel should return 0 when window is undefined", () => {
+      // Simuler un environnement SSR en supprimant window temporairement
+      const originalWindow = global.window;
+      delete (global as any).window;
+
+      const result = getWireframesProgressLevel();
+
+      expect(result).toBe(0);
+
+      // Restaurer window
+      global.window = originalWindow;
+    });
+
+    test("setWireframesProgressLevel should return early when window is undefined", () => {
+      // Simuler un environnement SSR en supprimant window temporairement
+      const originalWindow = global.window;
+      delete (global as any).window;
+
+      // Cette fonction ne devrait pas lancer d'erreur
+      expect(() => setWireframesProgressLevel(2)).not.toThrow();
+
+      // Restaurer window
+      global.window = originalWindow;
+    });
+
+    test("getWireframesProgress should return 0 when window is undefined", () => {
+      // Simuler un environnement SSR en supprimant window temporairement
+      const originalWindow = global.window;
+      delete (global as any).window;
+
+      const result = getWireframesProgress();
+
+      expect(result).toBe(0);
+
+      // Restaurer window
+      global.window = originalWindow;
     });
   });
 });
