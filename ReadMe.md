@@ -1,5 +1,11 @@
 ## 📦 PO-UX-UI-DATA – UX Product Owner Toolkit
 
+![Tests](https://img.shields.io/badge/Tests-72%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-92.53%25-brightgreen)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
+![Next.js](https://img.shields.io/badge/Next.js-14.2.25-black)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 Cette application est conçue comme une boîte à outils moderne pour Product Owner spécialisé en UX/UI et Datavisualisation, intégrant les meilleures pratiques agiles (Scrum), la recherche utilisateur, le backlog produit et la documentation fonctionnelle.
 
 Pensée pour un usage terrain, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
@@ -15,6 +21,7 @@ Pensée pour un usage terrain, elle centralise tous les outils nécessaires pour
 ## Table of Contents
 
 - [Objectif du projet](#objectif-du-projet)
+- [Getting Started](#getting-started)
 - [1. Dashboard UX/Data](#1-dashboard-uxdata)
 - [2. Roadmap Produit](#2-roadmap-produit)
 - [3. Analyse Produit & Wireframes](#3-analyse-produit--wireframes)
@@ -23,7 +30,7 @@ Pensée pour un usage terrain, elle centralise tous les outils nécessaires pour
 - [6. Validation Produit & Qualité](#6-validation-produit--qualité)
 - [7. Fonctionnalités IA (à venir)](#7-fonctionnalités-ia-à-venir)
 - [Stack Technique](#stack-technique)
-- [Règles de gestion](#règles-de-gestion)
+- [Documentation](#documentation)
 - [Statut du projet](#statut-du-projet)
 - [Suivre le projet](#suivre-le-projet)
 
@@ -38,6 +45,37 @@ Pensée pour un usage terrain, elle centralise tous les outils nécessaires pour
 - Visualiser les indicateurs UX et business clés.
 - Coordonner les actions entre les équipes UX, BI et développement.
 - Assurer la qualité fonctionnelle via des checklists, tests et validations.
+
+⸻
+
+## Getting Started
+
+### 🚀 Installation rapide
+
+```bash
+# Cloner le repository
+git clone https://github.com/Florence-Martin/PO-UX-UI-DATA.git
+cd PO-UX-UI-DATA
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm run dev
+```
+
+### 📋 Prérequis
+- Node.js >= 18.0.0
+- npm >= 8.0.0
+
+### 🔧 Configuration
+- Configurer Firebase (voir [guide développeur](./documentation/developer-guide.md#configuration-firebase))
+- Variables d'environnement dans `.env.local`
+
+### 📚 Pour les développeurs
+- **[Guide complet](./documentation/developer-guide.md)** - Installation, développement, tests
+- **[Guide API](./documentation/api-guide.md)** - Services et hooks
+- **[Cheatsheet](./documentation/cheatsheet.md)** - Raccourcis et patterns
 
 ⸻
 
@@ -153,7 +191,15 @@ L’IA sera disponible dès **T1 2026** (version locale puis API).
 
 ⸻
 
-## Règles de gestion
+## Documentation
+
+### 📚 Documentation complète
+
+- **[Documentation technique](./documentation/README.md)** - Guide complet pour développeurs
+- **[Guide de contribution](./documentation/contributing.md)** - Standards et processus
+- **[Guide API](./documentation/api-guide.md)** - Services et hooks
+
+### 📋 Règles de gestion
 
 Un document détaillé des **règles métier et fonctionnelles** est disponible ici :
 👉 [Voir les règles de gestion](./documentation/business-rules.md)

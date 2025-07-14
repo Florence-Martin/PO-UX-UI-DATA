@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "ms-vscode.vscode-eslint",
+    "ms-vscode.vscode-jest",
+    "ms-vscode.vscode-jest-runner",
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+    "yoavbls.pretty-ts-errors",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "bradlc.vscode-tailwindcss",
+    "naumovs.color-highlight",
+    "streetsidesoftware.code-spell-checker",
+    "ms-vscode.vscode-json",
+    "firebase.vscode-firebase-explorer",
+    "ms-vscode.vscode-github-issue-notebooks"
+  ]
+}
