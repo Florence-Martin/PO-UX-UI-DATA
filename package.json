@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "clean": "rm -rf .next node_modules package-lock.json && npm install"
   },
   "dependencies": {
@@ -91,7 +93,8 @@
     "@types/jest": "^29.5.14",
     "@types/joi": "^17.2.2",
     "@types/react-beautiful-dnd": "^13.1.8",
-    "jest": "^30.0.0",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
     "ts-jest": "^29.4.0"
   }
 }
