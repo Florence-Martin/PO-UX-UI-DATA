@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ExternalLink } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ExternalLink } from "lucide-react";
 
 export function ExternalTools() {
   const tools = [
@@ -13,21 +13,21 @@ export function ExternalTools() {
       id: "jira",
       name: "JIRA",
       description: "Suivi des tickets et des sprints",
-      url: "https://your-domain.atlassian.net"
+      url: "https://your-domain.atlassian.net",
     },
     {
       id: "postman",
       name: "Postman",
       description: "Tests et documentation API",
-      url: "https://www.postman.com/your-workspace"
+      url: "https://www.postman.com/your-workspace",
     },
     {
       id: "figma",
       name: "Figma",
       description: "Design system et maquettes",
-      url: "https://www.figma.com/your-project"
-    }
-  ]
+      url: "https://www.figma.com/your-project",
+    },
+  ];
 
   return (
     <ScrollArea className="h-[400px]">
@@ -45,7 +45,7 @@ export function ExternalTools() {
                 {tool.description}
               </p>
               <div className="space-y-2">
-                <Label>URL de l'outil</Label>
+                <Label>URL de l&apos;outil</Label>
                 <Input value={tool.url} readOnly />
               </div>
             </CardContent>
@@ -53,5 +53,5 @@ export function ExternalTools() {
         ))}
       </div>
     </ScrollArea>
-  )
+  );
 }

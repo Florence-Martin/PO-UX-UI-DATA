@@ -8,6 +8,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Non publié]
 
 ### Prochaines fonctionnalités
+
 - Intégration JIRA et Confluence
 - Modules IA pour la génération automatique
 - Authentification Firebase complète
@@ -16,6 +17,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [1.0.0] - 2025-01-XX
 
 ### Ajouté
+
 - **Documentation complète** : Guide développeur, contribution, API
 - **Configuration VSCode** : Settings et extensions recommandées
 - **Tests unitaires** : Couverture de 92.53% avec 72 tests
@@ -25,12 +27,14 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Utilitaires** : buildTimelineItemsUserStories, gestion des erreurs
 
 ### Amélioré
+
 - **Couverture de tests** : Portée à 92.53% statements, 77.85% branches
 - **Architecture** : Séparation claire des responsabilités
 - **Performance** : Optimisation des hooks et composants
 - **Gestion d'erreurs** : Système robuste avec classes d'erreurs personnalisées
 
 ### Corrigé
+
 - **Doublons de tests** : Suppression des fichiers `*.branches.test.ts`
 - **Types** : Correction des types dans les données de test
 - **Imports** : Nettoyage des imports non utilisés
@@ -38,6 +42,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [0.9.0] - 2024-12-XX
 
 ### Ajouté
+
 - **Dashboard UX/Data** : Métriques temps réel et KPIs
 - **Roadmap Produit** : Planification trimestrielle interactive
 - **Backlog Product** : Kanban avec drag-and-drop
@@ -45,6 +50,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Validation & Qualité** : Checklists et tests API
 
 ### Fonctionnalités opérationnelles
+
 - ✅ Gestion des user stories (CRUD complet)
 - ✅ Backlog interactif avec statuts
 - ✅ Sprint planning et suivi
@@ -55,6 +61,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [0.8.0] - 2024-11-XX
 
 ### Ajouté
+
 - **Architecture Next.js** : App Router avec TypeScript
 - **Configuration Firebase** : Firestore pour le stockage
 - **Design System** : TailwindCSS + Shadcn UI
@@ -62,6 +69,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Routing** : Pages principales et navigation
 
 ### Technique
+
 - Configuration Jest pour les tests
 - ESLint et Prettier pour la qualité du code
 - Structure de projet modulaire
@@ -70,12 +78,14 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [0.7.0] - 2024-10-XX
 
 ### Ajouté
+
 - **Prototype initial** : Maquettes et wireframes
 - **Recherche utilisateur** : Personas et interviews
 - **Spécifications** : Règles métier et fonctionnalités
 - **Planning** : Roadmap produit et technique
 
 ### Conception
+
 - UX/UI des écrans principaux
 - Workflow utilisateur
 - Architecture technique

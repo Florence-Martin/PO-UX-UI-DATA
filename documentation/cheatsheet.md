@@ -3,6 +3,7 @@
 ## ⚡ Commandes rapides
 
 ### Développement
+
 ```bash
 # Démarrer le serveur de développement
 npm run dev
@@ -25,6 +26,7 @@ npm run clean            # Nettoie et réinstalle
 ```
 
 ### Git workflow
+
 ```bash
 # Nouvelle feature
 git checkout -b feature/nom-feature
@@ -73,39 +75,24 @@ tests/                # Tests unitaires
 ## 🎯 Hooks principaux
 
 ### useUserStories
+
 ```typescript
-const { 
-  stories, 
-  loading, 
-  error, 
-  addStory, 
-  updateStory, 
-  deleteStory 
-} = useUserStories();
+const { stories, loading, error, addStory, updateStory, deleteStory } =
+  useUserStories();
 ```
 
 ### useBacklogTasks
+
 ```typescript
-const { 
-  tasks, 
-  loading, 
-  error, 
-  addTask, 
-  updateTask, 
-  getTasksByStatus 
-} = useBacklogTasks();
+const { tasks, loading, error, addTask, updateTask, getTasksByStatus } =
+  useBacklogTasks();
 ```
 
 ### useRoadmap
+
 ```typescript
-const { 
-  roadmap, 
-  loading, 
-  error, 
-  addQuarter, 
-  updateQuarter, 
-  addObjective 
-} = useRoadmap();
+const { roadmap, loading, error, addQuarter, updateQuarter, addObjective } =
+  useRoadmap();
 ```
 
 ---
@@ -113,14 +100,15 @@ const {
 ## 🏗️ Types essentiels
 
 ### UserStory
+
 ```typescript
 interface UserStory {
   id: string;
   title: string;
   description: string;
   acceptanceCriteria: string[];
-  priority: 'high' | 'medium' | 'low';
-  status: 'todo' | 'in-progress' | 'done';
+  priority: "high" | "medium" | "low";
+  status: "todo" | "in-progress" | "done";
   estimatedPoints: number;
   assignedTo?: string;
   createdAt: Date;
@@ -129,14 +117,15 @@ interface UserStory {
 ```
 
 ### BacklogTask
+
 ```typescript
 interface BacklogTask {
   id: string;
   title: string;
   description: string;
-  type: 'feature' | 'bug' | 'technical';
-  priority: 'high' | 'medium' | 'low';
-  status: 'todo' | 'in-progress' | 'done';
+  type: "feature" | "bug" | "technical";
+  priority: "high" | "medium" | "low";
+  status: "todo" | "in-progress" | "done";
   estimatedHours: number;
   assignedTo?: string;
   createdAt: Date;
@@ -149,20 +138,22 @@ interface BacklogTask {
 ## 🎨 Composants UI
 
 ### Shadcn UI
+
 ```typescript
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog } from '@/components/ui/dialog';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 ```
 
 ### Composants personnalisés
+
 ```typescript
-import { UserStoryCard } from '@/components/backlog/UserStoryCard';
-import { KanbanBoard } from '@/components/backlog/KanbanBoard';
-import { SprintCard } from '@/components/sprint/SprintCard';
-import { RoadmapCard } from '@/components/analysis/RoadmapCard';
+import { UserStoryCard } from "@/components/backlog/UserStoryCard";
+import { KanbanBoard } from "@/components/backlog/KanbanBoard";
+import { SprintCard } from "@/components/sprint/SprintCard";
+import { RoadmapCard } from "@/components/analysis/RoadmapCard";
 ```
 
 ---
@@ -170,29 +161,32 @@ import { RoadmapCard } from '@/components/analysis/RoadmapCard';
 ## 🔧 Services utiles
 
 ### progressService
+
 ```typescript
-import { 
+import {
   calculateWireframeProgress,
-  calculateOverallProgress 
-} from '@/lib/services/progressService';
+  calculateOverallProgress,
+} from "@/lib/services/progressService";
 ```
 
 ### userStoryService
+
 ```typescript
-import { 
+import {
   getUserStories,
   addUserStory,
   updateUserStory,
-  deleteUserStory 
-} from '@/lib/services/userStoryService';
+  deleteUserStory,
+} from "@/lib/services/userStoryService";
 ```
 
 ### sprintService
+
 ```typescript
-import { 
+import {
   calculateSprintVelocity,
-  calculateSprintStats 
-} from '@/lib/services/sprintService';
+  calculateSprintStats,
+} from "@/lib/services/sprintService";
 ```
 
 ---
@@ -200,19 +194,21 @@ import {
 ## 🧪 Tests patterns
 
 ### Test unitaire
+
 ```typescript
-describe('Component', () => {
-  it('should render correctly', () => {
+describe("Component", () => {
+  it("should render correctly", () => {
     render(<Component />);
-    expect(screen.getByText('Text')).toBeInTheDocument();
+    expect(screen.getByText("Text")).toBeInTheDocument();
   });
 });
 ```
 
 ### Test hook
+
 ```typescript
-describe('useHook', () => {
-  it('should return initial state', () => {
+describe("useHook", () => {
+  it("should return initial state", () => {
     const { result } = renderHook(() => useHook());
     expect(result.current.loading).toBe(true);
   });
@@ -220,8 +216,9 @@ describe('useHook', () => {
 ```
 
 ### Test avec mock
+
 ```typescript
-jest.mock('@/lib/firebase', () => ({
+jest.mock("@/lib/firebase", () => ({
   db: mockFirestore,
 }));
 ```
@@ -231,31 +228,33 @@ jest.mock('@/lib/firebase', () => ({
 ## 📡 Firebase
 
 ### Configuration
+
 ```typescript
-import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc 
-} from 'firebase/firestore';
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  doc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 ```
 
 ### CRUD operations
+
 ```typescript
 // Create
-const docRef = await addDoc(collection(db, 'collection'), data);
+const docRef = await addDoc(collection(db, "collection"), data);
 
 // Read
-const snapshot = await getDocs(collection(db, 'collection'));
+const snapshot = await getDocs(collection(db, "collection"));
 
 // Update
-await updateDoc(doc(db, 'collection', id), updates);
+await updateDoc(doc(db, "collection", id), updates);
 
 // Delete
-await deleteDoc(doc(db, 'collection', id));
+await deleteDoc(doc(db, "collection", id));
 ```
 
 ---
@@ -263,22 +262,36 @@ await deleteDoc(doc(db, 'collection', id));
 ## 🎨 Styling
 
 ### TailwindCSS classes communes
+
 ```css
 /* Layout */
-.container { @apply mx-auto px-4 py-8; }
-.grid-cols-auto { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3; }
-.flex-center { @apply flex items-center justify-center; }
+.container {
+  @apply mx-auto px-4 py-8;
+}
+.grid-cols-auto {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+.flex-center {
+  @apply flex items-center justify-center;
+}
 
 /* Composants */
-.card { @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6; }
-.button { @apply px-4 py-2 rounded-md font-medium transition-colors; }
-.input { @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2; }
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6;
+}
+.button {
+  @apply px-4 py-2 rounded-md font-medium transition-colors;
+}
+.input {
+  @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2;
+}
 ```
 
 ### Thèmes
+
 ```typescript
 // Utilisation du thème
-import { useTheme } from 'next-themes';
+import { useTheme } from "next-themes";
 
 const { theme, setTheme } = useTheme();
 ```
@@ -288,20 +301,23 @@ const { theme, setTheme } = useTheme();
 ## 🔍 Debugging
 
 ### React DevTools
+
 - Components tab pour inspecter l'état
 - Profiler pour les performances
 - Console pour les erreurs
 
 ### Console logs utiles
+
 ```typescript
-console.log('State:', { stories, loading, error });
+console.log("State:", { stories, loading, error });
 console.table(stories);
-console.time('operation');
+console.time("operation");
 // ... opération
-console.timeEnd('operation');
+console.timeEnd("operation");
 ```
 
 ### Erreurs communes
+
 ```typescript
 // TypeError: Cannot read property 'x' of undefined
 const safeProp = object?.property || defaultValue;
@@ -320,6 +336,7 @@ useEffect(() => {
 ## 🚀 Performance
 
 ### Optimisations React
+
 ```typescript
 // Mémorisation
 const MemoizedComponent = React.memo(Component);
@@ -334,15 +351,16 @@ const handleClick = useCallback(() => {
 ```
 
 ### Optimisations Next.js
+
 ```typescript
 // Dynamic imports
-const Component = dynamic(() => import('./Component'), {
+const Component = dynamic(() => import("./Component"), {
   loading: () => <div>Loading...</div>,
 });
 
 // Image optimization
-import Image from 'next/image';
-<Image src="/image.jpg" alt="Description" width={500} height={300} />
+import Image from "next/image";
+<Image src="/image.jpg" alt="Description" width={500} height={300} />;
 ```
 
 ---
@@ -350,11 +368,13 @@ import Image from 'next/image';
 ## 📚 Ressources rapides
 
 ### Documentation
+
 - [Guide développeur](./documentation/developer-guide.md)
 - [Guide API](./documentation/api-guide.md)
 - [Contribution](./documentation/contributing.md)
 
 ### Liens externes
+
 - [Next.js Docs](https://nextjs.org/docs)
 - [TypeScript](https://www.typescriptlang.org/docs/)
 - [TailwindCSS](https://tailwindcss.com/docs)

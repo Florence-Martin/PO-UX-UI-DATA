@@ -14,11 +14,13 @@
 ## 🔄 Processus de contribution
 
 ### 1. Avant de commencer
+
 - [ ] Lire ce guide de contribution
 - [ ] Consulter les [issues existantes](https://github.com/Florence-Martin/PO-UX-UI-DATA/issues)
 - [ ] Discuter des changements importants via une issue
 
 ### 2. Setup de développement
+
 ```bash
 # Fork le repository
 git clone https://github.com/[username]/PO-UX-UI-DATA.git
@@ -35,6 +37,7 @@ npm run dev
 ```
 
 ### 3. Processus de développement
+
 - [ ] Écrire du code propre et testé
 - [ ] Respecter les conventions de nommage
 - [ ] Ajouter des tests pour les nouvelles fonctionnalités
@@ -42,6 +45,7 @@ npm run dev
 - [ ] Tester localement avant de push
 
 ### 4. Soumission
+
 - [ ] Créer une Pull Request
 - [ ] Remplir le template de PR
 - [ ] Lier les issues correspondantes
@@ -52,6 +56,7 @@ npm run dev
 ## 📝 Standards de code
 
 ### Structure des fichiers
+
 ```
 component/
 ├── index.ts                    # Export principal
@@ -67,6 +72,7 @@ component/
 ### Conventions de nommage
 
 #### Fichiers
+
 ```
 PascalCase     → Components, Types, Interfaces
 camelCase      → hooks, utils, functions
@@ -75,27 +81,29 @@ UPPER_CASE     → constantes, enums
 ```
 
 #### Variables et fonctions
+
 ```typescript
 // ✅ Bon
 const userStories = [];
 const fetchUserStories = async () => {};
 const USER_STORY_STATUS = {
-  TODO: 'todo',
-  IN_PROGRESS: 'in-progress',
-  DONE: 'done',
+  TODO: "todo",
+  IN_PROGRESS: "in-progress",
+  DONE: "done",
 };
 
 // ❌ Éviter
 const UserStories = [];
 const FetchUserStories = async () => {};
 const userStoryStatus = {
-  todo: 'todo',
-  inProgress: 'in-progress',
-  done: 'done',
+  todo: "todo",
+  inProgress: "in-progress",
+  done: "done",
 };
 ```
 
 #### Composants
+
 ```typescript
 // ✅ Bon
 interface UserStoryCardProps {
@@ -107,7 +115,7 @@ interface UserStoryCardProps {
 const UserStoryCard: React.FC<UserStoryCardProps> = ({
   story,
   onUpdate,
-  className = '',
+  className = "",
 }) => {
   return (
     <div className={`p-4 border rounded-lg ${className}`}>
@@ -121,6 +129,7 @@ export default UserStoryCard;
 ```
 
 ### Types TypeScript
+
 ```typescript
 // ✅ Interfaces pour les objets
 interface UserStory {
@@ -136,19 +145,20 @@ interface UserStory {
 }
 
 // ✅ Types pour les unions
-type Priority = 'high' | 'medium' | 'low';
-type SprintStatus = 'todo' | 'in-progress' | 'in-review' | 'done';
+type Priority = "high" | "medium" | "low";
+type SprintStatus = "todo" | "in-progress" | "in-review" | "done";
 
 // ✅ Énumérations pour les constantes
 enum UserRole {
-  ADMIN = 'admin',
-  PRODUCT_OWNER = 'product_owner',
-  DEVELOPER = 'developer',
-  DESIGNER = 'designer',
+  ADMIN = "admin",
+  PRODUCT_OWNER = "product_owner",
+  DEVELOPER = "developer",
+  DESIGNER = "designer",
 }
 ```
 
 ### Hooks personnalisés
+
 ```typescript
 // ✅ Structure type pour un hook
 const useUserStories = () => {
@@ -157,20 +167,20 @@ const useUserStories = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Fonctions de manipulation
-  const addStory = useCallback((story: Omit<UserStory, 'id'>) => {
+  const addStory = useCallback((story: Omit<UserStory, "id">) => {
     const newStory: UserStory = {
       ...story,
       id: generateId(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    setStories(prev => [...prev, newStory]);
+    setStories((prev) => [...prev, newStory]);
   }, []);
 
   const updateStory = useCallback((id: string, updates: Partial<UserStory>) => {
-    setStories(prev => 
-      prev.map(story => 
-        story.id === id 
+    setStories((prev) =>
+      prev.map((story) =>
+        story.id === id
           ? { ...story, ...updates, updatedAt: new Date() }
           : story
       )
@@ -178,7 +188,7 @@ const useUserStories = () => {
   }, []);
 
   const deleteStory = useCallback((id: string) => {
-    setStories(prev => prev.filter(story => story.id !== id));
+    setStories((prev) => prev.filter((story) => story.id !== id));
   }, []);
 
   // Effet pour charger les données
@@ -189,7 +199,7 @@ const useUserStories = () => {
         const data = await getUserStoriesFromDB();
         setStories(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -214,6 +224,7 @@ const useUserStories = () => {
 ## 🔀 Conventions Git
 
 ### Branches
+
 ```
 main                    # Production
 develop                 # Développement
@@ -224,6 +235,7 @@ release/v1.0.0          # Préparation de release
 ```
 
 ### Messages de commit
+
 Format : `type(scope): description`
 
 ```
@@ -237,6 +249,7 @@ chore(deps): update dependencies
 ```
 
 #### Types de commit
+
 - `feat`: Nouvelle fonctionnalité
 - `fix`: Correction de bug
 - `docs`: Documentation
@@ -246,6 +259,7 @@ chore(deps): update dependencies
 - `chore`: Maintenance (deps, config, etc.)
 
 #### Exemples
+
 ```bash
 # ✅ Bon
 git commit -m "feat(dashboard): add real-time metrics chart"
@@ -263,39 +277,41 @@ git commit -m "WIP"
 ## 🧪 Tests et qualité
 
 ### Standards de test
+
 ```typescript
 // ✅ Structure de test
-describe('UserStoryCard', () => {
+describe("UserStoryCard", () => {
   const mockStory: UserStory = {
-    id: '1',
-    title: 'Test Story',
-    description: 'Test description',
-    priority: 'high',
-    status: 'todo',
+    id: "1",
+    title: "Test Story",
+    description: "Test description",
+    priority: "high",
+    status: "todo",
     estimatedPoints: 5,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  it('should render story title and description', () => {
+  it("should render story title and description", () => {
     render(<UserStoryCard story={mockStory} onUpdate={jest.fn()} />);
-    
-    expect(screen.getByText('Test Story')).toBeInTheDocument();
-    expect(screen.getByText('Test description')).toBeInTheDocument();
+
+    expect(screen.getByText("Test Story")).toBeInTheDocument();
+    expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
-  it('should call onUpdate when story is modified', () => {
+  it("should call onUpdate when story is modified", () => {
     const mockUpdate = jest.fn();
     render(<UserStoryCard story={mockStory} onUpdate={mockUpdate} />);
-    
-    fireEvent.click(screen.getByRole('button', { name: /edit/i }));
-    
+
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
+
     expect(mockUpdate).toHaveBeenCalledWith(mockStory);
   });
 });
 ```
 
 ### Couverture de code
+
 - **Minimum requis** : 80% statements, 70% branches
 - **Objectif** : 90% statements, 80% branches
 - **Obligatoire** : 100% functions
@@ -311,49 +327,51 @@ npm run test -- --coverage --watchAll=false
 ### Types de tests
 
 #### Tests unitaires
+
 ```typescript
 // Test de fonction pure
-describe('calculateProgress', () => {
-  it('should return 0 for no completed items', () => {
+describe("calculateProgress", () => {
+  it("should return 0 for no completed items", () => {
     expect(calculateProgress(0, 10)).toBe(0);
   });
 
-  it('should return 100 for all completed items', () => {
+  it("should return 100 for all completed items", () => {
     expect(calculateProgress(10, 10)).toBe(100);
   });
 
-  it('should handle edge case with 0 total items', () => {
+  it("should handle edge case with 0 total items", () => {
     expect(calculateProgress(0, 0)).toBe(0);
   });
 });
 ```
 
 #### Tests d'hooks
+
 ```typescript
 // Test de hook personnalisé
-describe('useUserStories', () => {
-  it('should initialize with empty stories', () => {
+describe("useUserStories", () => {
+  it("should initialize with empty stories", () => {
     const { result } = renderHook(() => useUserStories());
-    
+
     expect(result.current.stories).toEqual([]);
     expect(result.current.loading).toBe(true);
   });
 
-  it('should add story correctly', () => {
+  it("should add story correctly", () => {
     const { result } = renderHook(() => useUserStories());
-    
+
     act(() => {
       result.current.addStory({
-        title: 'New Story',
-        description: 'Description',
-        priority: 'high',
-        status: 'todo',
+        title: "New Story",
+        description: "Description",
+        priority: "high",
+        status: "todo",
         estimatedPoints: 3,
       });
     });
-    
+
     expect(result.current.stories).toHaveLength(1);
-    expect(result.current.stories[0].title).toBe('New Story');
+    expect(result.current.stories[0].title).toBe("New Story");
   });
 });
 ```
@@ -363,10 +381,11 @@ describe('useUserStories', () => {
 ## 📖 Documentation
 
 ### Code documentation
+
 ```typescript
 /**
  * Hook pour gérer les user stories du backlog
- * 
+ *
  * @returns {Object} Objet contenant les stories et les méthodes de manipulation
  * @example
  * const { stories, addStory, updateStory } = useUserStories();
@@ -377,7 +396,7 @@ const useUserStories = () => {
 
 /**
  * Calcule le pourcentage de progression
- * 
+ *
  * @param completed - Nombre d'éléments terminés
  * @param total - Nombre total d'éléments
  * @returns Pourcentage de progression (0-100)
@@ -389,18 +408,19 @@ const calculateProgress = (completed: number, total: number): number => {
 ```
 
 ### README des composants
-```markdown
+
+````markdown
 # UserStoryCard
 
 Composant pour afficher une user story dans le backlog.
 
 ## Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| story | UserStory | ✅ | Objet user story |
-| onUpdate | (story: UserStory) => void | ✅ | Callback mise à jour |
-| className | string | ❌ | Classes CSS supplémentaires |
+| Prop      | Type                       | Required | Description                 |
+| --------- | -------------------------- | -------- | --------------------------- |
+| story     | UserStory                  | ✅       | Objet user story            |
+| onUpdate  | (story: UserStory) => void | ✅       | Callback mise à jour        |
+| className | string                     | ❌       | Classes CSS supplémentaires |
 
 ## Exemple d'utilisation
 
@@ -411,13 +431,15 @@ Composant pour afficher une user story dans le backlog.
   className="mb-4"
 />
 ```
+````
 
 ## Tests
 
 - [x] Affichage des données
 - [x] Interaction utilisateur
 - [x] Gestion des erreurs
-```
+
+````
 
 ---
 
@@ -442,9 +464,10 @@ git checkout -b feature/user-story-drag-drop
 npm run test
 npm run lint
 npm run build
-```
+````
 
 ### 3. Review et merge
+
 ```bash
 # Push des changements
 git push origin feature/user-story-drag-drop
@@ -462,22 +485,27 @@ git branch -d feature/user-story-drag-drop
 ```
 
 ### 4. Template de Pull Request
+
 ```markdown
 ## Description
+
 Brève description des changements apportés.
 
 ## Type de changement
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Tests
+
 - [ ] Tests unitaires ajoutés/mis à jour
 - [ ] Tests manuels effectués
 - [ ] Couverture de code maintenue
 
 ## Checklist
+
 - [ ] Code respecte les conventions
 - [ ] Documentation mise à jour
 - [ ] Tests passent
@@ -485,9 +513,11 @@ Brève description des changements apportés.
 - [ ] Pas de régression
 
 ## Screenshots
+
 [Si applicable]
 
 ## Notes supplémentaires
+
 [Informations complémentaires]
 ```
 
@@ -496,6 +526,7 @@ Brève description des changements apportés.
 ## 🎯 Standards de qualité
 
 ### Critères d'acceptation
+
 - [ ] Code fonctionne correctement
 - [ ] Tests passent (100%)
 - [ ] Couverture de code maintenue
@@ -505,6 +536,7 @@ Brève description des changements apportés.
 - [ ] Accessibilité respectée
 
 ### Checklist avant merge
+
 - [ ] Lint sans erreur
 - [ ] Build sans erreur
 - [ ] Tests unitaires passent
@@ -517,11 +549,13 @@ Brève description des changements apportés.
 ## 📞 Support et questions
 
 ### Où obtenir de l'aide
+
 - **Issues GitHub** : Pour les bugs et feature requests
 - **LinkedIn** : [Florence Martin](https://www.linkedin.com/in/florence-martin-922b3861/)
 - **Email** : [Contact direct]
 
 ### Ressources utiles
+
 - [Documentation développeur](./developer-guide.md)
 - [Règles métier](./business-rules.md)
 - [Roadmap technique](./roadmap-development.md)

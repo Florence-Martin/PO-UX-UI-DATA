@@ -19,6 +19,7 @@
 PO-UX-UI-DATA est une application Next.js complète destinée aux Product Owners spécialisés en UX/UI. Elle intègre les meilleures pratiques agiles, la recherche utilisateur, la gestion de backlog et la visualisation de données.
 
 ### Fonctionnalités principales
+
 - **Dashboard UX/Data** : Métriques temps réel et KPIs
 - **Roadmap Produit** : Planification trimestrielle
 - **Analyse & Wireframes** : Recherche utilisateur, personas
@@ -31,6 +32,7 @@ PO-UX-UI-DATA est une application Next.js complète destinée aux Product Owners
 ## 🏗️ Architecture technique
 
 ### Stack principal
+
 ```
 Frontend : Next.js 14 (App Router) + TypeScript
 Styling : TailwindCSS + Shadcn UI
@@ -42,6 +44,7 @@ Animation : Framer Motion
 ```
 
 ### Patterns architecturaux
+
 - **Custom Hooks** : Logique métier réutilisable
 - **Context API** : Gestion d'état globale
 - **Compound Components** : Composants complexes
@@ -53,6 +56,7 @@ Animation : Framer Motion
 ## 🚀 Installation et configuration
 
 ### Prérequis
+
 ```bash
 Node.js >= 18.0.0
 npm >= 8.0.0
@@ -60,6 +64,7 @@ Git
 ```
 
 ### Installation rapide
+
 ```bash
 # Cloner le repository
 git clone https://github.com/Florence-Martin/PO-UX-UI-DATA.git
@@ -73,9 +78,11 @@ npm run dev
 ```
 
 ### Configuration Firebase
+
 1. Créer un projet Firebase
 2. Configurer Firestore
 3. Ajouter les clés dans `.env.local` :
+
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
@@ -130,6 +137,7 @@ PO-UX-UI-Data/
 ## 💻 Développement local
 
 ### Scripts disponibles
+
 ```bash
 npm run dev         # Développement (http://localhost:3000)
 npm run build       # Build de production
@@ -141,6 +149,7 @@ npm run clean       # Nettoyer et réinstaller
 ```
 
 ### Configuration VSCode recommandée
+
 ```json
 {
   "editor.formatOnSave": true,
@@ -152,6 +161,7 @@ npm run clean       # Nettoyer et réinstaller
 ```
 
 ### Extensions VSCode utiles
+
 - ES7+ React/Redux/React-Native snippets
 - Tailwind CSS IntelliSense
 - TypeScript Importer
@@ -163,6 +173,7 @@ npm run clean       # Nettoyer et réinstaller
 ## 🧪 Tests
 
 ### Configuration Jest
+
 ```javascript
 // jest.config.js
 module.exports = {
@@ -180,12 +191,14 @@ module.exports = {
 ```
 
 ### Couverture actuelle
+
 - **Statements** : 92.53%
 - **Branches** : 77.85%
 - **Functions** : 100%
 - **Lines** : 98.13%
 
 ### Lancer les tests
+
 ```bash
 # Tests unitaires
 npm run test
@@ -198,26 +211,27 @@ npm run test -- --coverage
 ```
 
 ### Types de tests
+
 ```typescript
 // Test unitaire basique
-describe('progressService', () => {
-  it('should calculate progress correctly', () => {
+describe("progressService", () => {
+  it("should calculate progress correctly", () => {
     expect(calculateProgress(5, 10)).toBe(50);
   });
 });
 
 // Test avec mock Firebase
-jest.mock('@/lib/firebase', () => ({
+jest.mock("@/lib/firebase", () => ({
   db: mockFirestore,
 }));
 
 // Test composant React
-import { render, screen } from '@testing-library/react';
-import Component from '@/components/Component';
+import { render, screen } from "@testing-library/react";
+import Component from "@/components/Component";
 
-test('renders component', () => {
+test("renders component", () => {
   render(<Component />);
-  expect(screen.getByRole('button')).toBeInTheDocument();
+  expect(screen.getByRole("button")).toBeInTheDocument();
 });
 ```
 
@@ -226,6 +240,7 @@ test('renders component', () => {
 ## 🚀 Déploiement
 
 ### Vercel (Recommandé)
+
 ```bash
 # Installation Vercel CLI
 npm i -g vercel
@@ -235,6 +250,7 @@ vercel --prod
 ```
 
 ### Variables d'environnement
+
 ```env
 # Production
 NEXT_PUBLIC_FIREBASE_API_KEY=prod_key
@@ -246,6 +262,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=dev_project
 ```
 
 ### Build de production
+
 ```bash
 npm run build
 npm run start
@@ -256,15 +273,16 @@ npm run start
 ## 📋 Bonnes pratiques
 
 ### Code Style
+
 ```typescript
 // ✅ Bon
 const useUserStories = () => {
   const [stories, setStories] = useState<UserStory[]>([]);
-  
+
   const addStory = useCallback((story: UserStory) => {
-    setStories(prev => [...prev, story]);
+    setStories((prev) => [...prev, story]);
   }, []);
-  
+
   return { stories, addStory };
 };
 
@@ -277,6 +295,7 @@ function getUserStories() {
 ```
 
 ### Gestion des erreurs
+
 ```typescript
 // ✅ Avec try/catch
 const fetchData = async () => {
@@ -284,20 +303,21 @@ const fetchData = async () => {
     const data = await api.getData();
     return data;
   } catch (error) {
-    console.error('Fetch error:', error);
-    throw new Error('Failed to fetch data');
+    console.error("Fetch error:", error);
+    throw new Error("Failed to fetch data");
   }
 };
 ```
 
 ### Types TypeScript
+
 ```typescript
 // ✅ Types explicites
 interface UserStory {
   id: string;
   title: string;
   description: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   status: SprintStatus;
   estimatedPoints: number;
   assignedTo?: string;
@@ -307,7 +327,7 @@ interface UserStory {
 const createStory = (data: Partial<UserStory>): UserStory => {
   return {
     id: generateId(),
-    status: 'todo',
+    status: "todo",
     estimatedPoints: 0,
     ...data,
   } as UserStory;
@@ -315,6 +335,7 @@ const createStory = (data: Partial<UserStory>): UserStory => {
 ```
 
 ### Hooks personnalisés
+
 ```typescript
 // ✅ Hook réutilisable
 const useFirebaseCollection = <T>(
@@ -330,7 +351,7 @@ const useFirebaseCollection = <T>(
       try {
         setLoading(true);
         const snapshot = await getDocs(collection(db, collectionName));
-        const items = snapshot.docs.map(doc => 
+        const items = snapshot.docs.map((doc) =>
           transformer ? transformer(doc.data()) : doc.data()
         );
         setData(items);
@@ -349,32 +370,33 @@ const useFirebaseCollection = <T>(
 ```
 
 ### Composants
+
 ```typescript
 // ✅ Composant bien structuré
 interface ButtonProps {
-  variant?: 'primary' | 'secondary';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   onClick,
   children,
 }) => {
-  const baseClasses = 'rounded-lg font-medium transition-colors';
+  const baseClasses = "rounded-lg font-medium transition-colors";
   const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
+    primary: "bg-blue-600 text-white hover:bg-blue-700",
+    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
   };
   const sizeClasses = {
-    sm: 'px-3 py-1 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: "px-3 py-1 text-sm",
+    md: "px-4 py-2 text-base",
+    lg: "px-6 py-3 text-lg",
   };
 
   return (
@@ -394,6 +416,7 @@ const Button: React.FC<ButtonProps> = ({
 ## 📚 Ressources utiles
 
 ### Documentation officielle
+
 - [Next.js](https://nextjs.org/docs)
 - [TypeScript](https://www.typescriptlang.org/docs/)
 - [TailwindCSS](https://tailwindcss.com/docs)
@@ -401,11 +424,13 @@ const Button: React.FC<ButtonProps> = ({
 - [Shadcn UI](https://ui.shadcn.com/)
 
 ### Outils de développement
+
 - [React DevTools](https://reactjs.org/blog/2019/08/15/new-react-devtools.html)
 - [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)
 - [Vercel CLI](https://vercel.com/docs/cli)
 
 ### Ressources d'apprentissage
+
 - [React Patterns](https://reactpatterns.com/)
 - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 - [Next.js Examples](https://github.com/vercel/next.js/tree/canary/examples)
@@ -417,6 +442,7 @@ const Button: React.FC<ButtonProps> = ({
 ### Erreurs communes
 
 **Module not found**
+
 ```bash
 # Vérifier les paths
 npm run build
@@ -426,31 +452,32 @@ npm install
 ```
 
 **Firebase connection issues**
+
 ```bash
 # Vérifier les variables d'environnement
 echo $NEXT_PUBLIC_FIREBASE_API_KEY
 ```
 
 **Tests qui échouent**
+
 ```bash
 # Nettoyer le cache Jest
 npm test -- --clearCache
 ```
 
 ### Performance
+
 ```typescript
 // ✅ Optimisations React
 const MemoizedComponent = React.memo(MyComponent);
 
 const OptimizedComponent = () => {
-  const expensiveValue = useMemo(() => 
-    heavyCalculation(data), [data]
-  );
-  
+  const expensiveValue = useMemo(() => heavyCalculation(data), [data]);
+
   const handleClick = useCallback(() => {
     // handle click
   }, [dependency]);
-  
+
   return <div>{expensiveValue}</div>;
 };
 ```

@@ -65,14 +65,17 @@ npm run dev
 ```
 
 ### 📋 Prérequis
+
 - Node.js >= 18.0.0
 - npm >= 8.0.0
 
 ### 🔧 Configuration
+
 - Configurer Firebase (voir [guide développeur](./documentation/developer-guide.md#configuration-firebase))
 - Variables d'environnement dans `.env.local`
 
 ### 📚 Pour les développeurs
+
 - **[Guide complet](./documentation/developer-guide.md)** - Installation, développement, tests
 - **[Guide API](./documentation/api-guide.md)** - Services et hooks
 - **[Cheatsheet](./documentation/cheatsheet.md)** - Raccourcis et patterns
