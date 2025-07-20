@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DoDProgress } from "@/lib/types/userStory";
 import { AlertCircle, CheckCircle2, Circle } from "lucide-react";
@@ -95,7 +94,7 @@ export function UserStoryDoD({
             <span className="text-sm font-medium">Definition of Done</span>
           </div>
           {showPercentage && (
-            <Badge 
+            <Badge
               variant={percentage === 100 ? "default" : "secondary"}
               className="text-xs"
             >
@@ -165,7 +164,9 @@ export function UserStoryDoDSummary({
   };
 
   return (
-    <Badge className={`${getStatusColor()} text-xs sm:text-sm whitespace-nowrap`}>
+    <Badge
+      className={`${getStatusColor()} text-xs sm:text-sm whitespace-nowrap`}
+    >
       <span className="hidden sm:inline">DoD: </span>
       {completedCount}/{totalCount} ({percentage}%)
     </Badge>

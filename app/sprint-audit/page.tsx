@@ -204,7 +204,9 @@ function SprintAuditContent() {
             ) : incompleteStories.length === 0 ? (
               <>
                 <CheckCircle2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Clôturer {sprint.title}</span>
+                <span className="hidden sm:inline">
+                  Clôturer {sprint.title}
+                </span>
                 <span className="sm:hidden">Clôturer</span>
               </>
             ) : (
@@ -249,7 +251,9 @@ function SprintAuditContent() {
             <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{sprintStories.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {sprintStories.length}
+            </div>
             <p className="text-xs text-muted-foreground">À auditer</p>
           </CardContent>
         </Card>
