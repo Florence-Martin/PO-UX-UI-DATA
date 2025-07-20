@@ -1,29 +1,29 @@
 "use client";
 
-import { useBacklogTasks } from "@/hooks/useBacklogTasks";
-import { useUserStories } from "@/hooks/useUserStories";
-import { SprintActiveCard } from "./SprintActiveCard";
-import {
-  CircleDashed,
-  LoaderCircle,
-  FlaskConical,
-  CheckCircle2,
-  Info,
-  Wrench,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
 import { useActiveSprint } from "@/hooks/sprint";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useBacklogTasks } from "@/hooks/useBacklogTasks";
+import { useUserStories } from "@/hooks/useUserStories";
 import { updateSprint } from "@/lib/services/sprintService";
+import {
+  CheckCircle2,
+  CircleDashed,
+  FlaskConical,
+  Info,
+  LoaderCircle,
+  Wrench,
+} from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { SprintActiveCard } from "./SprintActiveCard";
 
 const columns = [
   {
@@ -70,17 +70,50 @@ export function SprintBoard() {
   }
 
   const sprintUserStoryIds = activeSprint.userStoryIds ?? [];
-
-  const sprintTasks = tasks.filter((task) =>
-    task.userStoryIds?.some((id) => sprintUserStoryIds.includes(id))
+  
+  // Récupérer les User Stories du sprint actif
+  const sprintUserStories = userStories.filter(us => 
+    sprintUserStoryIds.includes(us.id)
   );
 
-  const totalPoints = sprintTasks.reduce(
+  // Filtrer les tâches du sprint actif ET qui ont encore le badge "sprint"
+  // (exclut automatiquement les tâches des sprints clôturés)
+  const sprintTasks = tasks.filter(
+    (task) =>
+      task.userStoryIds?.some((id) => sprintUserStoryIds.includes(id)) &&
+      task.badge === "sprint"
+  );
+
+  // Créer des tâches virtuelles pour les User Stories sans tâches
+  const virtualTasks = sprintUserStories
+    .filter(us => {
+      // Vérifier si cette US a déjà des tâches dans sprintTasks
+      const hasExistingTasks = sprintTasks.some(task => 
+        task.userStoryIds?.includes(us.id)
+      );
+      return !hasExistingTasks;
+    })
+    .map(us => ({
+      id: `virtual-${us.id}`,
+      title: us.title || `User Story ${us.code || us.id}`,
+      description: us.description || `User Story: ${us.title || 'Sans description'}`,
+      status: "todo" as const,
+      storyPoints: us.storyPoints || 0,
+      userStoryIds: [us.id],
+      badge: "sprint" as const,
+      isVirtual: true,
+      userStoryCode: us.code || "US-???",
+    }));
+
+  // Combiner les vraies tâches et les tâches virtuelles
+  const allSprintTasks = [...sprintTasks, ...virtualTasks];
+
+  const totalPoints = allSprintTasks.reduce(
     (sum, task) => sum + (task.storyPoints || 0),
     0
   );
 
-  const donePoints = sprintTasks
+  const donePoints = allSprintTasks
     .filter((task) => task.status === "done")
     .reduce((sum, task) => sum + (task.storyPoints || 0), 0);
 
@@ -88,8 +121,8 @@ export function SprintBoard() {
     totalPoints > 0 ? Math.round((donePoints / totalPoints) * 100) : 0;
 
   const isSprintDone =
-    sprintTasks.length > 0 &&
-    sprintTasks.every((task) => task.status === "done");
+    allSprintTasks.length > 0 &&
+    allSprintTasks.every((task) => task.status === "done");
 
   const handleCloseSprint = async () => {
     if (!activeSprint) return;
@@ -124,82 +157,94 @@ export function SprintBoard() {
           />
         </div>
       </div>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-2 md:gap-6 w-full">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-6 w-full">
+        {/* Bouton d'audit DoD à gauche */}
         <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Checkbox
-                    id="review"
-                    checked={activeSprint.hasReview}
-                    disabled={!isSprintDone}
-                    onCheckedChange={async (checked) => {
-                      await updateSprint(activeSprint.id, {
-                        hasReview: !!checked,
-                      });
-                      toast.success("Sprint Review effectuée!");
-                    }}
-                  />
-                </span>
-              </TooltipTrigger>
-              {!isSprintDone && (
-                <TooltipContent>
-                  Toutes les tâches doivent être terminées pour valider la
-                  Review.
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-          <Label htmlFor="review" className="text-sm flex items-center gap-1">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            Sprint Review effectuée
-          </Label>
+          <Link href={`/sprint-audit?sprintId=${activeSprint.id}`}>
+            <Button variant="outline" size="sm" className="text-sm">
+              📋 Audit DoD
+            </Button>
+          </Link>
         </div>
 
-        <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Checkbox
-                    id="retrospective"
-                    checked={activeSprint.hasRetrospective}
-                    disabled={!activeSprint.hasReview}
-                    onCheckedChange={async (checked) => {
-                      await updateSprint(activeSprint.id, {
-                        hasRetrospective: !!checked,
-                        // Si cochée, on passe le sprint en "done" et on ajoute la date de clôture
-                        ...(checked
-                          ? { status: "done", closedAt: new Date() }
-                          : {}),
-                      });
-                      toast.success("Sprint Rétrospective effectuée!");
-                    }}
-                  />
-                </span>
-              </TooltipTrigger>
-              {!activeSprint.hasReview && (
-                <TooltipContent>
-                  La Review doit être validée avant de cocher la Rétrospective.
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-          <Label
-            htmlFor="retrospective"
-            className="text-sm flex items-center gap-1"
-          >
-            <LoaderCircle className="w-4 h-4 text-blue-500" />
-            Rétrospective complétée
-          </Label>
+        {/* Contrôles Review et Retrospective à droite */}
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Checkbox
+                      id="review"
+                      checked={activeSprint.hasReview}
+                      disabled={!isSprintDone}
+                      onCheckedChange={async (checked) => {
+                        await updateSprint(activeSprint.id, {
+                          hasReview: !!checked,
+                        });
+                        toast.success("Sprint Review effectuée!");
+                      }}
+                    />
+                  </span>
+                </TooltipTrigger>
+                {!isSprintDone && (
+                  <TooltipContent>
+                    Toutes les tâches doivent être terminées pour valider la
+                    Review.
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+            <Label htmlFor="review" className="text-sm flex items-center gap-1">
+              <CheckCircle2 className="w-4 h-4 text-green-500" />
+              Sprint Review effectuée
+            </Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Checkbox
+                      id="retrospective"
+                      checked={activeSprint.hasRetrospective}
+                      disabled={!activeSprint.hasReview}
+                      onCheckedChange={async (checked) => {
+                        await updateSprint(activeSprint.id, {
+                          hasRetrospective: !!checked,
+                          // Si cochée, on passe le sprint en "done" et on ajoute la date de clôture
+                          ...(checked
+                            ? { status: "done", closedAt: new Date() }
+                            : {}),
+                        });
+                        toast.success("Sprint Rétrospective effectuée!");
+                      }}
+                    />
+                  </span>
+                </TooltipTrigger>
+                {!activeSprint.hasReview && (
+                  <TooltipContent>
+                    La Review doit être validée avant de cocher la Rétrospective.
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+            <Label
+              htmlFor="retrospective"
+              className="text-sm flex items-center gap-1"
+            >
+              <LoaderCircle className="w-4 h-4 text-blue-500" />
+              Rétrospective complétée
+            </Label>
+          </div>
         </div>
       </div>
 
       <TooltipProvider>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {columns.map((col) => {
-            const tasksForColumn = sprintTasks.filter(
+            const tasksForColumn = allSprintTasks.filter(
               (t) => t.status === col.status
             );
 
@@ -232,44 +277,71 @@ export function SprintBoard() {
                       const userStory = userStories.find((us) =>
                         task.userStoryIds?.includes(us.id!)
                       );
+                      
+                      // @ts-ignore - On ajoute isVirtual aux tâches virtuelles
+                      const isVirtualTask = task.isVirtual;
 
                       return (
                         <div
                           key={task.id}
-                          className="p-4 rounded-lg bg-background border space-y-3 min-h-[140px] hover:shadow-md transition-all"
+                          className={`p-4 rounded-lg border space-y-3 min-h-[140px] transition-all ${
+                            isVirtualTask 
+                              ? "bg-blue-50 border-blue-200 border-dashed" 
+                              : "bg-background hover:shadow-md"
+                          }`}
                         >
-                          <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span className="font-mono truncate">
-                              {userStory?.code ?? "US-???"}
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-mono truncate font-medium">
+                              {/* @ts-ignore */}
+                              {isVirtualTask ? task.userStoryCode : (userStory?.code ?? "US-???")}
                             </span>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link
-                                  href={`/backlog?tab=kanban#${task.id}`}
-                                  scroll={false}
-                                >
-                                  <Wrench className="w-4 h-4 hover:text-primary transition-colors" />
-                                </Link>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                Modifier dans le backlog
-                              </TooltipContent>
-                            </Tooltip>
+                            {!isVirtualTask && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Link
+                                    href={`/backlog?tab=kanban#${task.id}`}
+                                    scroll={false}
+                                  >
+                                    <Wrench className="w-4 h-4 hover:text-primary transition-colors" />
+                                  </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Modifier dans le backlog
+                                </TooltipContent>
+                              </Tooltip>
+                            )}
+                            {isVirtualTask && (
+                              <span className="text-blue-600 text-xs font-medium bg-blue-100 px-2 py-1 rounded">
+                                📝 User Story
+                              </span>
+                            )}
                           </div>
 
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <h4 className="font-medium text-sm leading-snug line-clamp-2 cursor-default">
+                              <h4 className={`font-medium text-sm leading-snug line-clamp-2 cursor-default ${
+                                isVirtualTask ? "text-blue-800" : ""
+                              }`}>
                                 {task.title}
                               </h4>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs md:max-w-sm whitespace-pre-wrap">
                               {task.title}
+                              {isVirtualTask && (
+                                <div className="mt-2 text-xs text-muted-foreground">
+                                  {task.description}
+                                </div>
+                              )}
                             </TooltipContent>
                           </Tooltip>
 
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>Story Points : {task.storyPoints}</span>
+                            {isVirtualTask && (
+                              <span className="text-blue-600 text-xs italic">
+                                Cliquer pour voir détails
+                              </span>
+                            )}
                           </div>
                         </div>
                       );

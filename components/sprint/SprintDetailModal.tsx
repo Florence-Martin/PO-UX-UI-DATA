@@ -6,14 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useSprintDetail, useSprints } from "@/hooks/sprint";
 import { Sprint } from "@/lib/types/sprint";
 import { UserStory } from "@/lib/types/userStory";
 import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
-import { Timestamp } from "firebase/firestore";
 import { Button } from "../ui/button";
-import { useSprintDetail, useSprints } from "@/hooks/sprint";
 
 const getDate = (value: Date | Timestamp): Date =>
   value instanceof Timestamp ? value.toDate() : value;
@@ -23,6 +23,7 @@ type Props = {
   userStories: UserStory[];
   open: boolean;
   onClose: () => void;
+  readOnly?: boolean;
 };
 
 export function SprintDetailModal({
@@ -30,6 +31,7 @@ export function SprintDetailModal({
   userStories,
   open,
   onClose,
+  readOnly = false,
 }: Props) {
   const { refetch } = useSprints();
   const {
@@ -37,6 +39,7 @@ export function SprintDetailModal({
     titleRef,
     startDateRef,
     endDateRef,
+    isActiveRef,
     showStoryList,
     setShowStoryList,
     searchTerm,
@@ -55,6 +58,8 @@ export function SprintDetailModal({
           <DialogTitle>
             {isCreating
               ? "Créer un nouveau sprint"
+              : readOnly
+              ? `${sprint?.title} (Lecture seule)`
               : `Détails du sprint ${sprint?.title}`}
           </DialogTitle>
         </DialogHeader>
@@ -68,6 +73,7 @@ export function SprintDetailModal({
               placeholder="Exemple : Sprint 24 - Avril"
               className="w-full border rounded p-2"
               required
+              disabled={readOnly}
             />
           </div>
           <div>
@@ -79,6 +85,7 @@ export function SprintDetailModal({
               defaultValue={sprint?.goal || ""}
               placeholder="Exemple : Améliorer la performance de l'application"
               className="w-full border rounded p-2"
+              disabled={readOnly}
             />
           </div>
           <div>
@@ -91,6 +98,7 @@ export function SprintDetailModal({
               }
               className="w-full border rounded p-2"
               required
+              disabled={readOnly}
             />
           </div>
           <div>
@@ -103,7 +111,22 @@ export function SprintDetailModal({
               }
               className="w-full border rounded p-2"
               required
+              disabled={readOnly}
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              ref={isActiveRef}
+              type="checkbox"
+              id="isActive"
+              defaultChecked={sprint?.isActive || false}
+              className="rounded border-gray-300"
+              disabled={readOnly}
+            />
+            <label htmlFor="isActive" className="text-sm font-medium">
+              🎯 Marquer comme sprint actif (affiché dans Sprint Board)
+            </label>
           </div>
 
           <div>
@@ -124,6 +147,7 @@ export function SprintDetailModal({
                         type="checkbox"
                         checked={true}
                         onChange={() => toggleUserStorySelection(us.id)}
+                        disabled={readOnly}
                       />
                       <Link
                         href={`/backlog?tab=user-stories#${us.id}`}
@@ -136,18 +160,20 @@ export function SprintDetailModal({
               </div>
             )}
 
-            <button
-              type="button"
-              onClick={() => setShowStoryList(!showStoryList)}
-              className="text-xs underline text-primary flex items-center gap-1 mb-2"
-            >
-              {showStoryList ? (
-                <ChevronUp className="w-3 h-3" />
-              ) : (
-                <ChevronDown className="w-3 h-3" />
-              )}
-              {showStoryList ? "Masquer" : "Afficher la liste"}
-            </button>
+            {!readOnly && (
+              <button
+                type="button"
+                onClick={() => setShowStoryList(!showStoryList)}
+                className="text-xs underline text-primary flex items-center gap-1 mb-2"
+              >
+                {showStoryList ? (
+                  <ChevronUp className="w-3 h-3" />
+                ) : (
+                  <ChevronDown className="w-3 h-3" />
+                )}
+                {showStoryList ? "Masquer" : "Afficher la liste"}
+              </button>
+            )}
 
             {showStoryList && (
               <>
@@ -201,10 +227,12 @@ export function SprintDetailModal({
               onClick={onClose}
               className="border border-gray-300"
             >
-              Annuler
+              {readOnly ? "Fermer" : "Annuler"}
             </Button>
 
-            <Button type="submit">{isCreating ? "Créer" : "Modifier"}</Button>
+            {!readOnly && (
+              <Button type="submit">{isCreating ? "Créer" : "Modifier"}</Button>
+            )}
           </div>
         </form>
       </DialogContent>

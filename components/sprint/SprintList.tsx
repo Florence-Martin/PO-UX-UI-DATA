@@ -1,9 +1,9 @@
 "use client";
 
+import { useSprintList, useSprints } from "@/hooks/sprint";
+import { Button } from "../ui/button";
 import { SprintDetailModal } from "./SprintDetailModal";
 import { SprintPlanningCard } from "./SprintPlanningCard";
-import { Button } from "../ui/button";
-import { useSprintList, useSprints } from "@/hooks/sprint";
 
 export function SprintList() {
   const { sprints, refetch } = useSprints();
@@ -40,6 +40,7 @@ export function SprintList() {
             userStories={userStories}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onView={setSelectedSprint}
           />
         </div>
       ))}
@@ -49,6 +50,7 @@ export function SprintList() {
           sprint={selectedSprint}
           userStories={userStories}
           open={!!selectedSprint}
+          readOnly={selectedSprint.status === "done"}
           onClose={() => {
             setSelectedSprint(null);
             refetch();

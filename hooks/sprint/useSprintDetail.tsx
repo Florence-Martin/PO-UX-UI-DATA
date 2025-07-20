@@ -21,6 +21,7 @@ export function useSprintDetail(
   const titleRef = useRef<HTMLInputElement>(null);
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
+  const isActiveRef = useRef<HTMLInputElement>(null);
 
   const [showStoryList, setShowStoryList] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,6 +54,7 @@ export function useSprintDetail(
     const sanitizedTitle = sanitize(rawTitle); //Assainissement du title via DOMPurify (sanitize(title))
     const startDateStr = startDateRef.current?.value;
     const endDateStr = endDateRef.current?.value;
+    const isActive = isActiveRef.current?.checked || false;
 
     const startDate = startDateStr ? new Date(startDateStr) : undefined;
     const endDate = endDateStr ? new Date(endDateStr) : undefined;
@@ -80,6 +82,7 @@ export function useSprintDetail(
           velocity: 0,
           hasReview: false,
           hasRetrospective: false,
+          isActive: isActive,
         });
 
         // Mise à jour des User Stories avec le nouvel ID de sprint
@@ -99,6 +102,7 @@ export function useSprintDetail(
           userStoryIds: edited.userStoryIds,
           hasReview: sprint.hasReview || false,
           hasRetrospective: sprint.hasRetrospective || false,
+          isActive: isActive,
         });
 
         for (const story of userStories) {
@@ -138,6 +142,7 @@ export function useSprintDetail(
     titleRef,
     startDateRef,
     endDateRef,
+    isActiveRef,
     showStoryList,
     setShowStoryList,
     searchTerm,

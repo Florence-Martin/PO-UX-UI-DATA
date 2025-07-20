@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { removeUserStoryIdFromTasks } from "@/lib/services/backlogTasksService";
 import {
   createUserStory,
   deleteUserStory,
   getAllUserStories,
   updateUserStory,
 } from "@/lib/services/userStoryService";
-import { removeUserStoryIdFromTasks } from "@/lib/services/backlogTasksService";
-import { UserStory } from "@/lib/types/userStory";
-import { toast } from "sonner";
+import { DoDProgress, UserStory } from "@/lib/types/userStory";
 import { Timestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function useUserStories() {
   // Formulaire
@@ -164,7 +164,7 @@ export function useUserStories() {
         };
 
         const created = await createUserStory(newStory);
-        toast.success("User Story créée ✅ (ID : " + created.id + ")");
+        toast.success(`User Story créée ✅ (${created.code})`);
       }
 
       resetForm();
@@ -219,6 +219,31 @@ export function useUserStories() {
   const filterByPriority = (priority: string) => setSelectedPriority(priority);
   const filterByMoscow = (moscow: string) => setSelectedMoscowPriority(moscow);
 
+  // Mise à jour DoD
+  const updateDoDProgress = async (
+    userStoryId: string,
+    dodProgress: DoDProgress
+  ) => {
+    try {
+      setLoading(true);
+      await updateUserStory(userStoryId, { dodProgress });
+
+      // Mettre à jour l'état local
+      setUserStories((prev) =>
+        prev.map((story) =>
+          story.id === userStoryId ? { ...story, dodProgress } : story
+        )
+      );
+
+      toast.success("Definition of Done mise à jour ✅");
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour DoD :", err);
+      toast.error("Erreur lors de la mise à jour de la DoD.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     // Formulaire
     title,
@@ -262,5 +287,8 @@ export function useUserStories() {
 
     // Rechargement
     refetch,
+
+    // DoD
+    updateDoDProgress,
   };
 }

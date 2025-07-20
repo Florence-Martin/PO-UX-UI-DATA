@@ -13,4 +13,5 @@ export interface Sprint {
   hasRetrospective: boolean;
   closedAt?: Timestamp | Date;
   goal?: string; // Objectif du sprint
+  isActive?: boolean; // Indique si c'est le sprint actif (pour affichage dans Sprint Board)
 }

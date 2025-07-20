@@ -46,7 +46,14 @@ export function useActiveSprint() {
             parseDate(a.startDate).getTime() - parseDate(b.startDate).getTime()
         );
 
-        const current = sorted.find(isCurrentSprint) || null;
+        // D'abord chercher un sprint marqué comme actif (isActive = true)
+        let current = sorted.find(sprint => sprint.isActive && sprint.status !== "done") || null;
+        
+        // Si aucun sprint n'est marqué comme actif, fallback sur la logique par date
+        if (!current) {
+          current = sorted.find(isCurrentSprint) || null;
+        }
+        
         setActiveSprint(current);
 
         // Abonnement temps réel si un sprint actif existe
