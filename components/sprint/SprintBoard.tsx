@@ -11,6 +11,7 @@ import { useActiveSprint } from "@/hooks/sprint";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useUserStories } from "@/hooks/useUserStories";
 import { updateSprint } from "@/lib/services/sprintService";
+import { UserStory } from "@/lib/types/userStory";
 import {
   CheckCircle2,
   CircleDashed,
@@ -70,9 +71,9 @@ export function SprintBoard() {
   }
 
   const sprintUserStoryIds = activeSprint.userStoryIds ?? [];
-  
+
   // Récupérer les User Stories du sprint actif
-  const sprintUserStories = userStories.filter(us => 
+  const sprintUserStories = userStories.filter((us) =>
     sprintUserStoryIds.includes(us.id)
   );
 
@@ -86,17 +87,18 @@ export function SprintBoard() {
 
   // Créer des tâches virtuelles pour les User Stories sans tâches
   const virtualTasks = sprintUserStories
-    .filter(us => {
+    .filter((us) => {
       // Vérifier si cette US a déjà des tâches dans sprintTasks
-      const hasExistingTasks = sprintTasks.some(task => 
+      const hasExistingTasks = sprintTasks.some((task) =>
         task.userStoryIds?.includes(us.id)
       );
       return !hasExistingTasks;
     })
-    .map(us => ({
+    .map((us) => ({
       id: `virtual-${us.id}`,
       title: us.title || `User Story ${us.code || us.id}`,
-      description: us.description || `User Story: ${us.title || 'Sans description'}`,
+      description:
+        us.description || `User Story: ${us.title || "Sans description"}`,
       status: "todo" as const,
       storyPoints: us.storyPoints || 0,
       userStoryIds: [us.id],
@@ -107,6 +109,17 @@ export function SprintBoard() {
 
   // Combiner les vraies tâches et les tâches virtuelles
   const allSprintTasks = [...sprintTasks, ...virtualTasks];
+
+  // Vérifier si une User Story a sa DoD complétée
+  const isUserStoryDoDCompleted = (userStory: UserStory): boolean => {
+    if (!userStory.dodProgress) return false;
+    return Object.values(userStory.dodProgress).every(Boolean);
+  };
+
+  // Vérifier si toutes les User Stories du sprint ont leur DoD validée
+  const allUserStoriesHaveDoDCompleted =
+    sprintUserStories.length > 0 &&
+    sprintUserStories.every(isUserStoryDoDCompleted);
 
   const totalPoints = allSprintTasks.reduce(
     (sum, task) => sum + (task.storyPoints || 0),
@@ -120,9 +133,11 @@ export function SprintBoard() {
   const percentDone =
     totalPoints > 0 ? Math.round((donePoints / totalPoints) * 100) : 0;
 
+  // Un sprint est terminé si toutes les tâches sont done ET que toutes les US ont leur DoD validée
   const isSprintDone =
     allSprintTasks.length > 0 &&
-    allSprintTasks.every((task) => task.status === "done");
+    allSprintTasks.every((task) => task.status === "done") &&
+    allUserStoriesHaveDoDCompleted;
 
   const handleCloseSprint = async () => {
     if (!activeSprint) return;
@@ -157,6 +172,42 @@ export function SprintBoard() {
           />
         </div>
       </div>
+
+      {/* Indicateur DoD des User Stories */}
+      <div className="bg-muted/50 rounded-lg p-3">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm font-medium">Definition of Done (DoD)</p>
+          <span
+            className={`text-xs px-2 py-1 rounded ${
+              allUserStoriesHaveDoDCompleted
+                ? "bg-green-100 text-green-700"
+                : "bg-orange-100 text-orange-700"
+            }`}
+          >
+            {sprintUserStories.filter(isUserStoryDoDCompleted).length} /{" "}
+            {sprintUserStories.length} validées
+          </span>
+        </div>
+        <div className="space-y-1">
+          {sprintUserStories.map((us) => (
+            <div
+              key={us.id}
+              className="flex items-center justify-between text-xs"
+            >
+              <span className="font-mono">{us.code}</span>
+              <span
+                className={
+                  isUserStoryDoDCompleted(us)
+                    ? "text-green-600"
+                    : "text-orange-600"
+                }
+              >
+                {isUserStoryDoDCompleted(us) ? "✅ Validée" : "⏳ En attente"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-6 w-full">
         {/* Bouton d'audit DoD à gauche */}
         <div className="flex items-center gap-2">
@@ -189,7 +240,8 @@ export function SprintBoard() {
                 </TooltipTrigger>
                 {!isSprintDone && (
                   <TooltipContent>
-                    Toutes les tâches doivent être terminées pour valider la
+                    Toutes les tâches doivent être terminées ET toutes les User
+                    Stories doivent avoir leur DoD validée pour effectuer la
                     Review.
                   </TooltipContent>
                 )}
@@ -225,7 +277,8 @@ export function SprintBoard() {
                 </TooltipTrigger>
                 {!activeSprint.hasReview && (
                   <TooltipContent>
-                    La Review doit être validée avant de cocher la Rétrospective.
+                    La Review doit être validée avant de cocher la
+                    Rétrospective.
                   </TooltipContent>
                 )}
               </Tooltip>
@@ -277,7 +330,7 @@ export function SprintBoard() {
                       const userStory = userStories.find((us) =>
                         task.userStoryIds?.includes(us.id!)
                       );
-                      
+
                       // @ts-ignore - On ajoute isVirtual aux tâches virtuelles
                       const isVirtualTask = task.isVirtual;
 
@@ -285,15 +338,16 @@ export function SprintBoard() {
                         <div
                           key={task.id}
                           className={`p-4 rounded-lg border space-y-3 min-h-[140px] transition-all ${
-                            isVirtualTask 
-                              ? "bg-blue-50 border-blue-200 border-dashed" 
+                            isVirtualTask
+                              ? "bg-blue-50 border-blue-200 border-dashed"
                               : "bg-background hover:shadow-md"
                           }`}
                         >
                           <div className="flex items-center justify-between text-xs">
                             <span className="font-mono truncate font-medium">
-                              {/* @ts-ignore */}
-                              {isVirtualTask ? task.userStoryCode : (userStory?.code ?? "US-???")}
+                              {isVirtualTask
+                                ? userStory?.code ?? "US-???"
+                                : userStory?.code ?? "US-???"}
                             </span>
                             {!isVirtualTask && (
                               <Tooltip>
@@ -319,9 +373,11 @@ export function SprintBoard() {
 
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <h4 className={`font-medium text-sm leading-snug line-clamp-2 cursor-default ${
-                                isVirtualTask ? "text-blue-800" : ""
-                              }`}>
+                              <h4
+                                className={`font-medium text-sm leading-snug line-clamp-2 cursor-default ${
+                                  isVirtualTask ? "text-blue-800" : ""
+                                }`}
+                              >
                                 {task.title}
                               </h4>
                             </TooltipTrigger>

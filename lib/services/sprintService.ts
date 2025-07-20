@@ -419,7 +419,7 @@ export const getSprintTasks = async (
 export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
   try {
     console.log("🔄 Synchronisation des User Stories avec les sprints...");
-    
+
     // Récupérer tous les sprints et User Stories
     const sprints = await getAllSprints();
     const userStoriesSnapshot = await getDocs(collection(db, "userStories"));
@@ -427,31 +427,35 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
       id: doc.id,
       ...doc.data(),
     })) as UserStory[];
-    
+
     let syncedCount = 0;
-    
+
     for (const sprint of sprints) {
       try {
         console.log(`🔍 Synchronisation du sprint: ${sprint.title}`);
-        
+
         // Trouver les User Stories qui ont ce sprint comme sprintId
         const storiesWithThisSprintId = userStories
-          .filter(story => story.sprintId === sprint.id)
-          .map(story => story.id);
-        
+          .filter((story) => story.sprintId === sprint.id)
+          .map((story) => story.id);
+
         // Comparer avec les userStoryIds stockés dans le sprint
         const currentUserStoryIds = sprint.userStoryIds || [];
-        
+
         // Vérifier s'il y a une différence
-        const needsSync = 
+        const needsSync =
           storiesWithThisSprintId.length !== currentUserStoryIds.length ||
-          !storiesWithThisSprintId.every(id => currentUserStoryIds.includes(id));
-        
+          !storiesWithThisSprintId.every((id) =>
+            currentUserStoryIds.includes(id)
+          );
+
         if (needsSync) {
-          console.log(`  � Sprint "${sprint.title}" nécessite une synchronisation`);
-          console.log(`     Actuel: [${currentUserStoryIds.join(', ')}]`);
-          console.log(`     Correct: [${storiesWithThisSprintId.join(', ')}]`);
-          
+          console.log(
+            `  � Sprint "${sprint.title}" nécessite une synchronisation`
+          );
+          console.log(`     Actuel: [${currentUserStoryIds.join(", ")}]`);
+          console.log(`     Correct: [${storiesWithThisSprintId.join(", ")}]`);
+
           // Mettre à jour le sprint avec les bonnes userStoryIds
           // En conservant toutes les propriétés existantes pour respecter les règles Firebase
           const sprintRef = doc(collection(db, "sprints"), sprint.id);
@@ -460,21 +464,25 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
             // Conserver la date de modification
             updatedAt: Timestamp.now(),
           });
-          
+
           console.log(`  ✅ Sprint "${sprint.title}" synchronisé`);
           syncedCount++;
         } else {
           console.log(`  ✅ Sprint "${sprint.title}" déjà synchronisé`);
         }
       } catch (sprintError) {
-        console.error(`❌ Erreur lors de la synchronisation du sprint ${sprint.title}:`, sprintError);
+        console.error(
+          `❌ Erreur lors de la synchronisation du sprint ${sprint.title}:`,
+          sprintError
+        );
         // Continuer avec les autres sprints même si un échoue
       }
     }
-    
-    console.log(`✅ Synchronisation terminée: ${syncedCount} sprint(s) mis à jour`);
+
+    console.log(
+      `✅ Synchronisation terminée: ${syncedCount} sprint(s) mis à jour`
+    );
     return { synced: syncedCount };
-    
   } catch (error) {
     console.error("❌ Erreur lors de la synchronisation:", error);
     throw error;

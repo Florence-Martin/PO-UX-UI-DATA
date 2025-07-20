@@ -87,29 +87,32 @@ export function UserStoryDoD({
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+    <div className="w-full">
+      <div className="mb-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
             {getStatusIcon()}
-            Definition of Done
-          </CardTitle>
+            <span className="text-sm font-medium">Definition of Done</span>
+          </div>
           {showPercentage && (
-            <Badge variant={percentage === 100 ? "default" : "secondary"}>
+            <Badge 
+              variant={percentage === 100 ? "default" : "secondary"}
+              className="text-xs"
+            >
               {completedCount}/{totalCount} ({percentage}%)
             </Badge>
           )}
         </div>
         {showPercentage && (
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
             <div
               className={`h-2 rounded-full transition-all duration-300 ${getStatusColor()}`}
               style={{ width: `${percentage}%` }}
             />
           </div>
         )}
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </div>
+      <div className="space-y-3">
         {DOD_CRITERIA.map((criteria) => (
           <div key={criteria.key} className="flex items-start space-x-3">
             <Checkbox
@@ -119,12 +122,12 @@ export function UserStoryDoD({
                 handleCriteriaChange(criteria.key, checked as boolean)
               }
               disabled={readOnly}
-              className="mt-0.5"
+              className="mt-0.5 flex-shrink-0"
             />
-            <div className="grid gap-1.5 leading-none">
+            <div className="min-w-0 flex-1 space-y-1">
               <label
                 htmlFor={criteria.key}
-                className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                className={`text-sm font-medium leading-none block cursor-pointer ${
                   dodProgress[criteria.key]
                     ? "line-through text-muted-foreground"
                     : ""
@@ -132,14 +135,14 @@ export function UserStoryDoD({
               >
                 {criteria.label}
               </label>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 {criteria.description}
               </p>
             </div>
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -162,8 +165,9 @@ export function UserStoryDoDSummary({
   };
 
   return (
-    <Badge className={getStatusColor()}>
-      DoD: {completedCount}/{totalCount} ({percentage}%)
+    <Badge className={`${getStatusColor()} text-xs sm:text-sm whitespace-nowrap`}>
+      <span className="hidden sm:inline">DoD: </span>
+      {completedCount}/{totalCount} ({percentage}%)
     </Badge>
   );
 }

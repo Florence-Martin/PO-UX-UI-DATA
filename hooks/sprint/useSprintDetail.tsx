@@ -1,14 +1,14 @@
 // création / modification
 
-import { useState, useEffect, useRef } from "react";
-import { Sprint } from "@/lib/types/sprint";
-import { UserStory } from "@/lib/types/userStory";
 import { createSprint, updateSprint } from "@/lib/services/sprintService";
 import { updateUserStorySprint } from "@/lib/services/userStoryService";
-import { Timestamp } from "firebase/firestore";
-import { toast } from "sonner";
-import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema";
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
+import { sanitize, sprintSchema } from "@/lib/utils/sprintSchema";
 import { updateBadgesForSprintUserStories } from "@/lib/utils/updateSprintBadges";
+import { Timestamp } from "firebase/firestore";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function useSprintDetail(
   sprint: Sprint | null,

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { db } from "@/lib/firebase"; // Assure-toi que ce chemin est correct
 import { getAllSprints } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
 import { Timestamp, doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase"; // Assure-toi que ce chemin est correct
+import { useEffect, useState } from "react";
 
 /**
  * Convertit n'importe quel format de date en Date JS.
@@ -47,13 +47,16 @@ export function useActiveSprint() {
         );
 
         // D'abord chercher un sprint marqué comme actif (isActive = true)
-        let current = sorted.find(sprint => sprint.isActive && sprint.status !== "done") || null;
-        
+        let current =
+          sorted.find(
+            (sprint) => sprint.isActive && sprint.status !== "done"
+          ) || null;
+
         // Si aucun sprint n'est marqué comme actif, fallback sur la logique par date
         if (!current) {
           current = sorted.find(isCurrentSprint) || null;
         }
-        
+
         setActiveSprint(current);
 
         // Abonnement temps réel si un sprint actif existe

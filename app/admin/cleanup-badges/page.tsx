@@ -59,7 +59,9 @@ export default function CleanupBadgesPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <div>
-        <h1 className="text-3xl font-bold">Outils d&apos;administration Sprint</h1>
+        <h1 className="text-3xl font-bold">
+          Outils d&apos;administration Sprint
+        </h1>
         <p className="text-muted-foreground">
           Nettoyage et synchronisation des données Sprint
         </p>
@@ -73,7 +75,9 @@ export default function CleanupBadgesPage() {
             variant="default"
             size="lg"
           >
-            {isSyncing ? "Synchronisation en cours..." : "🔄 Synchroniser Sprint/User Stories"}
+            {isSyncing
+              ? "Synchronisation en cours..."
+              : "🔄 Synchroniser Sprint/User Stories"}
           </Button>
 
           <Button
@@ -89,7 +93,8 @@ export default function CleanupBadgesPage() {
         {syncResult !== null && (
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-blue-800">
-              🔄 Synchronisation terminée : {syncResult.synced} sprint(s) synchronisé(s)
+              🔄 Synchronisation terminée : {syncResult.synced} sprint(s)
+              synchronisé(s)
             </p>
           </div>
         )}

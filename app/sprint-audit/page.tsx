@@ -160,10 +160,10 @@ function SprintAuditContent() {
 
   if (!sprint) {
     return (
-      <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
+      <div className="flex-1 space-y-4 px-2 sm:px-4 lg:px-8 pt-4">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">
+            <p className="text-center text-muted-foreground text-sm sm:text-base">
               Chargement du sprint...
             </p>
           </CardContent>
@@ -173,59 +173,69 @@ function SprintAuditContent() {
   }
 
   return (
-    <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
+    <div className="flex-1 space-y-4 px-2 sm:px-4 lg:px-8 pt-4 pb-8">
       {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
             Audit {sprint.title} - Definition of Done
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Validation des critères DoD avant clôture du sprint
           </p>
         </div>
-        <Button
-          onClick={handleSprintClosure}
-          disabled={isClosing}
-          className={
-            incompleteStories.length === 0
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-orange-600 hover:bg-orange-700"
-          }
-        >
-          {isClosing ? (
-            <>
-              <Clock className="mr-2 h-4 w-4 animate-spin" />
-              Clôture en cours...
-            </>
-          ) : incompleteStories.length === 0 ? (
-            <>
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              Clôturer {sprint.title}
-            </>
-          ) : (
-            <>
-              <ArrowRight className="mr-2 h-4 w-4" />
-              Clôturer et reporter {incompleteStories.length} US au backlog
-            </>
-          )}
-        </Button>
+        <div className="flex-shrink-0">
+          <Button
+            onClick={handleSprintClosure}
+            disabled={isClosing}
+            size="sm"
+            className={`w-full sm:w-auto text-sm ${
+              incompleteStories.length === 0
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-orange-600 hover:bg-orange-700"
+            }`}
+          >
+            {isClosing ? (
+              <>
+                <Clock className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                <span className="hidden sm:inline">Clôture en cours...</span>
+                <span className="sm:hidden">Clôture...</span>
+              </>
+            ) : incompleteStories.length === 0 ? (
+              <>
+                <CheckCircle2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Clôturer {sprint.title}</span>
+                <span className="sm:hidden">Clôturer</span>
+              </>
+            ) : (
+              <>
+                <ArrowRight className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden lg:inline">
+                  Clôturer et reporter {incompleteStories.length} US au backlog
+                </span>
+                <span className="lg:hidden">
+                  Clôturer ({incompleteStories.length} US au backlog)
+                </span>
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Métriques globales */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xs sm:text-sm font-medium leading-tight">
               Progression DoD
             </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-xl sm:text-2xl font-bold">
               {overallProgress.percentage}%
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground leading-tight">
               {overallProgress.completed}/{overallProgress.total} critères
             </p>
           </CardContent>
@@ -233,24 +243,26 @@ function SprintAuditContent() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">User Stories</CardTitle>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium leading-tight">
+              User Stories
+            </CardTitle>
+            <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sprintStories.length}</div>
+            <div className="text-xl sm:text-2xl font-bold">{sprintStories.length}</div>
             <p className="text-xs text-muted-foreground">À auditer</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xs sm:text-sm font-medium leading-tight">
               Prêtes à clôturer
             </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-xl sm:text-2xl font-bold text-green-600">
               {readyStories.length}
             </div>
             <p className="text-xs text-muted-foreground">100% DoD</p>
@@ -259,11 +271,13 @@ function SprintAuditContent() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">À compléter</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <CardTitle className="text-xs sm:text-sm font-medium leading-tight">
+              À compléter
+            </CardTitle>
+            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600 flex-shrink-0" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
+            <div className="text-xl sm:text-2xl font-bold text-orange-600">
               {incompleteStories.length}
             </div>
             <p className="text-xs text-muted-foreground">DoD incomplète</p>
@@ -272,26 +286,37 @@ function SprintAuditContent() {
       </div>
 
       {/* Liste des User Stories */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
+      <div className="space-y-3 sm:space-y-4">
+        <h2 className="text-lg sm:text-xl font-semibold">
           User Stories du {sprint.title}
         </h2>
 
         {sprintStories.map((story) => (
-          <Card key={story.id}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">
-                  [{story.code}] {story.title}
-                </CardTitle>
-                <UserStoryDoDSummary dodProgress={story.dodProgress} />
+          <Card key={story.id} className="overflow-hidden">
+            <CardHeader className="pb-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-base sm:text-lg leading-tight break-words">
+                    [{story.code}] {story.title}
+                  </CardTitle>
+                  {story.description && (
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
+                      {story.description}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-shrink-0">
+                  <UserStoryDoDSummary dodProgress={story.dodProgress} />
+                </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <UserStoryDoD
-                dodProgress={story.dodProgress}
-                onUpdate={(progress) => handleDoDUpdate(story.id, progress)}
-              />
+            <CardContent className="pt-0">
+              <div className="overflow-x-auto">
+                <UserStoryDoD
+                  dodProgress={story.dodProgress}
+                  onUpdate={(progress) => handleDoDUpdate(story.id, progress)}
+                />
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -300,7 +325,7 @@ function SprintAuditContent() {
       {sprintStories.length === 0 && (
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">
+            <p className="text-center text-muted-foreground text-sm sm:text-base">
               Aucune User Story trouvée pour ce sprint.
             </p>
           </CardContent>
@@ -314,10 +339,10 @@ export default function SprintAuditPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
+        <div className="flex-1 space-y-4 px-2 sm:px-4 lg:px-8 pt-4">
           <Card>
             <CardContent className="pt-6">
-              <p className="text-center text-muted-foreground">
+              <p className="text-center text-muted-foreground text-sm sm:text-base">
                 Chargement de l&apos;audit...
               </p>
             </CardContent>
