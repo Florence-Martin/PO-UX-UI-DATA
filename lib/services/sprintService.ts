@@ -239,7 +239,7 @@ export const handleIncompleteUserStories = async (
     );
 
     // Mettre à jour les US non terminées selon la stratégie
-    const userStoryCollection = collection(db, "userStories");
+    const userStoryCollection = collection(db, "user_stories");
     const updates = incomplete.map(async (story) => {
       const storyRef = doc(userStoryCollection, story.id);
 
@@ -283,7 +283,7 @@ export const migrateExpiredSprints = async (
   // Récupérer toutes les User Stories si nécessaire
   let userStories: UserStory[] = [];
   if (includeUserStories) {
-    const userStoriesSnapshot = await getDocs(collection(db, "userStories"));
+    const userStoriesSnapshot = await getDocs(collection(db, "user_stories"));
     userStories = userStoriesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -422,7 +422,7 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
 
     // Récupérer tous les sprints et User Stories
     const sprints = await getAllSprints();
-    const userStoriesSnapshot = await getDocs(collection(db, "userStories"));
+    const userStoriesSnapshot = await getDocs(collection(db, "user_stories"));
     const userStories = userStoriesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -510,7 +510,7 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
     console.log(`📊 ${completedSprints.length} sprint(s) terminé(s) trouvé(s)`);
 
     // Récupérer toutes les User Stories et Tasks
-    const userStoriesSnapshot = await getDocs(collection(db, "userStories"));
+    const userStoriesSnapshot = await getDocs(collection(db, "user_stories"));
     const userStories = userStoriesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
