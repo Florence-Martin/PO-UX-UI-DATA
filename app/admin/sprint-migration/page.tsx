@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   cleanupCompletedSprintsBadges,
+  debugUserStory,
   migrateExpiredSprints,
 } from "@/lib/services/sprintService";
 import { CheckCircle2, RefreshCw, Trash2 } from "lucide-react";
@@ -22,6 +23,8 @@ export default function SprintMigrationPage() {
   }> | null>(null);
   const [lastCleanupResult, setLastCleanupResult] = useState<{
     cleaned: number;
+    userStoriesCleaned: number;
+    tasksCleaned: number;
   } | null>(null);
 
   const handleMigration = async () => {
@@ -63,7 +66,9 @@ export default function SprintMigrationPage() {
       setLastCleanupResult(result);
 
       if (result.cleaned > 0) {
-        toast.success(`${result.cleaned} badge(s) "sprint" nettoyé(s)`);
+        toast.success(
+          `${result.cleaned} badge(s) nettoyé(s) (${result.userStoriesCleaned} User Stories + ${result.tasksCleaned} tâches)`
+        );
       } else {
         toast.info("Aucun badge à nettoyer");
       }
@@ -72,6 +77,16 @@ export default function SprintMigrationPage() {
       toast.error("Erreur lors du nettoyage des badges");
     } finally {
       setIsCleaningBadges(false);
+    }
+  };
+
+  const handleDebugUS009 = async () => {
+    try {
+      await debugUserStory("US-009");
+      toast.info("Vérifiez la console pour les détails de l'US-009");
+    } catch (error) {
+      console.error("Erreur debug:", error);
+      toast.error("Erreur lors du debug");
     }
   };
 
@@ -140,6 +155,15 @@ export default function SprintMigrationPage() {
                 </>
               )}
             </Button>
+
+            <Button
+              onClick={handleDebugUS009}
+              variant="outline"
+              size="sm"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50"
+            >
+              🔍 Debug US-009
+            </Button>
           </div>
 
           {lastCleanupResult !== null && (
@@ -148,6 +172,12 @@ export default function SprintMigrationPage() {
                 <strong>Dernier nettoyage :</strong> {lastCleanupResult.cleaned}{" "}
                 badge(s) nettoyé(s)
               </p>
+              {lastCleanupResult.cleaned > 0 && (
+                <p className="text-xs text-red-700 mt-1">
+                  • {lastCleanupResult.userStoriesCleaned} User Stories •{" "}
+                  {lastCleanupResult.tasksCleaned} tâches
+                </p>
+              )}
             </div>
           )}
 
@@ -193,16 +223,17 @@ export default function SprintMigrationPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Cette fonction nettoie les badges &quot;sprint&quot; des tâches qui
-            appartiennent à des sprints terminés. Ces tâches ne doivent plus
-            apparaître dans le Sprint Backlog actif.
+            Cette fonction nettoie les badges &quot;sprint&quot; des User
+            Stories et tâches qui appartiennent à des sprints terminés. Ces
+            éléments ne doivent plus apparaître dans le Sprint Backlog actif.
           </p>
           <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
             <li>Identifie tous les sprints avec status = &quot;done&quot;</li>
+            <li>Trouve toutes les User Stories liées à ces sprints</li>
             <li>Trouve toutes les tâches liées à ces sprints</li>
-            <li>Retire le badge &quot;sprint&quot; de ces tâches</li>
+            <li>Retire le badge &quot;sprint&quot; de ces éléments</li>
             <li>
-              Les tâches restent visibles dans la vue historique du sprint
+              Les éléments restent visibles dans la vue historique du sprint
             </li>
           </ul>
         </CardContent>

@@ -14,7 +14,23 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Authentification Firebase complète
 - Dashboard temps réel avec WebSockets
 
-## [1.0.0] - 2025-01-XX
+## [1.0.1] - 2025-07-21
+
+### Corrigé
+
+- **Sprint Backlog** : Filtrage correct des tâches et User Stories par badge "sprint"
+- **Tests mocks** : Correction des types TypeScript dans roadmapService.test.ts
+- **Badge cleanup** : Les éléments des sprints terminés n'apparaissent plus dans le Sprint Backlog actif
+- **Filtrage frontend** : SprintBoard et SprintActiveCard filtrent par sprintId ET badge
+- **Service tâches** : getAllBacklogTasks ne retourne que les tâches avec badge "sprint"
+
+### Ajouté
+
+- **Debug tools** : Fonction debugUserStory pour troubleshooting
+- **Service amélioré** : getAllBacklogTasksUnfiltered pour les autres cas d'usage
+- **Admin UI** : Interface de nettoyage des badges avec feedback utilisateur
+
+## [1.0.0] - 2025-07-XX
 
 ### Ajouté
 
@@ -39,7 +55,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Types** : Correction des types dans les données de test
 - **Imports** : Nettoyage des imports non utilisés
 
-## [0.9.0] - 2024-12-XX
+## [0.9.0] - 2025-01-XX
 
 ### Ajouté
 
@@ -113,4 +129,4 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ---
 
 **Auteur** : Florence Martin - PO / UX/UI / Frontend Developer  
-**Dernière mise à jour** : Janvier 2025
+**Dernière mise à jour** : Juillet 2025

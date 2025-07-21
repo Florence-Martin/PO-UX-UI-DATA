@@ -72,9 +72,10 @@ export function SprintBoard() {
 
   const sprintUserStoryIds = activeSprint.userStoryIds ?? [];
 
-  // Récupérer les User Stories du sprint actif
-  const sprintUserStories = userStories.filter((us) =>
-    sprintUserStoryIds.includes(us.id)
+  // Récupérer les User Stories du sprint actif ET qui ont encore le badge "sprint"
+  // (exclut automatiquement les US des sprints clôturés)
+  const sprintUserStories = userStories.filter(
+    (us) => sprintUserStoryIds.includes(us.id) && us.badge === "sprint"
   );
 
   // Filtrer les tâches du sprint actif ET qui ont encore le badge "sprint"

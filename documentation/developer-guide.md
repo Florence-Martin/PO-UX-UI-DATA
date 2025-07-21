@@ -51,6 +51,30 @@ Animation : Framer Motion
 - **Render Props** : Partage de logique
 - **Error Boundaries** : Gestion d'erreurs
 
+### Services métier principaux
+
+#### SprintService (`lib/services/sprintService.ts`)
+
+- `cleanupCompletedSprintsBadges()` : Nettoie les badges des sprints terminés
+- `migrateExpiredSprints()` : Migration automatique des sprints expirés
+- `debugUserStory(id)` : Debug d'une User Story spécifique
+- Gestion du cycle de vie des sprints et badges
+
+#### BacklogTasksService (`lib/services/backlogTasksService.ts`)
+
+- `getAllBacklogTasks()` : Récupère les tâches avec badge "sprint" actif
+- `getAllBacklogTasksUnfiltered()` : Récupère toutes les tâches (sans filtre)
+- Filtrage automatique par badge pour le Sprint Backlog
+
+#### Pattern de filtrage par badge
+
+```typescript
+// Exemple : filtrage des User Stories actives
+const activeUserStories = userStories.filter(
+  (us) => us.sprintId === currentSprintId && us.badge === "sprint"
+);
+```
+
 ---
 
 ## 🚀 Installation et configuration

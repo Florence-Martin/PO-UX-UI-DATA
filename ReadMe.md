@@ -209,6 +209,24 @@ Un document détaillé des **règles métier et fonctionnelles** est disponible 
 
 ⸻
 
+## 🆕 Dernières améliorations (Juillet 2025)
+
+### Sprint Management robuste
+
+- **Filtrage intelligent** : Le Sprint Backlog affiche uniquement les éléments du sprint actif
+- **Nettoyage automatique** : Les badges des sprints terminés sont automatiquement nettoyés
+- **Migration automatique** : Clôture automatique des sprints expirés avec report des éléments incomplets
+- **Interface d'administration** : Outils de debug et de gestion des migrations
+- **Préservation de l'historique** : Les données restent visibles dans les vues historiques
+
+### Qualité technique
+
+- **Couverture de tests** : 92.53% avec 72 tests unitaires
+- **Types TypeScript** : Système de types robuste et cohérent
+- **Architecture modulaire** : Services métier séparés et réutilisables
+
+⸻
+
 ## Statut du projet
 
 L’application est en cours de développement itératif.  

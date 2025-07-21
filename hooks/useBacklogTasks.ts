@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
-  getAllBacklogTasks,
   createBacklogTask,
-  updateBacklogTask,
   deleteBacklogTask,
+  getAllBacklogTasks,
+  updateBacklogTask,
 } from "@/lib/services/backlogTasksService";
-import { toast } from "sonner";
+import { getAllSprints } from "@/lib/services/sprintService";
+import { getAllUserStories } from "@/lib/services/userStoryService";
 import { BacklogTask } from "@/lib/types/backlogTask";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function useBacklogTasks() {
   const [tasks, setTasks] = useState<BacklogTask[]>([]);
@@ -81,9 +83,32 @@ export function useBacklogTasks() {
         status: newStatus,
       };
 
-      // ✅ Si la tâche est liée à une userStory, on force le badge sprint
+      // ✅ Si la tâche est liée à une userStory, on vérifie si c'est un sprint actif
       if (task?.userStoryIds && task.userStoryIds.length > 0) {
-        payload.badge = "sprint";
+        try {
+          // Récupérer les User Stories et sprints pour vérifier l'état
+          const [userStories, sprints] = await Promise.all([
+            getAllUserStories(),
+            getAllSprints(),
+          ]);
+
+          // Vérifier si au moins une US est liée à un sprint actif
+          const hasActiveSprint = task.userStoryIds.some((usId) => {
+            const userStory = userStories.find((us) => us.id === usId);
+            if (!userStory?.sprintId) return false;
+
+            const sprint = sprints.find((s) => s.id === userStory.sprintId);
+            return sprint && sprint.status !== "done";
+          });
+
+          // Ne mettre le badge "sprint" QUE si c'est un sprint actif
+          if (hasActiveSprint) {
+            payload.badge = "sprint";
+          }
+        } catch (err) {
+          console.warn("Erreur lors de la vérification du sprint:", err);
+          // En cas d'erreur, on ne met pas le badge pour éviter la pollution
+        }
       }
 
       console.debug("[DEBUG] 🔄 updateTaskStatus payload", payload);

@@ -489,9 +489,47 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
   }
 };
 
-//  Nettoyer les badges "sprint" des tâches des sprints terminés
+//  Debug : Vérifier l'état d'une User Story spécifique
+export const debugUserStory = async (code: string): Promise<void> => {
+  try {
+    console.log(`🔍 Debug User Story ${code}:`);
+
+    const userStoriesSnapshot = await getDocs(collection(db, "user_stories"));
+    const userStories = userStoriesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as UserStory[];
+
+    const us = userStories.find((story) => story.code === code);
+    if (!us) {
+      console.log(`❌ User Story ${code} non trouvée`);
+      return;
+    }
+
+    console.log(`📋 User Story ${code} trouvée:`);
+    console.log(`  ID: ${us.id}`);
+    console.log(`  Title: ${us.title}`);
+    console.log(`  Badge: ${us.badge}`);
+    console.log(`  SprintId: ${us.sprintId}`);
+
+    if (us.sprintId) {
+      const sprint = await getSprintById(us.sprintId);
+      if (sprint) {
+        console.log(`  Sprint: ${sprint.title} (status: ${sprint.status})`);
+      }
+    }
+
+    console.log(`  Données complètes:`, JSON.stringify(us, null, 2));
+  } catch (error) {
+    console.error("❌ Erreur debug:", error);
+  }
+};
+
+//  Nettoyer les badges "sprint" des tâches et User Stories des sprints terminés
 export const cleanupCompletedSprintsBadges = async (): Promise<{
   cleaned: number;
+  userStoriesCleaned: number;
+  tasksCleaned: number;
 }> => {
   try {
     console.log("🧹 Nettoyage des badges des sprints terminés...");
@@ -504,7 +542,7 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
 
     if (completedSprints.length === 0) {
       console.log("ℹ️ Aucun sprint terminé trouvé");
-      return { cleaned: 0 };
+      return { cleaned: 0, userStoriesCleaned: 0, tasksCleaned: 0 };
     }
 
     console.log(`📊 ${completedSprints.length} sprint(s) terminé(s) trouvé(s)`);
@@ -526,13 +564,55 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
       `📋 ${userStories.length} User Stories et ${tasks.length} tâches trouvées`
     );
 
-    let cleanedCount = 0;
+    let userStoriesCleanedCount = 0;
+    let tasksCleanedCount = 0;
 
     for (const sprint of completedSprints) {
       try {
         console.log(`🔍 Nettoyage du sprint terminé: ${sprint.title}`);
 
-        // Trouver les User Stories du sprint
+        // Nettoyer les User Stories du sprint terminé
+        const sprintUserStories = userStories.filter(
+          (story) => story.sprintId === sprint.id && story.badge === "sprint"
+        );
+
+        if (sprintUserStories.length > 0) {
+          console.log(
+            `📋 ${sprintUserStories.length} User Stories à nettoyer dans ${sprint.title}`
+          );
+
+          const userStoryCollection = collection(db, "user_stories");
+          const userStoryUpdates = sprintUserStories.map(async (story) => {
+            try {
+              const storyRef = doc(userStoryCollection, story.id);
+              await updateDoc(storyRef, {
+                badge: null, // Retirer le badge "sprint"
+              });
+              console.log(`  ✅ Badge retiré de l'US "${story.code}"`);
+              return true;
+            } catch (storyError) {
+              console.error(
+                `  ❌ Erreur pour l'US "${story.code}":`,
+                storyError
+              );
+              return false;
+            }
+          });
+
+          const storyResults = await Promise.all(userStoryUpdates);
+          const storySuccessCount = storyResults.filter(Boolean).length;
+          userStoriesCleanedCount += storySuccessCount;
+
+          console.log(
+            `   ✅ ${storySuccessCount}/${sprintUserStories.length} User Stories nettoyées avec succès`
+          );
+        } else {
+          console.log(
+            `   ℹ️ Aucune User Story avec badge "sprint" trouvée dans ${sprint.title}`
+          );
+        }
+
+        // Trouver les User Stories du sprint (pour identifier les tâches)
         const sprintUserStoryIds = userStories
           .filter((story) => story.sprintId === sprint.id)
           .map((story) => story.id);
@@ -556,7 +636,7 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
 
           // Retirer le badge "sprint" de toutes ces tâches
           const taskCollection = collection(db, "backlog_tasks");
-          const updates = sprintTasks.map(async (task) => {
+          const taskUpdates = sprintTasks.map(async (task) => {
             try {
               const taskRef = doc(taskCollection, task.id!);
               await updateDoc(taskRef, {
@@ -573,12 +653,12 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
             }
           });
 
-          const results = await Promise.all(updates);
-          const successCount = results.filter(Boolean).length;
-          cleanedCount += successCount;
+          const taskResults = await Promise.all(taskUpdates);
+          const taskSuccessCount = taskResults.filter(Boolean).length;
+          tasksCleanedCount += taskSuccessCount;
 
           console.log(
-            `   ✅ ${successCount}/${sprintTasks.length} tâches nettoyées avec succès`
+            `   ✅ ${taskSuccessCount}/${sprintTasks.length} tâches nettoyées avec succès`
           );
         } else {
           console.log(
@@ -593,10 +673,15 @@ export const cleanupCompletedSprintsBadges = async (): Promise<{
       }
     }
 
+    const totalCleaned = userStoriesCleanedCount + tasksCleanedCount;
     console.log(
-      `✅ Nettoyage terminé: ${cleanedCount} tâches nettoyées au total`
+      `✅ Nettoyage terminé: ${totalCleaned} éléments nettoyés au total (${userStoriesCleanedCount} User Stories + ${tasksCleanedCount} tâches)`
     );
-    return { cleaned: cleanedCount };
+    return {
+      cleaned: totalCleaned,
+      userStoriesCleaned: userStoriesCleanedCount,
+      tasksCleaned: tasksCleanedCount,
+    };
   } catch (error) {
     console.error("❌ Erreur lors du nettoyage des badges:", error);
     throw error;

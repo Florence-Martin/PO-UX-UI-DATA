@@ -75,8 +75,16 @@ describe("roadmapService", () => {
         docs: mockQuarters.map((quarter) => ({
           id: quarter.id,
           data: () => quarter,
+          exists: true,
+          metadata: {},
+          get: jest.fn(),
+          ref: {},
         })),
-      });
+        size: mockQuarters.length,
+        empty: false,
+        forEach: jest.fn(),
+        metadata: {},
+      } as any);
 
       const result = await getRoadmapQuarters();
 

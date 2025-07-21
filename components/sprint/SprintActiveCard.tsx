@@ -1,9 +1,9 @@
 "use client";
 
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { Sprint } from "@/lib/types/sprint";
 import { UserStory } from "@/lib/types/userStory";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 type Props = {
   sprint: Sprint;
@@ -13,7 +13,9 @@ type Props = {
 export function SprintActiveCard({ sprint, userStories }: Props) {
   const getDate = (d: any) => d?.toDate?.() ?? new Date(d);
 
-  const sprintStories = userStories.filter((us) => us.sprintId === sprint.id);
+  const sprintStories = userStories.filter(
+    (us) => us.sprintId === sprint.id && us.badge === "sprint"
+  );
   const velocity = sprintStories.reduce(
     (sum, us) => sum + (us.storyPoints || 0),
     0

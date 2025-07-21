@@ -1,22 +1,37 @@
 import {
-  collection,
   addDoc,
-  getDocs,
-  updateDoc,
+  arrayRemove,
+  collection,
   deleteDoc,
   doc,
-  Timestamp,
+  getDocs,
   query,
+  Timestamp,
+  updateDoc,
   where,
-  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { BacklogTask } from "../types/backlogTask";
 
 const COLLECTION_NAME = "backlog_tasks";
 
-// 🔍 Récupère toutes les tâches
+// 🔍 Récupère les tâches du sprint actif (avec badge "sprint")
 export const getAllBacklogTasks = async (): Promise<BacklogTask[]> => {
+  const sprintTasksQuery = query(
+    collection(db, COLLECTION_NAME),
+    where("badge", "==", "sprint")
+  );
+  const querySnapshot = await getDocs(sprintTasksQuery);
+  return querySnapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...(docSnap.data() as Omit<BacklogTask, "id">),
+  }));
+};
+
+// 🔍 Récupère TOUTES les tâches (sans filtre badge)
+export const getAllBacklogTasksUnfiltered = async (): Promise<
+  BacklogTask[]
+> => {
   const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
   return querySnapshot.docs.map((docSnap) => ({
     id: docSnap.id,
