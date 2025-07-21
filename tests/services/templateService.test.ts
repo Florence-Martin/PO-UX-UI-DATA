@@ -2,30 +2,37 @@
  * @jest-environment jsdom
  */
 
-import { getTemplate, saveTemplate } from "../../lib/services/templateService";
-
-// Mock Firebase
-jest.mock("../../lib/firebase", () => ({
-  db: {
-    collection: jest.fn(),
-    doc: jest.fn(),
+// Mock Firebase AVANT d'importer le service
+jest.mock("firebase/firestore", () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  getDocs: jest.fn(),
+  getDoc: jest.fn(),
+  setDoc: jest.fn(),
+  deleteDoc: jest.fn(),
+  serverTimestamp: jest.fn(() => ({ isServerTimestamp: true })),
+  Timestamp: {
+    now: jest.fn(() => ({ toDate: () => new Date() })),
+    fromDate: jest.fn((date: Date) => ({ toDate: () => date })),
   },
 }));
 
-// Mock Firestore functions
-const mockGetDoc = jest.fn();
-const mockSetDoc = jest.fn();
-const mockDoc = jest.fn();
-
-jest.mock("firebase/firestore", () => ({
-  doc: mockDoc,
-  getDoc: mockGetDoc,
-  setDoc: mockSetDoc,
+jest.mock("../../lib/firebase", () => ({
+  db: {},
 }));
+
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getTemplate, saveTemplate } from "../../lib/services/templateService";
+
+const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;
+const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;
+const mockDoc = doc as jest.MockedFunction<typeof doc>;
 
 describe("templateService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock doc pour retourner une référence valide
+    mockDoc.mockReturnValue({ id: "template_test" } as any);
   });
 
   describe("getTemplate", () => {

@@ -2,6 +2,34 @@
  * @jest-environment jsdom
  */
 
+// Mock Firebase AVANT d'importer le service
+jest.mock("firebase/firestore", () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  getDocs: jest.fn(),
+  getDoc: jest.fn(),
+  setDoc: jest.fn(),
+  deleteDoc: jest.fn(),
+  serverTimestamp: jest.fn(() => ({ isServerTimestamp: true })),
+  Timestamp: {
+    now: jest.fn(() => ({ toDate: () => new Date() })),
+    fromDate: jest.fn((date: Date) => ({ toDate: () => date })),
+  },
+}));
+
+jest.mock("../../lib/firebase", () => ({
+  db: {},
+}));
+
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import {
   createScenario,
   deleteScenario,
@@ -10,41 +38,23 @@ import {
   saveScenario,
 } from "../../lib/services/scenarioService";
 
-// Mock Firebase
-jest.mock("../../lib/firebase", () => ({
-  db: {
-    collection: jest.fn(),
-    doc: jest.fn(),
-  },
-}));
-
-// Mock Firestore functions
-const mockGetDocs = jest.fn();
-const mockGetDoc = jest.fn();
-const mockSetDoc = jest.fn();
-const mockDeleteDoc = jest.fn();
-const mockDoc = jest.fn();
-const mockCollection = jest.fn();
-const mockServerTimestamp = jest.fn();
-
-jest.mock("firebase/firestore", () => ({
-  collection: mockCollection,
-  getDocs: mockGetDocs,
-  getDoc: mockGetDoc,
-  setDoc: mockSetDoc,
-  deleteDoc: mockDeleteDoc,
-  doc: mockDoc,
-  serverTimestamp: mockServerTimestamp,
-  Timestamp: {
-    now: () => ({ toDate: () => new Date() }),
-    fromDate: (date: Date) => ({ toDate: () => date }),
-  },
-}));
+const mockGetDocs = getDocs as jest.MockedFunction<typeof getDocs>;
+const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;
+const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;
+const mockDeleteDoc = deleteDoc as jest.MockedFunction<typeof deleteDoc>;
+const mockDoc = doc as jest.MockedFunction<typeof doc>;
+const mockCollection = collection as jest.MockedFunction<typeof collection>;
+const mockServerTimestamp = serverTimestamp as jest.MockedFunction<
+  typeof serverTimestamp
+>;
 
 describe("scenarioService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockServerTimestamp.mockReturnValue({ toDate: () => new Date() });
+    mockServerTimestamp.mockReturnValue({ toDate: () => new Date() } as any);
+    // Mock doc pour retourner une référence valide
+    mockDoc.mockReturnValue({ id: "scenario_test" } as any);
+    mockCollection.mockReturnValue({ path: "scenarios" } as any);
   });
 
   describe("getAllScenarios", () => {

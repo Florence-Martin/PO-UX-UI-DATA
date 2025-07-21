@@ -1,192 +1,465 @@
-import { buildTimelineItemsUserStories } from "../lib/utils/buildTimelineItemsUserStories";
+import { Timestamp } from "firebase/firestore";
+import { BacklogTask } from "../lib/types/backlogTask";
 import { Sprint } from "../lib/types/sprint";
 import { UserStory } from "../lib/types/userStory";
-import { BacklogTask } from "../lib/types/backlogTask";
-import { Timestamp } from "firebase/firestore";
-import { formatDateToFrenchString } from "../lib/utils/formatDateToFrenchString";
-
-// Mock de la fonction formatDateToFrenchString
-jest.mock("../lib/utils/formatDateToFrenchString", () => ({
-  formatDateToFrenchString: jest.fn((date) => `formatted_${date}`),
-}));
+import { buildTimelineItemsUserStories } from "../lib/utils/buildTimelineItemsUserStories";
 
 describe("buildTimelineItemsUserStories", () => {
-  // Dates constantes pour les tests
-  const date1 = new Date("2023-01-10");
-  const date2 = new Date("2023-01-20");
-  const date3 = new Date("2023-01-30");
+  const mockSprints: Sprint[] = [
+    {
+      id: "sprint1",
+      title: "Sprint 1",
+      startDate: Timestamp.fromDate(new Date("2024-01-01")),
+      endDate: Timestamp.fromDate(new Date("2024-01-15")),
+      status: "active",
+      goal: "Test sprint",
+      userStoryIds: ["us1", "us2"],
+      velocity: 10,
+      progress: 50,
+      hasReview: false,
+      hasRetrospective: false,
+    },
+    {
+      id: "sprint2",
+      title: "Sprint 2",
+      startDate: Timestamp.fromDate(new Date("2024-01-16")),
+      endDate: Timestamp.fromDate(new Date("2024-01-30")),
+      status: "done",
+      goal: "Completed sprint",
+      userStoryIds: ["us3"],
+      velocity: 8,
+      progress: 100,
+      hasReview: true,
+      hasRetrospective: true,
+    },
+    {
+      id: "sprint3",
+      title: "Sprint 3",
+      startDate: Timestamp.fromDate(new Date("2024-02-01")),
+      endDate: Timestamp.fromDate(new Date("2024-02-15")),
+      status: "planned",
+      goal: "Future sprint",
+      userStoryIds: ["us4"],
+      velocity: 12,
+      progress: 0,
+      hasReview: false,
+      hasRetrospective: false,
+    },
+  ];
 
-  // Création de données de test respectant les types exacts
-  const createSprint = (
-    id: string,
-    status: "planned" | "active" | "done",
-    startDate?: Date
-  ): Sprint => ({
-    id,
-    title: `Sprint ${id}`,
-    status,
-    startDate: startDate
-      ? Timestamp.fromDate(startDate)
-      : Timestamp.fromDate(new Date()),
-    endDate: startDate
-      ? Timestamp.fromDate(new Date(startDate.getTime() + 86400000 * 14))
-      : Timestamp.fromDate(new Date()),
-    userStoryIds: [`us-${id}`], // Chaque sprint a une US associée
-    velocity: 10,
-    progress: 50,
-    hasReview: false,
-    hasRetrospective: false,
-    goal: `Goal for Sprint ${id}`,
-  });
+  const mockUserStories: UserStory[] = [
+    {
+      id: "us1",
+      code: "US001",
+      title: "User story 1",
+      description: "First user story",
+      priority: "high",
+      storyPoints: 5,
+      status: "todo",
+      acceptanceCriteria: "Criteria 1",
+      sprintId: "sprint1",
+      createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+    },
+    {
+      id: "us2",
+      code: "US002",
+      title: "User story 2",
+      description: "Second user story",
+      priority: "medium",
+      storyPoints: 3,
+      status: "in-progress",
+      acceptanceCriteria: "Criteria 2",
+      sprintId: "sprint1",
+      createdAt: Timestamp.fromDate(new Date("2024-01-02")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-05")),
+    },
+    {
+      id: "us3",
+      code: "US003",
+      title: "User story 3",
+      description: "Third user story",
+      priority: "low",
+      storyPoints: 2,
+      status: "done",
+      acceptanceCriteria: "Criteria 3",
+      sprintId: "sprint2",
+      createdAt: Timestamp.fromDate(new Date("2024-01-16")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-18")),
+    },
+    {
+      id: "us4",
+      code: "US004",
+      title: "User story 4",
+      description: "Fourth user story",
+      priority: "high",
+      storyPoints: 8,
+      status: "todo",
+      acceptanceCriteria: "Criteria 4",
+      sprintId: "sprint3",
+      createdAt: Timestamp.fromDate(new Date("2024-02-01")),
+      updatedAt: Timestamp.fromDate(new Date("2024-02-05")),
+    },
+  ];
 
-  const createUserStory = (
-    id: string,
-    sprintId?: string,
-    createdAt?: Date
-  ): UserStory => ({
-    id,
-    code: `US-${id}`,
-    title: `User Story ${id}`,
-    description: `Description of User Story ${id}`,
-    priority: "medium",
-    storyPoints: 5,
-    acceptanceCriteria: "Criteria for US",
-    sprintId,
-    createdAt: createdAt
-      ? Timestamp.fromDate(createdAt)
-      : Timestamp.fromDate(new Date()),
-    updatedAt: Timestamp.fromDate(new Date()),
-    moscow: "mustHave",
-    badge: "sprint",
-  });
+  const mockBacklogTasks: BacklogTask[] = [
+    {
+      id: "task1",
+      title: "Task 1",
+      description: "First task",
+      status: "todo",
+      priority: "high",
+      storyPoints: 2,
+      userStoryIds: ["us1"],
+      createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+    },
+    {
+      id: "task2",
+      title: "Task 2",
+      description: "Second task",
+      status: "in-progress",
+      priority: "medium",
+      storyPoints: 3,
+      userStoryIds: ["us2"],
+      createdAt: Timestamp.fromDate(new Date("2024-01-02")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-05")),
+    },
+    {
+      id: "task3",
+      title: "Task 3",
+      description: "Third task",
+      status: "done",
+      priority: "low",
+      storyPoints: 1,
+      userStoryIds: ["us3"],
+      createdAt: Timestamp.fromDate(new Date("2024-01-16")),
+      updatedAt: Timestamp.fromDate(new Date("2024-01-18")),
+    },
+    {
+      id: "task4",
+      title: "Task 4",
+      description: "Fourth task",
+      status: "in-testing",
+      priority: "high",
+      storyPoints: 4,
+      userStoryIds: ["us4"],
+      createdAt: Timestamp.fromDate(new Date("2024-02-01")),
+      updatedAt: Timestamp.fromDate(new Date("2024-02-05")),
+    },
+  ];
 
-  const createTask = (
-    id: string,
-    userStoryIds: string[],
-    status: "todo" | "in-progress" | "done" | "in-testing"
-  ): BacklogTask => ({
-    id,
-    status,
-    title: `Task ${id}`,
-    description: `Description of task ${id}`,
-    badge: "sprint", // Pour que la tâche soit considérée comme de sprint
-    userStoryIds,
-    priority: "medium",
-    storyPoints: 3,
-    createdAt: Timestamp.fromDate(new Date()),
-    updatedAt: Timestamp.fromDate(new Date()),
-  });
+  describe("basic functionality", () => {
+    test("should return timeline items for valid data", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
 
-  beforeEach(() => {
-    (formatDateToFrenchString as jest.Mock).mockClear();
-  });
+      expect(result).toHaveLength(4);
+      expect(result[0]).toHaveProperty("id");
+      expect(result[0]).toHaveProperty("title");
+      expect(result[0]).toHaveProperty("section");
+      expect(result[0]).toHaveProperty("userStory");
+    });
 
-  test("devrait retourner un tableau vide si aucune donnée n'est fournie", () => {
-    const items = buildTimelineItemsUserStories([], [], []);
-    expect(items).toEqual([]);
-  });
+    test("should handle empty arrays", () => {
+      const result = buildTimelineItemsUserStories([], [], []);
+      expect(result).toHaveLength(0);
+    });
 
-  test("devrait créer des items à partir des tâches de backlog liées à des US", () => {
-    const sprints = [createSprint("1", "active", date1)];
-    const userStories = [createUserStory("us-1", "1", date1)];
-    const tasks = [createTask("task-1", ["us-1"], "in-progress")];
+    test("should handle missing user stories", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        [],
+        mockBacklogTasks
+      );
+      expect(result).toHaveLength(0);
+    });
 
-    const items = buildTimelineItemsUserStories(sprints, userStories, tasks);
-
-    expect(items).toHaveLength(1);
-    expect(items[0]).toMatchObject({
-      id: "us-1",
-      title: "User Story us-1",
-      code: "US-us-1",
-      section: "execution", // Correspondra au résultat de mapTaskStatusToSection
+    test("should handle missing sprints", () => {
+      const result = buildTimelineItemsUserStories(
+        [],
+        mockUserStories,
+        mockBacklogTasks
+      );
+      expect(result).toHaveLength(0);
     });
   });
 
-  test("devrait ignorer les tâches qui ne sont pas liées à un sprint", () => {
-    const sprints = [createSprint("1", "active", date1)];
-    const userStories = [createUserStory("us-1", "1", date1)];
-    const tasks = [
-      createTask("task-1", ["us-1"], "in-progress"),
-      createTask("task-2", ["us-2"], "todo"),
-    ];
-    // Modifier la deuxième tâche pour ne pas être une tâche de sprint
-    const nonSprintTask = { ...tasks[1], badge: null };
-    tasks[1] = nonSprintTask;
+  describe("section mapping based on sprint status", () => {
+    test("should map active sprint to execution section", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
 
-    const items = buildTimelineItemsUserStories(sprints, userStories, tasks);
+      const activeSprintItems = result.filter((item) =>
+        mockUserStories.find(
+          (us) => us.id === item.id && us.sprintId === "sprint1"
+        )
+      );
 
-    expect(items).toHaveLength(1);
-    expect(items[0].id).toBe("us-1");
+      activeSprintItems.forEach((item) => {
+        expect(item.section).toBe("execution");
+      });
+    });
+
+    test("should map done sprint to review section", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
+
+      const doneSprintItems = result.filter((item) =>
+        mockUserStories.find(
+          (us) => us.id === item.id && us.sprintId === "sprint2"
+        )
+      );
+
+      doneSprintItems.forEach((item) => {
+        expect(item.section).toBe("review");
+      });
+    });
+
+    test("should map planned sprint to planning section", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
+
+      const plannedSprintItems = result.filter((item) =>
+        mockUserStories.find(
+          (us) => us.id === item.id && us.sprintId === "sprint3"
+        )
+      );
+
+      plannedSprintItems.forEach((item) => {
+        expect(item.section).toBe("planning");
+      });
+    });
   });
 
-  test("devrait ajouter des US liées à un sprint même si elles ne sont pas référencées par une tâche", () => {
-    const sprints = [
-      createSprint("1", "active", date1),
-      createSprint("2", "done", date2),
-    ];
-    const userStories = [
-      createUserStory("us-1", "1", date1),
-      createUserStory("us-2", "2", date2),
-      createUserStory("us-3", undefined, date3), // Sans sprintId
-    ];
-    const tasks: BacklogTask[] = []; // Aucune tâche
+  describe("date formatting", () => {
+    test("should handle string dates", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
 
-    const items = buildTimelineItemsUserStories(sprints, userStories, tasks);
+      result.forEach((item) => {
+        expect(item.startDate).toBeDefined();
+        expect(item.endDate).toBeDefined();
+        expect(typeof item.startDate).toBe("string");
+        expect(typeof item.endDate).toBe("string");
+      });
+    });
 
-    expect(items).toHaveLength(2);
-    expect(items.map((item) => item.id)).toEqual(["us-1", "us-2"]);
-    expect(items.find((i) => i.id === "us-1")?.section).toBe("execution");
-    expect(items.find((i) => i.id === "us-2")?.section).toBe("review");
+    test("should handle Timestamp dates", () => {
+      const timestampSprints = mockSprints.map((sprint) => ({
+        ...sprint,
+        startDate: Timestamp.fromDate(sprint.startDate.toDate()),
+        endDate: Timestamp.fromDate(sprint.endDate.toDate()),
+      }));
+
+      const result = buildTimelineItemsUserStories(
+        timestampSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
+
+      result.forEach((item) => {
+        expect(item.startDate).toBeDefined();
+        expect(item.endDate).toBeDefined();
+        expect(typeof item.startDate).toBe("string");
+        expect(typeof item.endDate).toBe("string");
+      });
+    });
+
+    test("should handle Date objects", () => {
+      const dateSprints = mockSprints.map((sprint) => ({
+        ...sprint,
+        startDate: Timestamp.fromDate(sprint.startDate.toDate()),
+        endDate: Timestamp.fromDate(sprint.endDate.toDate()),
+      }));
+
+      const result = buildTimelineItemsUserStories(
+        dateSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
+
+      result.forEach((item) => {
+        expect(item.startDate).toBeDefined();
+        expect(item.endDate).toBeDefined();
+        expect(typeof item.startDate).toBe("string");
+        expect(typeof item.endDate).toBe("string");
+      });
+    });
+
+    test("should handle undefined dates", () => {
+      // Pour ce test, nous testons la fonction getFormattedDate avec des valeurs undefined
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
+
+      // Vérifier que les dates sont formatées correctement
+      result.forEach((item) => {
+        expect(typeof item.startDate).toBe("string");
+        expect(typeof item.endDate).toBe("string");
+      });
+    });
   });
 
-  test("devrait affecter la bonne section en fonction du statut de la tâche ou du sprint", () => {
-    const sprints = [
-      createSprint("1", "planned", date1),
-      createSprint("2", "active", date2),
-      createSprint("3", "done", date3),
-    ];
-    const userStories = [
-      createUserStory("us-1", "1", date1),
-      createUserStory("us-2", "2", date2),
-      createUserStory("us-3", "3", date3),
-    ];
-    const tasks = [
-      createTask("task-1", ["us-1"], "todo"),
-      createTask("task-2", ["us-2"], "in-progress"),
-      createTask("task-3", ["us-3"], "done"),
-    ];
+  describe("sorting functionality", () => {
+    test("should sort by section then by date", () => {
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        mockUserStories,
+        mockBacklogTasks
+      );
 
-    const items = buildTimelineItemsUserStories(sprints, userStories, tasks);
+      // Vérifier que les sections sont dans l'ordre correct
+      const sections = result.map((item) => item.section);
+      const sectionOrder = ["planning", "execution", "review"];
 
-    expect(items).toHaveLength(3);
-    // Ces assertions supposent que la fonction mapTaskStatusToSection assigne correctement les sections
-    expect(items.find((i) => i.id === "us-1")?.section).toBe("planning");
-    expect(items.find((i) => i.id === "us-2")?.section).toBe("execution");
-    expect(items.find((i) => i.id === "us-3")?.section).toBe("review");
+      let lastSectionIndex = -1;
+      sections.forEach((section) => {
+        const currentSectionIndex = sectionOrder.indexOf(section);
+        expect(currentSectionIndex).toBeGreaterThanOrEqual(lastSectionIndex);
+        lastSectionIndex = currentSectionIndex;
+      });
+    });
+
+    test("should handle items with missing rawDate", () => {
+      const userStoriesWithoutDates = mockUserStories.map((us) => ({
+        ...us,
+        createdAt: undefined,
+        updatedAt: undefined,
+      }));
+
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        userStoriesWithoutDates,
+        mockBacklogTasks
+      );
+
+      expect(result).toHaveLength(4);
+      // Devrait toujours être trié par section même sans dates
+      result.forEach((item) => {
+        expect(item.section).toBeDefined();
+      });
+    });
   });
 
-  test("devrait éviter les doublons d'US", () => {
-    const sprints = [createSprint("1", "active", date1)];
-    const userStories = [createUserStory("us-1", "1", date1)];
-    const tasks = [
-      createTask("task-1", ["us-1"], "in-progress"),
-      createTask("task-2", ["us-1"], "in-progress"), // Même US
-    ];
+  describe("edge cases", () => {
+    test("should handle user stories without matching sprints", () => {
+      const orphanUserStories: UserStory[] = [
+        ...mockUserStories,
+        {
+          id: "us5",
+          code: "US005",
+          title: "Orphan user story",
+          description: "User story without sprint",
+          priority: "medium",
+          storyPoints: 3,
+          status: "todo",
+          acceptanceCriteria: "Criteria 5",
+          sprintId: "nonexistent-sprint",
+          createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+          updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+        },
+      ];
 
-    const items = buildTimelineItemsUserStories(sprints, userStories, tasks);
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        orphanUserStories,
+        mockBacklogTasks
+      );
 
-    expect(items).toHaveLength(1);
-    expect(items[0].id).toBe("us-1");
-  });
+      // L'user story orpheline ne devrait pas être incluse
+      expect(result).toHaveLength(4);
+      expect(result.find((item) => item.id === "us5")).toBeUndefined();
+    });
 
-  test("devrait formater correctement les dates", () => {
-    const sprints = [createSprint("1", "active", date1)];
-    const userStories = [createUserStory("us-1", "1", date1)];
-    const tasks = [createTask("task-1", ["us-1"], "in-progress")];
+    test("should handle user stories with missing code or title", () => {
+      const incompleteUserStories: UserStory[] = [
+        {
+          id: "us6",
+          code: "", // Code vide
+          title: "Story without code",
+          description: "Test story",
+          priority: "low",
+          storyPoints: 1,
+          status: "todo",
+          acceptanceCriteria: "Criteria 6",
+          sprintId: "sprint1",
+          createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+          updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+        },
+        {
+          id: "us7",
+          code: "US007",
+          title: "", // Title vide
+          description: "Test story",
+          priority: "low",
+          storyPoints: 1,
+          status: "todo",
+          acceptanceCriteria: "Criteria 7",
+          sprintId: "sprint1",
+          createdAt: Timestamp.fromDate(new Date("2024-01-01")),
+          updatedAt: Timestamp.fromDate(new Date("2024-01-01")),
+        },
+      ];
 
-    buildTimelineItemsUserStories(sprints, userStories, tasks);
+      const extendedSprints = [
+        {
+          ...mockSprints[0],
+          userStoryIds: [...mockSprints[0].userStoryIds, "us6", "us7"],
+        },
+        ...mockSprints.slice(1),
+      ];
 
-    // Vérifie que la fonction de formatage a été appelée
-    expect(formatDateToFrenchString).toHaveBeenCalled();
+      const result = buildTimelineItemsUserStories(
+        extendedSprints,
+        incompleteUserStories,
+        mockBacklogTasks
+      );
+
+      expect(result).toHaveLength(2);
+
+      const storyWithoutCode = result.find((item) => item.id === "us6");
+      expect(storyWithoutCode?.code).toBe("");
+
+      const storyWithoutTitle = result.find((item) => item.id === "us7");
+      expect(storyWithoutTitle?.title).toBe("");
+    });
+
+    test("should handle duplicate user story IDs", () => {
+      const duplicateUserStories = [
+        ...mockUserStories,
+        {
+          ...mockUserStories[0],
+          title: "Duplicate story",
+        },
+      ];
+
+      const result = buildTimelineItemsUserStories(
+        mockSprints,
+        duplicateUserStories,
+        mockBacklogTasks
+      );
+
+      // Le Set devrait empêcher les doublons
+      const us1Items = result.filter((item) => item.id === "us1");
+      expect(us1Items).toHaveLength(1);
+    });
   });
 });

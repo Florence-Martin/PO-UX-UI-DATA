@@ -2,38 +2,50 @@
  * @jest-environment jsdom
  */
 
+// Mock Firebase AVANT d'importer le service
+jest.mock("firebase/firestore", () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  getDocs: jest.fn(),
+  getDoc: jest.fn(),
+  setDoc: jest.fn(),
+  deleteDoc: jest.fn(),
+  serverTimestamp: jest.fn(() => ({ isServerTimestamp: true })),
+  Timestamp: {
+    now: jest.fn(() => ({ toDate: () => new Date() })),
+    fromDate: jest.fn((date: Date) => ({ toDate: () => date })),
+  },
+}));
+
+jest.mock("../../lib/firebase", () => ({
+  db: {},
+}));
+
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import {
   deleteRoadmapQuarter,
   getRoadmapQuarters,
   saveRoadmapQuarter,
 } from "../../lib/services/roadmapService";
 
-// Mock Firebase
-jest.mock("../../lib/firebase", () => ({
-  db: {
-    collection: jest.fn(),
-    doc: jest.fn(),
-  },
-}));
-
-// Mock Firestore functions
-const mockGetDocs = jest.fn();
-const mockSetDoc = jest.fn();
-const mockDeleteDoc = jest.fn();
-const mockDoc = jest.fn();
-const mockCollection = jest.fn();
-
-jest.mock("firebase/firestore", () => ({
-  collection: mockCollection,
-  getDocs: mockGetDocs,
-  setDoc: mockSetDoc,
-  deleteDoc: mockDeleteDoc,
-  doc: mockDoc,
-}));
+const mockGetDocs = getDocs as jest.MockedFunction<typeof getDocs>;
+const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;
+const mockDeleteDoc = deleteDoc as jest.MockedFunction<typeof deleteDoc>;
+const mockDoc = doc as jest.MockedFunction<typeof doc>;
+const mockCollection = collection as jest.MockedFunction<typeof collection>;
 
 describe("roadmapService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock doc pour retourner une référence valide
+    mockDoc.mockReturnValue({ id: "roadmap_test" } as any);
+    mockCollection.mockReturnValue({ path: "roadmap" } as any);
   });
 
   describe("getRoadmapQuarters", () => {

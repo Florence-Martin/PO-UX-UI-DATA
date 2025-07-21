@@ -2,42 +2,41 @@
  * @jest-environment jsdom
  */
 
+// Mock Firebase AVANT d'importer le service
+jest.mock("firebase/firestore", () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  getDocs: jest.fn(),
+  getDoc: jest.fn(),
+  setDoc: jest.fn(),
+  deleteDoc: jest.fn(),
+  serverTimestamp: jest.fn(() => ({ isServerTimestamp: true })),
+  Timestamp: {
+    now: jest.fn(() => ({ toDate: () => new Date() })),
+    fromDate: jest.fn((date: Date) => ({ toDate: () => date })),
+  },
+}));
+
+jest.mock("../../lib/firebase", () => ({
+  db: {},
+}));
+
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import {
   getDoD,
   updateDoD,
   updateDoDItemStatus,
 } from "../../lib/services/dodService";
 
-// Mock Firebase
-jest.mock("../../lib/firebase", () => ({
-  db: {
-    collection: jest.fn(),
-    doc: jest.fn(),
-  },
-}));
-
-// Mock Firestore functions
-const mockGetDoc = jest.fn();
-const mockSetDoc = jest.fn();
-const mockDoc = jest.fn();
-const mockServerTimestamp = jest.fn();
-
-jest.mock("firebase/firestore", () => ({
-  doc: mockDoc,
-  getDoc: mockGetDoc,
-  setDoc: mockSetDoc,
-  serverTimestamp: mockServerTimestamp,
-  onSnapshot: jest.fn(),
-  Timestamp: {
-    now: () => ({ toDate: () => new Date() }),
-    fromDate: (date: Date) => ({ toDate: () => date }),
-  },
-}));
+const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;
+const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;
+const mockDoc = doc as jest.MockedFunction<typeof doc>;
 
 describe("dodService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockServerTimestamp.mockReturnValue({ toDate: () => new Date() });
+    // Mock doc pour retourner une référence valide
+    mockDoc.mockReturnValue({ id: "default" } as any);
   });
 
   describe("getDoD", () => {
@@ -101,7 +100,7 @@ describe("dodService", () => {
         expect.anything(),
         expect.objectContaining({
           ...dod,
-          updatedAt: expect.anything(),
+          lastUpdated: expect.anything(),
         })
       );
     });
@@ -134,7 +133,7 @@ describe("dodService", () => {
             expect.objectContaining({ id: "1", checked: true }),
             expect.objectContaining({ id: "2", checked: false }),
           ]),
-          updatedAt: expect.anything(),
+          lastUpdated: expect.anything(),
         })
       );
     });

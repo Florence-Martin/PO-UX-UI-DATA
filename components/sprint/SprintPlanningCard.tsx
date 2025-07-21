@@ -57,7 +57,7 @@ export function SprintPlanningCard({
 
   return (
     <div
-      className={`border rounded-xl p-4 shadow-sm bg-card flex flex-col gap-2 ${
+      className={`border rounded-xl p-3 sm:p-4 shadow-sm bg-card flex flex-col gap-3 ${
         sprint.status === "done"
           ? "opacity-75 border-green-200 bg-green-50/50"
           : isExpired
@@ -65,54 +65,66 @@ export function SprintPlanningCard({
           : ""
       }`}
     >
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-bold text-lg">{sprint.title}</h3>
-            {sprint.status === "done" && (
-              <Badge
-                variant="secondary"
-                className="bg-green-100 text-green-800"
-              >
-                Terminé
-              </Badge>
-            )}
-            {isExpired && (
-              <Badge
-                variant="secondary"
-                className="bg-orange-100 text-orange-800"
-              >
-                À clôturer
-              </Badge>
-            )}
+      {/* En-tête avec titre et badges */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <h3 className="font-bold text-lg truncate pr-2">{sprint.title}</h3>
+            <div className="flex gap-2 flex-wrap">
+              {sprint.status === "done" && (
+                <Badge
+                  variant="secondary"
+                  className="bg-green-100 text-green-800 text-xs"
+                >
+                  Terminé
+                </Badge>
+              )}
+              {isExpired && (
+                <Badge
+                  variant="secondary"
+                  className="bg-orange-100 text-orange-800 text-xs"
+                >
+                  À clôturer
+                </Badge>
+              )}
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Du{" "}
-            {format(getDate(sprint.startDate), "dd MMMM yyyy", {
-              locale: fr,
-            })}{" "}
-            au{" "}
-            {format(getDate(sprint.endDate), "dd MMMM yyyy", {
-              locale: fr,
-            })}
+
+          {/* Dates */}
+          <p className="text-sm text-muted-foreground mt-1 break-words">
+            <span className="block sm:inline">
+              Du{" "}
+              {format(getDate(sprint.startDate), "dd MMM yyyy", {
+                locale: fr,
+              })}
+            </span>
+            <span className="block sm:inline sm:before:content-[' '] before:content-['']">
+              au{" "}
+              {format(getDate(sprint.endDate), "dd MMM yyyy", {
+                locale: fr,
+              })}
+            </span>
           </p>
+
           {sprint.closedAt && (
-            <p className="text-xs text-green-600 font-medium">
+            <p className="text-xs text-green-600 font-medium mt-1 break-words">
               Clôturé le{" "}
-              {format(getDate(sprint.closedAt), "dd MMMM yyyy à HH:mm", {
+              {format(getDate(sprint.closedAt), "dd MMM yyyy à HH:mm", {
                 locale: fr,
               })}
             </p>
           )}
         </div>
 
-        <div className="flex gap-2">
+        {/* Boutons d'action - responsive */}
+        <div className="flex flex-row sm:flex-row gap-2 flex-wrap justify-start sm:justify-end">
           {/* Bouton d'audit pour les sprints qui ont besoin d'être clôturés */}
           {needsAudit && (
             <Link href={`/sprint-audit?sprintId=${sprint.id}`}>
-              <Button variant="secondary" size="sm">
-                <ClipboardCheck className="w-4 h-4 mr-2" />
-                Audit DoD
+              <Button variant="secondary" size="sm" className="text-xs">
+                <ClipboardCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Audit DoD</span>
+                <span className="sm:hidden">Audit</span>
               </Button>
             </Link>
           )}
@@ -122,16 +134,19 @@ export function SprintPlanningCard({
             <>
               <Button
                 variant="outline"
-                size="icon"
+                size="sm"
                 onClick={() => onEdit(sprint)}
+                className="p-2"
               >
-                <Pencil className="w-4 h-4" />
+                <Pencil className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="sr-only">Modifier</span>
               </Button>
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive" size="icon">
-                    <Trash2 className="w-4 h-4" />
+                  <Button variant="destructive" size="sm" className="p-2">
+                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="sr-only">Supprimer</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
