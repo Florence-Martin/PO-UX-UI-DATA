@@ -18,12 +18,22 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 - **[Guide développeur](./developer-guide.md)** - Guide complet pour les développeurs
 - **[Guide de contribution](./contributing.md)** - Standards et processus de contribution
 - **[Guide API](./api-guide.md)** - Documentation des services et hooks
+- **[Cheatsheet](./cheatsheet.md)** - Raccourcis et patterns utiles
 
 ### 📋 Gestion de projet
 
 - **[Règles métier](./business-rules.md)** - Spécifications fonctionnelles détaillées
 - **[Roadmap technique](./roadmap-development.md)** - Plan de développement et prochaines étapes
 - **[Résumé exécutif](./executive-summary.md)** - Analyse et recommandations
+
+### ⚡ Performance & Optimisation
+
+- **[Analyse Performance](./PERFORMANCE_OPTIMIZATION.md)** - Leçons apprises et bonnes pratiques
+- **[Optimisations Lighthouse](./LIGHTHOUSE_OPTIMIZATIONS.md)** - Guide d'optimisation web
+
+### 🛡️ Sécurité & Conformité
+
+- **[Guide de Sécurité](./security-guide.md)** - Analyse des risques, mesures de protection et conformité RGPD
 
 ---
 
@@ -41,6 +51,16 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 1. [Guide API](./api-guide.md) pour les services et hooks
 2. [Règles métier](./business-rules.md) pour les spécifications
 3. [Roadmap technique](./roadmap-development.md) pour les prochaines étapes
+4. [Cheatsheet](./cheatsheet.md) pour les raccourcis et patterns
+
+### ⚡ Performance & Optimisation ?
+
+1. [Analyse Performance](./PERFORMANCE_OPTIMIZATION.md) pour les leçons apprises
+2. [Optimisations Lighthouse](./LIGHTHOUSE_OPTIMIZATIONS.md) pour l'optimisation web
+
+### 🛡️ Sécurité ?
+
+1. [Guide de Sécurité](./security-guide.md) pour l'analyse des risques et protections
 
 ### 📊 Product Owner / Chef de projet ?
 
@@ -193,9 +213,13 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 
 ### Sécurité
 
-- Firebase configuré en mode public pour la démo
-- Authentification à implémenter en production
-- Validation des données côté serveur à renforcer
+- **Mode démo** : Firebase configuré en accès public pour démonstration
+- **Protection native** : Aucun risque d'injection SQL (NoSQL Firebase)
+- **Validation Joi** : Schémas stricts pour tous les inputs utilisateur
+- **Sanitisation XSS** : DOMPurify intégré dans les formulaires critiques
+- **TypeScript strict** : Typage robuste des interfaces et paramètres
+- **Score sécurité** : 85/100 - Excellent pour une application de démonstration
+- **Voir** : [Guide de Sécurité](./security-guide.md) pour l'analyse complète
 
 ### Performance
 
@@ -229,12 +253,14 @@ Nous accueillons les contributions ! Consultez le [guide de contribution](./cont
 - [ ] Finaliser la couverture de tests (90%+)
 - [ ] Intégrations externes (JIRA, Figma)
 - [ ] Optimisations performance
+- [x] Analyse de sécurité et conformité RGPD
 
 ### Phase 2 (Q2 2025)
 
 - [ ] Authentification Firebase
 - [ ] Dashboard temps réel
 - [ ] Tests d'intégration
+- [ ] Bannière d'information RGPD
 
 ### Phase 3 (Q3 2025)
 

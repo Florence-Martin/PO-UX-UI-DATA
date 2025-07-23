@@ -1,27 +1,28 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  LayoutDashboard,
-  FileSearch,
-  UsersRound,
-  SquareKanban,
-  Database,
-  CheckSquare,
-  Menu,
-} from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { cn } from "@/lib/utils";
+import {
+  CheckSquare,
+  Database,
+  FileSearch,
+  LayoutDashboard,
+  Menu,
+  Shield,
+  SquareKanban,
+  UsersRound,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const navigation = [
   {
@@ -132,8 +133,19 @@ export function Sidebar() {
           })}
         </TooltipProvider>
       </nav>
-      <div className="p-4">
-        <ThemeToggle />
+      <div className="mt-auto p-4 space-y-2">
+        <div className="flex items-center gap-2">
+          {!isCollapsed && (
+            <Link
+              href="/privacy-policy"
+              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors flex-1"
+            >
+              <Shield className="h-3 w-3" />
+              Politique de confidentialité
+            </Link>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   );

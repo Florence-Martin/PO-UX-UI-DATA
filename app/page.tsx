@@ -4,6 +4,7 @@ import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo.";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UserMetrics } from "@/components/dashboard/UserMetrics";
+import { GDPRBanner } from "@/components/GDPRBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 // import { Overview } from "@/components/dashboard/overview";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <DashboardBannerInfo />
+      <GDPRBanner />
       <div className="flex items-center space-y-2">
         <Image
           src="/favicon-white-48x48.png"

@@ -1,15 +1,6 @@
-Ce document constitue la référence fonctionnelle des règles métier de### 6. Sprint & Suivi d'Avancement
+# 📋 Règles Métier - PO-UX-UI-DATA
 
-- **RG6.1** – Le Sprint Timeline permet de visualiser chaque sprint sur une frise chronologique, avec les phases clés : préparation, exécution, revue, rétrospective.
-- **RG6.2** – Le Sprint Board affiche les user stories en cours, regroupées par statut (à faire, en cours, en test, terminé).
-- **RG6.3** – La vélocité affiche la capacité de l'équipe par sprint, calculée à partir des story points complétés.
-- **RG6.4** – Il est possible de créer un nouveau sprint en sélectionnant des user stories depuis le backlog.
-- **❌ RG6.5** – Une user story ne peut appartenir à plusieurs sprints simultanément.
-- **RG6.6** – Les User Stories et tâches assignées à un sprint reçoivent automatiquement le badge "sprint".
-- **RG6.7** – Le Sprint Backlog n'affiche que les éléments avec badge "sprint" actif.
-- **RG6.8** – À la clôture d'un sprint, les badges "sprint" des éléments terminés sont automatiquement nettoyés.
-- **RG6.9** – Le nettoyage des badges préserve l'historique : les éléments restent visibles dans la vue historique du sprint.
-- **RG6.10** – Une fonction de migration automatique clôture les sprints expirés et reporte les éléments incomplets.ication, dans un contexte de gestion produit orienté UX/UI/Data avec méthodologie Scrum.
+Ce document constitue la référence fonctionnelle des règles métier de l'application, dans un contexte de gestion produit orienté UX/UI/Data avec méthodologie Scrum.
 
 ⸻
 

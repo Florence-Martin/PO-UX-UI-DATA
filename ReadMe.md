@@ -1,9 +1,11 @@
 ## 📦 PO-UX-UI-DATA – UX Product Owner Toolkit
 
-![Tests](https://img.shields.io/badge/Tests-72%20passing-brightgreen)
-![Coverage](https://img.shields.io/badge/Coverage-92.53%25-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-139%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2.25-black)
+![ESLint](https://img.shields.io/badge/ESLint-5%20warnings-yellow)
+![Lighthouse Desktop](https://img.shields.io/badge/Lighthouse-100%2F98%2F96%2F100-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 Cette application est conçue comme une boîte à outils moderne pour Product Owner spécialisé en UX/UI et Datavisualisation, intégrant les meilleures pratiques agiles (Scrum), la recherche utilisateur, le backlog produit et la documentation fonctionnelle.
@@ -76,9 +78,10 @@ npm run dev
 
 ### 📚 Pour les développeurs
 
-- **[Guide complet](./documentation/developer-guide.md)** - Installation, développement, tests
+- **[Documentation complète](./documentation/README.md)** - Index de toute la documentation
+- **[Guide développeur](./documentation/developer-guide.md)** - Installation, développement, tests
 - **[Guide API](./documentation/api-guide.md)** - Services et hooks
-- **[Cheatsheet](./documentation/cheatsheet.md)** - Raccourcis et patterns
+- **[Cheatsheet](./documentation/cheatsheet.md)** - Raccourcis et patterns utiles
 
 ⸻
 
@@ -198,9 +201,16 @@ L’IA sera disponible dès **T1 2026** (version locale puis API).
 
 ### 📚 Documentation complète
 
-- **[Documentation technique](./documentation/README.md)** - Guide complet pour développeurs
+- **[Documentation technique](./documentation/README.md)** - Guide complet et index de la documentation
+- **[Guide développeur](./documentation/developer-guide.md)** - Installation, développement, tests
 - **[Guide de contribution](./documentation/contributing.md)** - Standards et processus
 - **[Guide API](./documentation/api-guide.md)** - Services et hooks
+- **[Cheatsheet](./documentation/cheatsheet.md)** - Raccourcis et patterns utiles
+- **[Roadmap développement](./documentation/roadmap-development.md)** - Plan technique et évolutions
+- **[Résumé exécutif](./documentation/executive-summary.md)** - Analyse et recommandations
+- **[Analyse Performance](./documentation/PERFORMANCE_OPTIMIZATION.md)** - Leçons et bonnes pratiques
+- **[Optimisations Lighthouse](./documentation/LIGHTHOUSE_OPTIMIZATIONS.md)** - Guide d'optimisation web
+- **[Guide de Sécurité](./documentation/security-guide.md)** - Analyse des risques, protections et conformité RGPD
 
 ### 📋 Règles de gestion
 
@@ -221,9 +231,17 @@ Un document détaillé des **règles métier et fonctionnelles** est disponible 
 
 ### Qualité technique
 
-- **Couverture de tests** : 92.53% avec 72 tests unitaires
-- **Types TypeScript** : Système de types robuste et cohérent
+- **Couverture de tests** : 100% avec 139 tests unitaires passant
+- **Types TypeScript** : Configuration stricte activée
 - **Architecture modulaire** : Services métier séparés et réutilisables
+- **Standards ESLint** : 5 warnings à corriger (hooks dependencies)
+- **Sécurité** : Architecture protégée, pas de vulnérabilités d'injection, conformité RGPD
+
+### Performances web
+
+- **Lighthouse Desktop** : Performance 100, Accessibilité 98, Best Practices 96, SEO 100
+- **Optimisations** : Bundle optimisé, lazy loading, cache intelligent
+- **UX** : Interface fluide et responsive avec dark/light mode
 
 ⸻
 
