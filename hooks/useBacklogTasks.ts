@@ -3,7 +3,7 @@
 import {
   createBacklogTask,
   deleteBacklogTask,
-  getAllBacklogTasks,
+  getActiveSprintTasks,
   updateBacklogTask,
 } from "@/lib/services/backlogTasksService";
 import { getAllSprints } from "@/lib/services/sprintService";
@@ -28,7 +28,7 @@ export function useBacklogTasks() {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const allTasks = await getAllBacklogTasks();
+      const allTasks = await getActiveSprintTasks();
       setTasks(allTasks);
       setError(null);
     } catch (err) {
