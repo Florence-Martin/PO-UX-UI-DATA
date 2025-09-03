@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
 interface FilterUserStoryListProps {
@@ -23,7 +23,7 @@ export const FilterUserStoryList = ({
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [localValue]);
+  }, [localValue, onChange]);
 
   useEffect(() => {
     setLocalValue(value);

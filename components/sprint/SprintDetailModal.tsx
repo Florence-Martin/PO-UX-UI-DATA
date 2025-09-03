@@ -37,6 +37,7 @@ export function SprintDetailModal({
   const {
     isCreating,
     titleRef,
+    goalRef,
     startDateRef,
     endDateRef,
     isActiveRef,
@@ -81,6 +82,7 @@ export function SprintDetailModal({
               🎯 Objectif du sprint
             </label>
             <input
+              ref={goalRef}
               type="text"
               defaultValue={sprint?.goal || ""}
               placeholder="Exemple : Améliorer la performance de l'application"

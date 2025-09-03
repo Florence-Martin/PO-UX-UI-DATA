@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
 interface PriorityFilterSelectProps {
@@ -28,7 +28,7 @@ export const PriorityFilterSelect = ({
 
   useEffect(() => {
     onFilterChange(priority);
-  }, [priority]);
+  }, [priority, onFilterChange]);
 
   useEffect(() => {
     setLocalSearch(searchValue);
@@ -39,7 +39,7 @@ export const PriorityFilterSelect = ({
       onSearchChange?.(localSearch);
     }, 300);
     return () => clearTimeout(delay);
-  }, [localSearch]);
+  }, [localSearch, onSearchChange]);
 
   const handlePriorityChange = (value: string) => {
     setPriority(value);

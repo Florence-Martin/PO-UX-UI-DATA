@@ -86,30 +86,9 @@ export function SprintBoard() {
       task.badge === "sprint"
   );
 
-  // Créer des tâches virtuelles pour les User Stories sans tâches
-  const virtualTasks = sprintUserStories
-    .filter((us) => {
-      // Vérifier si cette US a déjà des tâches dans sprintTasks
-      const hasExistingTasks = sprintTasks.some((task) =>
-        task.userStoryIds?.includes(us.id)
-      );
-      return !hasExistingTasks;
-    })
-    .map((us) => ({
-      id: `virtual-${us.id}`,
-      title: us.title || `User Story ${us.code || us.id}`,
-      description:
-        us.description || `User Story: ${us.title || "Sans description"}`,
-      status: "todo" as const,
-      storyPoints: us.storyPoints || 0,
-      userStoryIds: [us.id],
-      badge: "sprint" as const,
-      isVirtual: true,
-      userStoryCode: us.code || "US-???",
-    }));
-
-  // Combiner les vraies tâches et les tâches virtuelles
-  const allSprintTasks = [...sprintTasks, ...virtualTasks];
+  // ✅ Plus besoin de tâches virtuelles : nous créons maintenant des vraies tâches automatiquement !
+  // Utiliser directement les tâches réelles du sprint
+  const allSprintTasks = sprintTasks;
 
   // Vérifier si une User Story a sa DoD complétée
   const isUserStoryDoDCompleted = (userStory: UserStory): boolean => {
@@ -332,73 +311,43 @@ export function SprintBoard() {
                         task.userStoryIds?.includes(us.id!)
                       );
 
-                      // @ts-ignore - On ajoute isVirtual aux tâches virtuelles
-                      const isVirtualTask = task.isVirtual;
-
                       return (
                         <div
                           key={task.id}
-                          className={`p-4 rounded-lg border space-y-3 min-h-[140px] transition-all ${
-                            isVirtualTask
-                              ? "bg-blue-50 border-blue-200 border-dashed"
-                              : "bg-background hover:shadow-md"
-                          }`}
+                          className="p-4 rounded-lg border space-y-3 min-h-[140px] transition-all bg-background hover:shadow-md"
                         >
                           <div className="flex items-center justify-between text-xs">
                             <span className="font-mono truncate font-medium">
-                              {isVirtualTask
-                                ? userStory?.code ?? "US-???"
-                                : userStory?.code ?? "US-???"}
+                              {userStory?.code ?? "US-???"}
                             </span>
-                            {!isVirtualTask && (
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Link
-                                    href={`/backlog?tab=kanban#${task.id}`}
-                                    scroll={false}
-                                  >
-                                    <Wrench className="w-4 h-4 hover:text-primary transition-colors" />
-                                  </Link>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  Modifier dans le backlog
-                                </TooltipContent>
-                              </Tooltip>
-                            )}
-                            {isVirtualTask && (
-                              <span className="text-blue-600 text-xs font-medium bg-blue-100 px-2 py-1 rounded">
-                                📝 User Story
-                              </span>
-                            )}
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link
+                                  href={`/backlog?tab=kanban#${task.id}`}
+                                  scroll={false}
+                                >
+                                  <Wrench className="w-4 h-4 hover:text-primary transition-colors" />
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Modifier dans le backlog
+                              </TooltipContent>
+                            </Tooltip>
                           </div>
 
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <h4
-                                className={`font-medium text-sm leading-snug line-clamp-2 cursor-default ${
-                                  isVirtualTask ? "text-blue-800" : ""
-                                }`}
-                              >
+                              <h4 className="font-medium text-sm leading-snug line-clamp-2 cursor-default">
                                 {task.title}
                               </h4>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs md:max-w-sm whitespace-pre-wrap">
                               {task.title}
-                              {isVirtualTask && (
-                                <div className="mt-2 text-xs text-muted-foreground">
-                                  {task.description}
-                                </div>
-                              )}
                             </TooltipContent>
                           </Tooltip>
 
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>Story Points : {task.storyPoints}</span>
-                            {isVirtualTask && (
-                              <span className="text-blue-600 text-xs italic">
-                                Cliquer pour voir détails
-                              </span>
-                            )}
                           </div>
                         </div>
                       );

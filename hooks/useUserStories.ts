@@ -9,7 +9,7 @@ import {
 } from "@/lib/services/userStoryService";
 import { DoDProgress, UserStory } from "@/lib/types/userStory";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useUserStories() {
@@ -178,7 +178,7 @@ export function useUserStories() {
   };
 
   // Chargement en édition
-  const handleEdit = (story: UserStory) => {
+  const handleEdit = useCallback((story: UserStory) => {
     setIsEditing(true);
     setEditingId(story.id ?? null);
     setEditingCode(story.code ?? null);
@@ -188,7 +188,7 @@ export function useUserStories() {
     setStoryPoints(story.storyPoints);
     setAcceptanceCriteria(story.acceptanceCriteria ?? "");
     setMoscow(story.moscow ?? "");
-  };
+  }, []);
 
   // Suppression
   const handleDelete = async (id?: string) => {

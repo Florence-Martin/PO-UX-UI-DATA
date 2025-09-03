@@ -19,6 +19,7 @@ export function useSprintDetail(
   const isCreating = sprint === null;
 
   const titleRef = useRef<HTMLInputElement>(null);
+  const goalRef = useRef<HTMLInputElement>(null);
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
   const isActiveRef = useRef<HTMLInputElement>(null);
@@ -52,6 +53,7 @@ export function useSprintDetail(
 
     const rawTitle = titleRef.current?.value || "";
     const sanitizedTitle = sanitize(rawTitle); //Assainissement du title via DOMPurify (sanitize(title))
+    const goal = goalRef.current?.value || "";
     const startDateStr = startDateRef.current?.value;
     const endDateStr = endDateRef.current?.value;
     const isActive = isActiveRef.current?.checked || false;
@@ -76,6 +78,7 @@ export function useSprintDetail(
       if (isCreating) {
         const newSprintId = await createSprint({
           title: sanitizedTitle,
+          goal: goal,
           startDate: Timestamp.fromDate(startDate!),
           endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
@@ -97,6 +100,7 @@ export function useSprintDetail(
       } else {
         await updateSprint(sprint.id, {
           title: sanitizedTitle,
+          goal: goal,
           startDate: Timestamp.fromDate(startDate!),
           endDate: Timestamp.fromDate(endDate!),
           userStoryIds: edited.userStoryIds,
@@ -140,6 +144,7 @@ export function useSprintDetail(
   return {
     isCreating,
     titleRef,
+    goalRef,
     startDateRef,
     endDateRef,
     isActiveRef,

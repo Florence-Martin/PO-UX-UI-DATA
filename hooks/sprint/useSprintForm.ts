@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { Timestamp } from "firebase/firestore";
-import { toast } from "sonner";
-import { createSprint } from "@/lib/services/sprintService";
-import { Sprint } from "@/lib/types/sprint";
-import { sprintSchema, sanitize } from "@/lib/utils/sprintSchema";
 import {
-  addSprintToUserStory,
-  updateUserStory,
-} from "@/lib/services/userStoryService";
-import { updateBadgesForSprintUserStories } from "@/lib/utils/updateSprintBadges";
-import {
+  createBacklogTask,
   getAllBacklogTasks,
   updateBacklogTask,
 } from "@/lib/services/backlogTasksService";
+import { createSprint } from "@/lib/services/sprintService";
+import {
+  addSprintToUserStory,
+  getAllUserStories,
+  updateUserStory,
+} from "@/lib/services/userStoryService";
+import { BacklogTask } from "@/lib/types/backlogTask";
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
+import { sanitize, sprintSchema } from "@/lib/utils/sprintSchema";
+import { updateBadgesForSprintUserStories } from "@/lib/utils/updateSprintBadges";
+import { Timestamp } from "firebase/firestore";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export function useSprintForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -103,10 +107,10 @@ export function useSprintForm() {
 
       await updateBadgesForSprintUserStories(userStoryIds);
 
-      // Mise à jour des tâches associées aux US
+      // Mise à jour des tâches existantes associées aux US
       const allTasks = await getAllBacklogTasks();
 
-      const updates = userStoryIds.flatMap((usId) => {
+      const existingTaskUpdates = userStoryIds.flatMap((usId) => {
         return allTasks
           .filter((task) => task.userStoryIds?.includes(usId))
           .map((task) =>
@@ -117,7 +121,46 @@ export function useSprintForm() {
           );
       });
 
-      await Promise.all(updates);
+      await Promise.all(existingTaskUpdates);
+
+      // 🆕 Créer automatiquement des tâches par défaut pour les US sans tâches
+      const userStoriesData = await getAllUserStories();
+      const newTaskCreations = userStoryIds.map(async (usId) => {
+        // Vérifier si cette US a déjà des tâches associées
+        const hasExistingTasks = allTasks.some((task) =>
+          task.userStoryIds?.includes(usId)
+        );
+
+        if (!hasExistingTasks) {
+          // Récupérer les infos de l'US pour créer une tâche appropriée
+          const userStory = userStoriesData.find(
+            (us: UserStory) => us.id === usId
+          );
+
+          if (userStory) {
+            console.log(
+              `🆕 Création d'une tâche par défaut pour l'US: ${userStory.title}`
+            );
+
+            // Créer une tâche par défaut pour cette User Story
+            const defaultTask: Omit<BacklogTask, "id"> = {
+              title: `Implémenter: ${userStory.title}`,
+              description: `Tâche principale pour implémenter la User Story: ${userStory.title}`,
+              priority: userStory.priority || "medium",
+              storyPoints: userStory.storyPoints || 3,
+              status: "todo",
+              userStoryIds: [usId],
+              badge: "sprint", // Directement avec le badge sprint
+              createdAt: Timestamp.now(),
+              updatedAt: Timestamp.now(),
+            };
+
+            await createBacklogTask(defaultTask);
+          }
+        }
+      });
+
+      await Promise.all(newTaskCreations);
 
       toast.success("Sprint créé avec succès ✅");
       resetForm();

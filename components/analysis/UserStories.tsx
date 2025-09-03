@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -13,21 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ArrowDownToDot, Info, List, Notebook, Pen } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
+import { ArrowDownToDot, List, Notebook, Pen } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-import { useUserStories } from "@/hooks/useUserStories";
-import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useUserStories } from "@/hooks/useUserStories";
+import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStories() {
   const {
@@ -73,7 +72,7 @@ export function UserStories() {
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 150);
     }
-  }, [storyIdToEdit, filteredStories]);
+  }, [storyIdToEdit, filteredStories, handleEdit, router]);
 
   // Surlignage temporaire
   useEffect(() => {

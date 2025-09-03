@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
 type MoscowType =
@@ -43,7 +43,7 @@ export const MoscowFilterSelect = ({
       onSearchChange?.(localSearch);
     }, 300);
     return () => clearTimeout(delay);
-  }, [localSearch]);
+  }, [localSearch, onSearchChange]);
 
   const handleMoscowChange = (value: MoscowType) => {
     setMoscowFilter(value);
