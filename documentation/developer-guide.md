@@ -216,7 +216,7 @@ module.exports = {
 
 ### Couverture actuelle
 
-- **Tests** : 139 tests passant (100%)
+- **Tests** : 141 tests passant (100%)
 - **Couverture globale** : 100%
 - **TypeScript** : Configuration stricte activée
 - **Lighthouse Desktop** : Performance 100, Accessibilité 98, Best Practices 96, SEO 100

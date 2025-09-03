@@ -1,10 +1,10 @@
 ## 📦 PO-UX-UI-DATA – UX Product Owner Toolkit
 
-![Tests](https://img.shields.io/badge/Tests-139%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-141%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
-![Next.js](https://img.shields.io/badge/Next.js-14.2.25-black)
-![ESLint](https://img.shields.io/badge/ESLint-5%20warnings-yellow)
+![Next.js](https://img.shields.io/badge/Next.js-14.2.31-black)
+![ESLint](https://img.shields.io/badge/ESLint-0%20warnings-brightgreen)
 ![Lighthouse Desktop](https://img.shields.io/badge/Lighthouse-100%2F98%2F96%2F100-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
