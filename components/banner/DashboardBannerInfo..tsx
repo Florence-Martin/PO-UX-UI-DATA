@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Info } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export const DashboardBannerInfo = () => {
   const [visible, setVisible] = useState(true);
@@ -29,8 +29,8 @@ export const DashboardBannerInfo = () => {
                 <div className="animate-marquee whitespace-nowrap">
                   <span className="text-sm sm:text-base leading-snug inline-block">
                     <strong>Dashboard UX/Data</strong> — Les données affichées
-                    sont simulées pour l’instant. L&apos;intégration dynamique
-                    est prévue dans les prochaines évolutions du projet.
+                    sont partiellement simulées. L&apos;intégration dynamique
+                    est en cours et sera progressivement étendue.
                   </span>
                 </div>
               </div>
