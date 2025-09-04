@@ -1,13 +1,13 @@
 // hooks/usePersonas.ts
-import { useEffect, useState } from "react";
+import { db } from "@/lib/firebase";
 import {
   collection,
-  getDocs,
-  doc,
-  setDoc,
   deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useEffect, useState } from "react";
 
 export type Persona = {
   id: string;
@@ -20,12 +20,17 @@ export function usePersonas() {
   const [loading, setLoading] = useState(true);
 
   const fetchPersonas = async () => {
-    const snapshot = await getDocs(collection(db, "user_research_personas"));
-    const list = snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Persona)
-    );
-    setPersonas(list);
-    setLoading(false);
+    try {
+      const snapshot = await getDocs(collection(db, "user_research_personas"));
+      const list = snapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as Persona)
+      );
+      setPersonas(list);
+    } catch (error) {
+      console.error("Erreur lors du chargement des personas:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const savePersona = async (id: string, data: Omit<Persona, "id">) => {

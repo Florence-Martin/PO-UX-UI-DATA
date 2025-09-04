@@ -22,7 +22,7 @@ PO-UX-UI-DATA est une application Next.js complète destinée aux Product Owners
 
 - **Dashboard UX/Data** : Métriques temps réel et KPIs
 - **Roadmap Produit** : Planification trimestrielle
-- **Analyse & Wireframes** : Recherche utilisateur, personas
+- **Analyse & Wireframes** : Recherche utilisateur, personas, grille wireframes configurable
 - **Backlog Product** : Kanban interactif avec drag-and-drop
 - **Sprint Management** : Planning et suivi de vélocité
 - **Validation & Qualité** : Checklists et tests API

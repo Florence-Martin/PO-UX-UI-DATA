@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { History as HistoryIcon } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
+import { History as HistoryIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { SprintHistoryCard } from "./SprintHistoryCard";
 import SprintFilter, {
   SprintFilterValue,
 } from "@/components/searchbar/SprintFilter";
+import { SprintHistoryCard } from "./SprintHistoryCard";
 
 import { useTimeline } from "@/context/TimelineContext";
 
@@ -31,26 +31,26 @@ export function SprintHistoryTimeline() {
         // Priorité 1: Utiliser closedAt si disponible, sinon endDate
         const dateA = a.closedAt ? parseDate(a.closedAt) : parseDate(a.endDate);
         const dateB = b.closedAt ? parseDate(b.closedAt) : parseDate(b.endDate);
-        
+
         // Tri principal par date de fin/clôture (plus récent en premier)
         const timeDiff = dateB.getTime() - dateA.getTime();
-        
+
         // Si égalité de date de fin, départager par date de début (plus récent en premier)
         if (timeDiff === 0) {
           const startA = parseDate(a.startDate);
           const startB = parseDate(b.startDate);
           const startTimeDiff = startB.getTime() - startA.getTime();
-          
+
           // Si même date de début aussi, utiliser le numéro de sprint comme dernier critère
           if (startTimeDiff === 0) {
-            const numA = parseInt(a.title.match(/Sprint (\d+)/)?.[1] || '0');
-            const numB = parseInt(b.title.match(/Sprint (\d+)/)?.[1] || '0');
+            const numA = parseInt(a.title.match(/Sprint (\d+)/)?.[1] || "0");
+            const numB = parseInt(b.title.match(/Sprint (\d+)/)?.[1] || "0");
             return numB - numA; // Plus grand numéro en premier
           }
-          
+
           return startTimeDiff;
         }
-        
+
         return timeDiff;
       });
 
@@ -79,9 +79,9 @@ export function SprintHistoryTimeline() {
       {filteredSprints.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredSprints.map((sprint, index) => (
-            <SprintHistoryCard 
-              key={`${sprint.id}-${index}-${filter}`} 
-              sprint={sprint} 
+            <SprintHistoryCard
+              key={`${sprint.id}-${index}-${filter}`}
+              sprint={sprint}
             />
           ))}
         </div>

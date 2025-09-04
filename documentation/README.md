@@ -12,12 +12,14 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 
 - **[README principal](../ReadMe.md)** - Vue d'ensemble du projet et fonctionnalités
 - **[Guide d'installation](./developer-guide.md#installation-et-configuration)** - Installation et configuration rapide
+- **[État final du projet](./project-final-state.md)** - Synthèse complète et métriques qualité
 
 ### 👨‍💻 Développeurs
 
 - **[Guide développeur](./developer-guide.md)** - Guide complet pour les développeurs
 - **[Guide de contribution](./contributing.md)** - Standards et processus de contribution
 - **[Guide API](./api-guide.md)** - Documentation des services et hooks
+- **[Guide des tests](./testing-guide.md)** - Architecture et stratégie de tests
 - **[Cheatsheet](./cheatsheet.md)** - Raccourcis et patterns utiles
 
 ### 📋 Gestion de projet
@@ -25,6 +27,11 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 - **[Règles métier](./business-rules.md)** - Spécifications fonctionnelles détaillées
 - **[Roadmap technique](./roadmap-development.md)** - Plan de développement et prochaines étapes
 - **[Résumé exécutif](./executive-summary.md)** - Analyse et recommandations
+
+### 🖼️ Fonctionnalités spécialisées
+
+- **[Architecture Wireframes](./wireframes-migration-summary.md)** - Migration Firebase Storage → Hybride
+- **[Wireframes Architecture Locale](./wireframes-local-architecture.md)** - Grille configurable et téléchargement d'images
 
 ### ⚡ Performance & Optimisation
 
@@ -76,7 +83,7 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 
 - **Dashboard UX/Data** : Métriques temps réel et KPIs
 - **Roadmap Produit** : Planification trimestrielle interactive
-- **Analyse & Wireframes** : Recherche utilisateur et personas
+- **Analyse & Wireframes** : Recherche utilisateur, personas et grille wireframes locale
 - **Backlog Product** : Kanban avec drag-and-drop
 - **Sprint Management** : Planning et suivi de vélocité
 - **Validation & Qualité** : Checklists et tests API
@@ -84,7 +91,7 @@ Cette documentation complète vous guide à travers tous les aspects techniques 
 ### 🔧 Stack technique
 
 - **Frontend** : Next.js 14 + TypeScript + TailwindCSS
-- **Backend** : Firebase/Firestore
+- **Backend** : Firebase/Firestore (+ services locaux pour wireframes)
 - **Tests** : Jest (92.53% coverage)
 - **UI Components** : Shadcn UI + Lucide Icons
 - **Charts** : Chart.js + React-Chartjs-2
@@ -184,9 +191,12 @@ npm run lint
 ### Variables d'environnement
 
 ```env
+# Variables Firebase (pour les fonctionnalités utilisant Firestore)
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 # ... autres variables Firebase
+
+# Note: Les wireframes utilisent un service local (pas de variables requises)
 ```
 
 ---
@@ -257,10 +267,11 @@ Nous accueillons les contributions ! Consultez le [guide de contribution](./cont
 
 ### Phase 2 (Q2 2025)
 
-- [ ] Authentification Firebase
+- [ ] Authentification Firebase (optionnelle pour sécurisation)
 - [ ] Dashboard temps réel
 - [ ] Tests d'intégration
 - [ ] Bannière d'information RGPD
+- [x] Wireframes avec grille configurable (architecture locale)
 
 ### Phase 3 (Q3 2025)
 

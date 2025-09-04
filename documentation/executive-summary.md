@@ -30,8 +30,9 @@
 ### **Court terme (Mois 1-2)**
 
 1. **Intégrations externes** : Figma API, JIRA, Confluence
-2. **Authentification** : Firebase Auth avec rôles
+2. **Authentification** : Firebase Auth avec rôles (optionnelle)
 3. **Données réelles** : Remplacer les données simulées
+4. **Wireframes** : ✅ Grille configurable avec service local
 
 ### **Moyen terme (Mois 3-6)**
 

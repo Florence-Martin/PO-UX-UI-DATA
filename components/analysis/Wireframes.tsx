@@ -1,124 +1,101 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ExternalLink, Layout, Link } from "lucide-react";
-import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { WireframeWithConfig } from "@/components/wireframes/WireframeWithConfig";
+import { WireframeImage } from "@/lib/services/wireframeService";
+import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { WireframesProgressPad } from "../wireframes/WireframesProgressPad";
 
 export function Wireframes() {
-  const [gridSize, setGridSize] = useState({ cols: 4, rows: 3 });
+  const handleImageChange = (
+    row: number,
+    col: number,
+    image: WireframeImage | null
+  ) => {
+    console.log(
+      `Case ${row},${col}:`,
+      image ? `Image "${image.fileName}" ajoutée` : "Image supprimée"
+    );
+  };
 
   return (
     <div className="space-y-6">
       {/* Section de progression - en haut pour la visibilité */}
       <WireframesProgressPad />
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-4">
-        <Card className="lg:col-span-3">
+
+      {/* Grille avec configuration intégrée */}
+      <WireframeWithConfig onImageChange={handleImageChange} />
+
+      {/* Panneau d'informations et liens */}
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+        {/* Liens Figma */}
+        <Card>
           <CardHeader>
-            <CardTitle>Grille de Wireframe</CardTitle>
+            <CardTitle>
+              <Image
+                src="/figma.svg"
+                alt="Figma Logo"
+                width={10}
+                height={10}
+                className="inline-block h-6 w-6 mr-2"
+              />
+              Liens Figma
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div
-              className="grid gap-2 p-4 bg-muted rounded-lg"
-              style={{
-                gridTemplateColumns: `repeat(${gridSize.cols}, 1fr)`,
-                gridTemplateRows: `repeat(${gridSize.rows}, 100px)`,
-              }}
+          <CardContent className="space-y-2">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/not-found")}
+              title="Lien pas disponible 🙂 "
             >
-              {Array.from({ length: gridSize.cols * gridSize.rows }).map(
-                (_, i) => (
-                  <div
-                    key={i}
-                    className="bg-background border-2 border-dashed border-border rounded-md flex items-center justify-center"
-                  >
-                    <Button variant="ghost" size="sm">
-                      <Layout className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )
-              )}
-            </div>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Maquettes HD
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/not-found")}
+              title="Lien pas disponible 🙂 "
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Design System
+            </Button>
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configuration</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Colonnes</Label>
-                <Input
-                  type="number"
-                  value={gridSize.cols}
-                  onChange={(e) =>
-                    setGridSize((prev) => ({
-                      ...prev,
-                      cols: parseInt(e.target.value) || 1,
-                    }))
-                  }
-                  min="1"
-                  max="12"
-                />
+        {/* Instructions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>💡 Mode d&apos;emploi</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-blue-500 font-mono text-xs bg-blue-50 px-1 rounded">
+                  1
+                </span>
+                <span>
+                  Cliquez sur une case vide pour télécharger une image
+                </span>
               </div>
-              <div className="space-y-2">
-                <Label>Lignes</Label>
-                <Input
-                  type="number"
-                  value={gridSize.rows}
-                  onChange={(e) =>
-                    setGridSize((prev) => ({
-                      ...prev,
-                      rows: parseInt(e.target.value) || 1,
-                    }))
-                  }
-                  min="1"
-                  max="12"
-                />
+              <div className="flex items-start gap-2">
+                <span className="text-green-500 font-mono text-xs bg-green-50 px-1 rounded">
+                  2
+                </span>
+                <span>Survolez une image pour accéder aux actions</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Image
-                  src="/figma.svg"
-                  alt="Figma Logo"
-                  width={10}
-                  height={10}
-                  className="inline-block h-6 w-6 mr-2"
-                />
-                Liens Figma
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => (window.location.href = "/not-found")}
-                title="Lien pas disponible 🙂 "
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Maquettes HD
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => (window.location.href = "/not-found")}
-                title="Lien pas disponible 🙂 "
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Design System
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-500 font-mono text-xs bg-purple-50 px-1 rounded">
+                  3
+                </span>
+                <span>Configurez la grille selon vos besoins</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

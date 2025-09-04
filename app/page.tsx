@@ -1,6 +1,7 @@
 import BacklogGoal from "@/components/analysis/BacklogGoal";
 import { RoadmapFlow } from "@/components/analysis/RoadmapFlow";
 import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo.";
+import { DashboardKPICards } from "@/components/dashboard/DashboardKPICards";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UserMetrics } from "@/components/dashboard/UserMetrics";
@@ -26,60 +27,10 @@ export default function Home() {
       </div>
       <BacklogGoal />
       <RoadmapFlow />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Taux de Conversion
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4.28%</div>
-            <p className="text-xs text-muted-foreground">
-              +0.6% par rapport au mois dernier
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Taux de Rebond
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">32.1%</div>
-            <p className="text-xs text-muted-foreground">
-              -2.3% par rapport au mois dernier
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Taux de Scroll
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">68.4%</div>
-            <p className="text-xs text-muted-foreground">
-              +4.1% par rapport au mois dernier
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Taux d&apos;Engagement
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">52.3%</div>
-            <p className="text-xs text-muted-foreground">
-              +2.4% par rapport au mois dernier
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+
+      {/* KPIs Dynamiques */}
+      <DashboardKPICards />
+
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>

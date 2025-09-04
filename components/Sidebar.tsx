@@ -16,6 +16,7 @@ import {
   FileSearch,
   LayoutDashboard,
   Menu,
+  Settings,
   Shield,
   SquareKanban,
   UsersRound,
@@ -66,6 +67,12 @@ const navigation = [
     href: "/scrum-glossary",
     icon: UsersRound,
     description: "Glossaire des termes et méthodes agiles Scrum",
+  },
+  {
+    name: "Administration",
+    href: "/admin",
+    icon: Settings,
+    description: "Interface d'administration des données et métriques UX",
   },
 ];
 

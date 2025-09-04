@@ -54,7 +54,10 @@ export function useActiveSprint() {
 
         // Si aucun sprint n'est marqué comme actif, fallback sur la logique par date
         if (!current) {
-          current = sorted.find(sprint => isCurrentSprint(sprint) && sprint.status !== "done") || null;
+          current =
+            sorted.find(
+              (sprint) => isCurrentSprint(sprint) && sprint.status !== "done"
+            ) || null;
         }
 
         setActiveSprint(current);

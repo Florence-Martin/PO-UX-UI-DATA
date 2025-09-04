@@ -1,52 +1,16 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTimeSeriesMetrics } from "@/hooks/useTimeSeriesMetrics";
 import {
-  LineChart,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const metricsData = [
-  {
-    name: "Jan",
-    conversion: 3.2,
-    bounce: 34.2,
-    scroll: 62.1,
-    engagement: 45.1,
-  },
-  {
-    name: "Fév",
-    conversion: 3.5,
-    bounce: 33.1,
-    scroll: 63.4,
-    engagement: 46.3,
-  },
-  {
-    name: "Mar",
-    conversion: 3.8,
-    bounce: 31.5,
-    scroll: 64.9,
-    engagement: 48.2,
-  },
-  {
-    name: "Avr",
-    conversion: 4.1,
-    bounce: 30.6,
-    scroll: 66.2,
-    engagement: 50.1,
-  },
-  {
-    name: "Mai",
-    conversion: 4.28,
-    bounce: 32.1,
-    scroll: 68.4,
-    engagement: 52.3,
-  },
-];
 
 const graphStyle = {
   strokeWidth: 2,
@@ -54,15 +18,54 @@ const graphStyle = {
 };
 
 export function MetricsGrid() {
+  const { aggregatedData, loading, error, hasData } = useTimeSeriesMetrics();
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-5 w-32" />
+            </CardHeader>
+            <CardContent className="h-[200px]">
+              <Skeleton className="h-full w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="col-span-full">
+          <CardContent className="pt-6">
+            <p className="text-sm text-muted-foreground text-center">
+              {error} {!hasData && "Utilisation des données de démonstration."}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Taux de Conversion</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">🎯</span>
+            Taux de Conversion
+            {!hasData && (
+              <span className="text-xs text-muted-foreground">(demo)</span>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={metricsData}>
+            <LineChart data={aggregatedData}>
               <XAxis dataKey="name" stroke="#888" fontSize={12} />
               <YAxis
                 stroke="#888"
@@ -83,11 +86,17 @@ export function MetricsGrid() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Taux de Rebond</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">🔄</span>
+            Taux de Rebond
+            {!hasData && (
+              <span className="text-xs text-muted-foreground">(demo)</span>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={metricsData}>
+            <LineChart data={aggregatedData}>
               <XAxis dataKey="name" stroke="#888" fontSize={12} />
               <YAxis
                 stroke="#888"
@@ -108,11 +117,17 @@ export function MetricsGrid() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Taux de Scroll</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">📊</span>
+            Taux de Scroll
+            {!hasData && (
+              <span className="text-xs text-muted-foreground">(demo)</span>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={metricsData}>
+            <LineChart data={aggregatedData}>
               <XAxis dataKey="name" stroke="#888" fontSize={12} />
               <YAxis
                 stroke="#888"
@@ -133,11 +148,17 @@ export function MetricsGrid() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Taux d’Engagement</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">💫</span>
+            Taux d&apos;Engagement
+            {!hasData && (
+              <span className="text-xs text-muted-foreground">(demo)</span>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={metricsData}>
+            <LineChart data={aggregatedData}>
               <XAxis dataKey="name" stroke="#888" fontSize={12} />
               <YAxis
                 stroke="#888"

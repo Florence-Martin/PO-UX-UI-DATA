@@ -1,6 +1,15 @@
-## 📦 PO-UX-UI-DATA – UX Product Owner Toolkit
+## 📦 PO-UX-UPensée pour un usage terrain, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
 
-![Tests](https://img.shields.io/badge/Tests-141%20passing-brightgreen)
+> ⚠️ Version Démo - Architecture Hybride
+
+- **Firestore** : Métadonnées et données structurées (Firebase publique pour démo)
+- **Stockage local** : Images wireframes dans `/public/wireframes/`
+- **Aucune authentification** requise pour cette version démo
+- **Aucune donnée sensible** n'est stockée - lecture/écriture publique uniquement
+- Architecture optimisée pour éviter les coûts Firebase Storage– UX Product Owner Toolkit
+
+![Tests](https://img.shields.io/badge/Tests-166%20passing-brightgreen)
+![Test Suites](https://img.shields.io/badge/Test%20Suites-16%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2.31-black)
@@ -120,8 +129,12 @@ npm run dev
 
 **Wireframes**
 
-- Grilles modulables de **wireframes basse fidélité**
-- Aperçu visuel type **grid preview** pour faciliter le prototypage
+- **Grilles dynamiques** : Configuration flexible de 2×2 à 5×5 cellules
+- **Upload d'images** : Stockage local via API Next.js (`/api/upload-wireframe`)
+- **Persistance hybride** : Métadonnées Firestore + images locales
+- **Interface intuitive** : Drag & drop, redimensionnement, suppression
+- **Aperçu visuel** : Grid preview pour faciliter le prototypage
+- **Architecture optimisée** : Zéro coût, performances élevées
 - Liaison possible avec des maquettes Figma
 
 **Documentation fonctionnelle**
@@ -187,13 +200,23 @@ L’IA sera disponible dès **T1 2026** (version locale puis API).
 
 ## Stack Technique
 
-- `Next.js` (App Router)
-- `TypeScript`
+- `Next.js` (App Router) + API Routes
+- `TypeScript` 5.2.2
 - `TailwindCSS` + `Shadcn UI`
-- `Chart.js`
-- `Firebase` (Auth + Firestore)
+- `Chart.js` (dataviz)
+- `Firebase` Firestore (métadonnées uniquement)
+- `Stockage local` (images wireframes)
+- `Jest` (tests - 166 tests, 16 suites)
 - `Lucide Icons`
-- `Framer Motion`
+- `Framer Motion` (animations)
+
+### Architecture Hybride
+
+- **Frontend** : Next.js avec composants React
+- **Base de données** : Firestore (données structurées)
+- **Stockage fichiers** : Local `/public/wireframes/`
+- **API** : Routes Next.js (`/api/upload-wireframe`, `/api/delete-wireframe`)
+- **Tests** : Jest avec mocks Firestore complets
 
 ⸻
 

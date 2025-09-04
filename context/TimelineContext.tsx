@@ -1,19 +1,19 @@
 // context/TimelineContext.tsx
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useCallback,
-  useState,
-} from "react";
-import { getAllUserStories } from "@/lib/services/userStoryService";
-import { getAllSprints } from "@/lib/services/sprintService";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
+import { getAllSprints } from "@/lib/services/sprintService";
+import { getAllUserStories } from "@/lib/services/userStoryService";
+import { BacklogTask } from "@/lib/types/backlogTask";
 import { Sprint } from "@/lib/types/sprint";
 import { UserStory } from "@/lib/types/userStory";
-import { BacklogTask } from "@/lib/types/backlogTask";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface TimelineContextValue {
   sprints: Sprint[];
@@ -45,6 +45,8 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
       setUserStories(us);
       setSprints(s);
       setTasks(t);
+    } catch (error) {
+      console.error("Erreur lors du chargement des données:", error);
     } finally {
       setLoading(false);
     }
