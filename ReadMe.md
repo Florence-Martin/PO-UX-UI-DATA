@@ -1,6 +1,8 @@
-## 📦 PO-UX-UPensée pour un usage terrain, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
+## 📦 PO-UX-UI Pensée pour un usage terrain, elle centralise tous les outils nécessaires pour cadrer, piloter, et valider un produit numérique dans un contexte collaboratif (UX, BI, Tech).
 
 > ⚠️ Version Démo - Architecture Hybride
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 - **Firestore** : Métadonnées et données structurées (Firebase publique pour démo)
 - **Stockage local** : Images wireframes dans `/public/wireframes/`
@@ -15,7 +17,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.2.31-black)
 ![ESLint](https://img.shields.io/badge/ESLint-0%20warnings-brightgreen)
 ![Lighthouse Desktop](https://img.shields.io/badge/Lighthouse-100%2F98%2F96%2F100-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 Cette application est conçue comme une boîte à outils moderne pour Product Owner spécialisé en UX/UI et Datavisualisation, intégrant les meilleures pratiques agiles (Scrum), la recherche utilisateur, le backlog produit et la documentation fonctionnelle.
 
@@ -284,6 +286,21 @@ D’autres sections sont pour le moment **présentées sous forme statique ou en
 - Suivre les updates sur [GitHub](https://github.com/Florence-Martin/PO-UX-UI-DATA)
 - Échanger sur [LinkedIn](https://www.linkedin.com/in/florence-martin-922b3861/)
 
+⸻
+
+## 📜 Licence & Attribution
+
+Ce projet est distribué sous la **licence MIT**.  
+Vous êtes libre d’utiliser, copier, modifier et distribuer ce logiciel,  
+à condition de mentionner clairement l’autrice : **Florence Martin**.
+
+📌 **Obligation d’attribution**  
+Si vous réutilisez ou partagez ce projet (en totalité ou en partie),  
+merci d’inclure la référence suivante :
+
+> Basé sur le projet **PO-UX-UI-DATA** de [Florence Martin](https://github.com/Florence-Martin)
+
+Consultez le fichier [LICENCE](./LICENSE) pour plus de détails.
 ⸻
 
 > _Projet conçu par Florence Martin – PO / UX/UI / Frontend Developer._
