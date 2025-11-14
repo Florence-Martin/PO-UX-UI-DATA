@@ -7,8 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "clean": "rm -rf .next node_modules package-lock.json && npm install"
   },
   "dependencies": {
@@ -95,6 +100,7 @@
     "@types/react-beautiful-dnd": "^13.1.8",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
+    "prettier": "^3.6.2",
     "ts-jest": "^29.4.0"
   }
 }
