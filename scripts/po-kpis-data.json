@@ -1,0 +1,226 @@
+{
+  "documentedKPIs": [
+    {
+      "name": "Feature Adoption Rate",
+      "definition": "Pourcentage d'utilisateurs actifs qui utilisent une nouvelle fonctionnalité dans les 30 jours suivant son lancement",
+      "category": "product",
+      "frequency": "weekly",
+      "target": "≥ 40%",
+      "owner": "Product Owner",
+      "dataSources": ["Analytics", "Feature Flags"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Time to Value (TTV)",
+      "definition": "Temps moyen pour qu'un nouvel utilisateur atteigne son premier succès clé (onboarding → activation)",
+      "category": "product",
+      "frequency": "weekly",
+      "target": "≤ 5 minutes",
+      "owner": "Product Owner",
+      "dataSources": ["Analytics", "User Journey"],
+      "visualizationType": "bar"
+    },
+    {
+      "name": "Feature Usage Rate",
+      "definition": "Taux d'utilisation des fonctionnalités principales par rapport aux utilisateurs actifs",
+      "category": "product",
+      "frequency": "daily",
+      "target": "≥ 60%",
+      "owner": "Product Owner",
+      "dataSources": ["Analytics", "Mixpanel"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Net Promoter Score (NPS)",
+      "definition": "Score de recommandation client basé sur la question 'Recommanderiez-vous ce produit ?' (0-10)",
+      "category": "product",
+      "frequency": "monthly",
+      "target": "≥ 50",
+      "owner": "Product Owner",
+      "dataSources": ["Surveys", "Customer Feedback"],
+      "visualizationType": "gauge"
+    },
+    {
+      "name": "Vélocité Sprint",
+      "definition": "Nombre moyen de story points complétés par sprint sur les 3 derniers sprints",
+      "category": "agile",
+      "frequency": "weekly",
+      "target": "≥ 40 SP",
+      "owner": "Scrum Master",
+      "dataSources": ["Jira", "Azure DevOps"],
+      "visualizationType": "bar"
+    },
+    {
+      "name": "Sprint Completion Rate",
+      "definition": "Pourcentage de story points complétés vs engagés dans le sprint (Sprint Goal Achievement)",
+      "category": "agile",
+      "frequency": "weekly",
+      "target": "≥ 85%",
+      "owner": "Scrum Master",
+      "dataSources": ["Jira", "Sprint Burndown"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Lead Time",
+      "definition": "Temps moyen entre la création d'une user story et sa mise en production",
+      "category": "agile",
+      "frequency": "weekly",
+      "target": "≤ 10 jours",
+      "owner": "Product Owner",
+      "dataSources": ["Jira", "Git", "CI/CD"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Cycle Time",
+      "definition": "Temps moyen entre le début du développement et le déploiement en production",
+      "category": "agile",
+      "frequency": "weekly",
+      "target": "≤ 5 jours",
+      "owner": "Tech Lead",
+      "dataSources": ["Jira", "Git"],
+      "visualizationType": "bar"
+    },
+    {
+      "name": "Revenue per User (RPU)",
+      "definition": "Revenu moyen généré par utilisateur actif mensuel",
+      "category": "business",
+      "frequency": "monthly",
+      "target": "≥ 15€",
+      "owner": "Product Owner",
+      "dataSources": ["Stripe", "Analytics"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Conversion Rate",
+      "definition": "Taux de conversion du funnel principal (visiteur → utilisateur payant)",
+      "category": "business",
+      "frequency": "weekly",
+      "target": "≥ 3.5%",
+      "owner": "Growth PM",
+      "dataSources": ["Analytics", "Mixpanel"],
+      "visualizationType": "funnel"
+    },
+    {
+      "name": "Customer Lifetime Value (CLV)",
+      "definition": "Valeur totale moyenne qu'un client génère sur toute sa durée de vie",
+      "category": "business",
+      "frequency": "monthly",
+      "target": "≥ 500€",
+      "owner": "Product Owner",
+      "dataSources": ["CRM", "Billing"],
+      "visualizationType": "bar"
+    },
+    {
+      "name": "Retention Rate D7/D30",
+      "definition": "Pourcentage d'utilisateurs actifs à J+7 et J+30 après leur première session",
+      "category": "business",
+      "frequency": "weekly",
+      "target": "D7: ≥40%, D30: ≥20%",
+      "owner": "Product Owner",
+      "dataSources": ["Analytics", "Cohort Analysis"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "System Usability Scale (SUS)",
+      "definition": "Score standardisé de satisfaction UX basé sur un questionnaire de 10 questions (0-100)",
+      "category": "ux",
+      "frequency": "quarterly",
+      "target": "≥ 75",
+      "owner": "UX Designer",
+      "dataSources": ["User Testing", "Surveys"],
+      "visualizationType": "gauge"
+    },
+    {
+      "name": "Bounce Rate",
+      "definition": "Pourcentage de sessions d'une seule page sans interaction (< 10 secondes)",
+      "category": "ux",
+      "frequency": "daily",
+      "target": "≤ 35%",
+      "owner": "UX Designer",
+      "dataSources": ["Analytics"],
+      "visualizationType": "line"
+    },
+    {
+      "name": "Bug Escape Rate",
+      "definition": "Pourcentage de bugs découverts en production vs total de bugs (production + QA)",
+      "category": "quality",
+      "frequency": "weekly",
+      "target": "≤ 10%",
+      "owner": "QA Lead",
+      "dataSources": ["Jira", "Bug Tracking"],
+      "visualizationType": "bar"
+    },
+    {
+      "name": "Support Tickets / MAU",
+      "definition": "Nombre de tickets support générés pour 1000 utilisateurs actifs mensuels",
+      "category": "quality",
+      "frequency": "weekly",
+      "target": "≤ 50 tickets/1000 MAU",
+      "owner": "Customer Success",
+      "dataSources": ["Zendesk", "Analytics"],
+      "visualizationType": "line"
+    }
+  ],
+  "deliverables": [
+    {
+      "name": "Dashboard Vélocité & Burndown",
+      "description": "Tableau de bord temps réel affichant la vélocité par sprint, burndown chart, et prédictions de capacité",
+      "category": "agile_metrics",
+      "status": "completed",
+      "priority": "high",
+      "estimatedDate": "2024-11-01",
+      "actualDate": "2024-10-28",
+      "owner": "Data Analyst"
+    },
+    {
+      "name": "Rapport Feature Adoption",
+      "description": "Analyse hebdomadaire de l'adoption des nouvelles features avec segmentation par persona et cohorte",
+      "category": "product_analytics",
+      "status": "in_progress",
+      "priority": "high",
+      "estimatedDate": "2024-11-15",
+      "actualDate": null,
+      "owner": "Product Analyst"
+    },
+    {
+      "name": "Customer Journey Analytics",
+      "description": "Visualisation du parcours utilisateur avec identification des points de friction et opportunités d'optimisation",
+      "category": "user_experience",
+      "status": "in_progress",
+      "priority": "medium",
+      "estimatedDate": "2024-12-01",
+      "actualDate": null,
+      "owner": "UX Researcher"
+    },
+    {
+      "name": "Cohort Retention Analysis",
+      "description": "Analyse de rétention par cohorte (D1, D7, D30, D90) avec comparaison entre versions produit",
+      "category": "product_analytics",
+      "status": "delayed",
+      "priority": "high",
+      "estimatedDate": "2024-11-10",
+      "actualDate": null,
+      "owner": "Product Analyst"
+    },
+    {
+      "name": "A/B Testing Framework",
+      "description": "Infrastructure complète pour l'expérimentation produit avec calculs de significativité statistique",
+      "category": "experimentation",
+      "status": "pending",
+      "priority": "medium",
+      "estimatedDate": "2024-12-15",
+      "actualDate": null,
+      "owner": "Data Engineer"
+    },
+    {
+      "name": "Revenue Attribution Model",
+      "description": "Modèle d'attribution multi-touch pour comprendre l'impact de chaque feature sur le revenu",
+      "category": "business_intelligence",
+      "status": "pending",
+      "priority": "low",
+      "estimatedDate": "2025-01-15",
+      "actualDate": null,
+      "owner": "BI Analyst"
+    }
+  ]
+}
