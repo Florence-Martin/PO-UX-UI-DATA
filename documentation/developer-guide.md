@@ -163,13 +163,18 @@ PO-UX-UI-Data/
 ### Scripts disponibles
 
 ```bash
-npm run dev         # Développement (http://localhost:3000)
-npm run build       # Build de production
-npm run start       # Serveur de production
-npm run lint        # Vérification ESLint
-npm run test        # Lancer les tests
-npm run test:watch  # Tests en mode watch
-npm run clean       # Nettoyer et réinstaller
+npm run dev             # Développement (http://localhost:3000)
+npm run build           # Build de production
+npm run start           # Serveur de production
+npm run lint            # Vérification ESLint
+npm run lint:fix        # Correction automatique ESLint
+npm run type-check      # Vérification TypeScript (sans build)
+npm run format          # Formater le code avec Prettier
+npm run format:check    # Vérifier le formatage (CI)
+npm run test            # Lancer les tests
+npm run test:watch      # Tests en mode watch
+npm run test:coverage   # Tests avec rapport de couverture
+npm run clean           # Nettoyer et réinstaller
 ```
 
 ### Configuration VSCode recommandée
@@ -321,16 +326,80 @@ function getUserStories() {
 ### Gestion des erreurs
 
 ```typescript
-// ✅ Avec try/catch
+// ✅ Avec try/catch et logger
+import { logger } from "@/lib/utils/logger";
+
 const fetchData = async () => {
   try {
     const data = await api.getData();
+    logger.info("Données récupérées avec succès");
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
+    logger.error("Erreur lors de la récupération des données:", error);
     throw new Error("Failed to fetch data");
   }
 };
+```
+
+### Système de Logging
+
+Le projet utilise un **système de logging centralisé** qui adapte la verbosité selon l'environnement :
+
+#### Utilisation du logger
+
+```typescript
+import { logger } from "@/lib/utils/logger";
+
+// Logs d'information (masqués en production)
+logger.info("User story créée:", userStory.code);
+
+// Logs de debug (masqués en production)
+logger.debug("Payload Firebase:", data);
+
+// Warnings (masqués en production)
+logger.warn("Token expiré, rafraîchissement nécessaire");
+
+// Erreurs (toujours visibles)
+logger.error("Erreur lors de la sauvegarde:", error);
+```
+
+#### Comportement selon l'environnement
+
+| Environnement | info() | debug() | warn() | error() |
+|---------------|--------|---------|--------|---------|
+| **Development** | ✅ Visible | ✅ Visible | ✅ Visible | ✅ Visible |
+| **Production** | ❌ Masqué | ❌ Masqué | ❌ Masqué | ✅ Visible |
+
+#### ⚠️ Ne PAS utiliser `console.log`
+
+```typescript
+// ❌ À ÉVITER - Logs visibles en production
+console.log("Debug info");
+console.error("Error occurred");
+
+// ✅ BON - Logger adaptatif
+logger.debug("Debug info");
+logger.error("Error occurred");
+```
+
+#### Implémentation
+
+Le logger est défini dans `lib/utils/logger.ts` et vérifie `process.env.NODE_ENV` pour adapter la sortie.
+
+```typescript
+// lib/utils/logger.ts
+const isDevelopment = process.env.NODE_ENV === "development";
+
+class Logger {
+  info(message: string, ...args: any[]): void {
+    if (!isDevelopment) return; // Masqué en production
+    console.info(`[${new Date().toISOString()}] [INFO]`, message, ...args);
+  }
+
+  error(message: string, ...args: any[]): void {
+    console.error(`[${new Date().toISOString()}] [ERROR]`, message, ...args);
+  }
+}
 ```
 
 ### Types TypeScript

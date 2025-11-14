@@ -161,6 +161,8 @@ enum UserRole {
 
 ```typescript
 // ✅ Structure type pour un hook
+import { logger } from "@/lib/utils/logger";
+
 const useUserStories = () => {
   const [stories, setStories] = useState<UserStory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -175,6 +177,7 @@ const useUserStories = () => {
       updatedAt: new Date(),
     };
     setStories((prev) => [...prev, newStory]);
+    logger.info("User story ajoutée:", newStory.id);
   }, []);
 
   const updateStory = useCallback((id: string, updates: Partial<UserStory>) => {
@@ -185,10 +188,12 @@ const useUserStories = () => {
           : story
       )
     );
+    logger.debug("User story mise à jour:", id);
   }, []);
 
   const deleteStory = useCallback((id: string) => {
     setStories((prev) => prev.filter((story) => story.id !== id));
+    logger.warn("User story supprimée:", id);
   }, []);
 
   // Effet pour charger les données
@@ -198,6 +203,53 @@ const useUserStories = () => {
         setLoading(true);
         const data = await getUserStoriesFromDB();
         setStories(data);
+        logger.info(`${data.length} user stories chargées`);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Unknown error";
+        setError(errorMsg);
+        logger.error("Erreur chargement user stories:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
+  }, []);
+
+  return {
+    stories,
+    loading,
+    error,
+    addStory,
+    updateStory,
+    deleteStory,
+  };
+};
+```
+
+### Logging et Debugging
+
+⚠️ **NE JAMAIS utiliser `console.log` directement** - Utiliser le système de logging centralisé
+
+```typescript
+import { logger } from "@/lib/utils/logger";
+
+// ✅ BON - Logger adaptatif
+logger.info("Opération réussie");           // Masqué en production
+logger.debug("Payload Firebase:", data);    // Masqué en production
+logger.warn("Token expiré");                // Masqué en production
+logger.error("Erreur critique:", error);    // Toujours visible
+
+// ❌ ÉVITER - Visible en production
+console.log("Debug info");
+console.error("Error occurred");
+```
+
+**Avantages du logger :**
+- 🔒 Logs masqués en production (sauf erreurs)
+- 📅 Timestamps automatiques
+- 🎯 Niveaux de verbosité (info, debug, warn, error)
+- 🚀 Amélioration des performances en production
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {

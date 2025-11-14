@@ -64,8 +64,29 @@ cd PO-UX-UI-DATA
 # Installer les dépendances
 npm install
 
+# Configurer l'environnement (copier .env.example vers .env.local)
+cp .env.example .env.local
+# Puis éditer .env.local avec vos clés Firebase
+
 # Lancer en développement
 npm run dev
+```
+
+### 🛠️ Scripts disponibles
+
+```bash
+npm run dev              # Serveur de développement (localhost:3000)
+npm run build            # Build de production
+npm run start            # Serveur de production
+npm run lint             # Vérification ESLint
+npm run lint:fix         # Correction automatique ESLint
+npm run type-check       # Vérification TypeScript (sans build)
+npm run format           # Formater le code avec Prettier
+npm run format:check     # Vérifier le formatage (CI)
+npm run test             # Lancer les tests Jest
+npm run test:watch       # Tests en mode watch
+npm run test:coverage    # Tests avec couverture de code
+npm run clean            # Nettoyer et réinstaller
 ```
 
 ## 📋 Prérequis

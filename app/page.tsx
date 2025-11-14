@@ -1,6 +1,6 @@
 import BacklogGoal from "@/components/analysis/BacklogGoal";
 import { RoadmapFlow } from "@/components/analysis/RoadmapFlow";
-import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo.";
+import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo";
 import { DashboardKPICards } from "@/components/dashboard/DashboardKPICards";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
