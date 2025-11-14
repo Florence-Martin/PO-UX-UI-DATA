@@ -59,7 +59,7 @@ export default function CleanupBadgesPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-2xl md:text-3xl font-bold">
           Outils d&apos;administration Sprint
         </h1>
         <p className="text-muted-foreground">

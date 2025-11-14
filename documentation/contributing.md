@@ -11,7 +11,7 @@
 
 ---
 
-## 🔄 Processus de contribution
+## Processus de contribution
 
 ### 1. Avant de commencer
 
@@ -53,7 +53,7 @@ npm run dev
 
 ---
 
-## 📝 Standards de code
+## Standards de code
 
 ### Structure des fichiers
 
@@ -221,7 +221,7 @@ const useUserStories = () => {
 
 ---
 
-## 🔀 Conventions Git
+## Conventions Git
 
 ### Branches
 
@@ -274,7 +274,7 @@ git commit -m "WIP"
 
 ---
 
-## 🧪 Tests et qualité
+## Tests et qualité
 
 ### Standards de test
 
@@ -378,7 +378,7 @@ describe("useUserStories", () => {
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 ### Code documentation
 
@@ -439,18 +439,18 @@ Composant pour afficher une user story dans le backlog.
 - [x] Interaction utilisateur
 - [x] Gestion des erreurs
 
-````
-
 ---
 
-## 🔄 Workflow de développement
+## Workflow de développement
 
 ### 1. Planification
+
 - [ ] Créer/choisir une issue
 - [ ] Définir les critères d'acceptation
 - [ ] Estimer la complexité
 
 ### 2. Développement
+
 ```bash
 # Créer une branche
 git checkout -b feature/user-story-drag-drop
@@ -464,7 +464,7 @@ git checkout -b feature/user-story-drag-drop
 npm run test
 npm run lint
 npm run build
-````
+```
 
 ### 3. Review et merge
 
@@ -523,7 +523,7 @@ Brève description des changements apportés.
 
 ---
 
-## 🎯 Standards de qualité
+## Standards de qualité
 
 ### Critères d'acceptation
 

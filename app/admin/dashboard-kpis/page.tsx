@@ -11,7 +11,9 @@ export default function DashboardKPIAdminPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Administration des KPIs UX</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">
+            Administration des KPIs UX
+          </h1>
           <p className="text-muted-foreground">
             Gérez les métriques UX affichées sur le dashboard principal : taux
             de conversion, rebond, scroll et engagement utilisateur.

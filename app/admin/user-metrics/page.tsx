@@ -12,7 +12,7 @@ export default function UserMetricsAdminPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-2xl md:text-3xl font-bold">
             Administration des Métriques Utilisateurs
           </h1>
           <p className="text-muted-foreground">

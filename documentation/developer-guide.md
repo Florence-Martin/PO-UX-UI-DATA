@@ -14,7 +14,7 @@
 
 ---
 
-## 🎯 Vue d'ensemble
+## Vue d'ensemble
 
 PO-UX-UI-DATA est une application Next.js complète destinée aux Product Owners spécialisés en UX/UI. Elle intègre les meilleures pratiques agiles, la recherche utilisateur, la gestion de backlog et la visualisation de données.
 
@@ -29,7 +29,7 @@ PO-UX-UI-DATA est une application Next.js complète destinée aux Product Owners
 
 ---
 
-## 🏗️ Architecture technique
+## Architecture technique
 
 ### Stack principal
 
@@ -77,7 +77,7 @@ const activeUserStories = userStories.filter(
 
 ---
 
-## 🚀 Installation et configuration
+## Installation et configuration
 
 ### Prérequis
 
@@ -118,7 +118,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 ---
 
-## 📁 Structure du projet
+## Structure du projet
 
 ```
 PO-UX-UI-Data/
@@ -158,7 +158,7 @@ PO-UX-UI-Data/
 
 ---
 
-## 💻 Développement local
+## Développement local
 
 ### Scripts disponibles
 
@@ -194,7 +194,7 @@ npm run clean       # Nettoyer et réinstaller
 
 ---
 
-## 🧪 Tests
+## Tests
 
 ### Configuration Jest
 
@@ -261,7 +261,7 @@ test("renders component", () => {
 
 ---
 
-## 🚀 Déploiement
+## Déploiement
 
 ### Vercel (Recommandé)
 
@@ -294,7 +294,7 @@ npm run start
 
 ---
 
-## 📋 Bonnes pratiques
+## Bonnes pratiques
 
 ### Code Style
 
@@ -437,7 +437,7 @@ const Button: React.FC<ButtonProps> = ({
 
 ---
 
-## 📚 Ressources utiles
+## Ressources utiles
 
 ### Documentation officielle
 
@@ -509,5 +509,5 @@ const OptimizedComponent = () => {
 ---
 
 **Auteur** : Florence Martin - PO / UX/UI / Frontend Developer  
-**Dernière mise à jour** : Janvier 2025  
+**Dernière mise à jour** : Septembre 2025  
 **Version** : 1.0.0

@@ -76,7 +76,7 @@ export default function AdminPage() {
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
             <Database className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">Administration</h1>
+            <h1 className="text-2xl md:text-3xl font-bold">Administration</h1>
           </div>
           <p className="text-muted-foreground text-lg">
             Interface d&apos;administration pour la gestion des données,

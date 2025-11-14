@@ -93,7 +93,9 @@ export default function SprintMigrationPage() {
   return (
     <div className="flex-1 space-y-4 px-2 sm:px-6 md:px-8 pt-6">
       <div>
-        <h1 className="text-3xl font-bold">Migration des Sprints</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">
+          Migration des Sprints
+        </h1>
         <p className="text-muted-foreground">
           Clôture automatique des sprints dont la date de fin est dépassée
         </p>
