@@ -23,7 +23,7 @@ export function usePersonas() {
     try {
       const snapshot = await getDocs(collection(db, "user_research_personas"));
       const list = snapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as Persona)
+        (doc) => ({ id: doc.id, ...doc.data() }) as Persona
       );
       setPersonas(list);
     } catch (error) {

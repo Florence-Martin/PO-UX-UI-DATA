@@ -1,13 +1,19 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Play, Plus } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Play, Plus } from "lucide-react";
 
 export function ApiTesting() {
   const endpoints = [
@@ -16,16 +22,16 @@ export function ApiTesting() {
       name: "GET /api/users",
       method: "GET",
       status: "success",
-      latency: "245ms"
+      latency: "245ms",
     },
     {
       id: "2",
       name: "POST /api/orders",
       method: "POST",
       status: "error",
-      latency: "567ms"
-    }
-  ]
+      latency: "567ms",
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -83,5 +89,5 @@ export function ApiTesting() {
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }

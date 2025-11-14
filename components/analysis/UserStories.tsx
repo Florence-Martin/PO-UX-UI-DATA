@@ -287,8 +287,8 @@ export function UserStories() {
                         story.priority === "high"
                           ? "bg-red-500/10 text-red-500"
                           : story.priority === "medium"
-                          ? "bg-yellow-500/10 text-yellow-500"
-                          : "bg-green-500/10 text-green-500"
+                            ? "bg-yellow-500/10 text-yellow-500"
+                            : "bg-green-500/10 text-green-500"
                       }`}
                     >
                       {story.priority}

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 const data = [
   {
@@ -15,7 +15,7 @@ const data = [
     name: "Desktop",
     total: 1234,
   },
-]
+];
 
 export function UserMetrics() {
   return (
@@ -34,12 +34,8 @@ export function UserMetrics() {
           tickLine={false}
           axisLine={false}
         />
-        <Bar
-          dataKey="total"
-          fill="hsl(var(--primary))"
-          radius={[4, 4, 0, 0]}
-        />
+        <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Table,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 const activities = [
   {
@@ -28,7 +28,7 @@ const activities = [
     status: "En attente",
     date: "2024-03-18",
   },
-]
+];
 
 export function RecentActivity() {
   return (
@@ -52,5 +52,5 @@ export function RecentActivity() {
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }

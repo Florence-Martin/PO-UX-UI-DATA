@@ -1,5 +1,6 @@
-import { db } from "../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { logger } from "../utils/logger";
 
 export type UserResearchDoc = {
   id: string;
@@ -21,7 +22,7 @@ export async function getTemplate(id: string): Promise<UserResearchDoc | null> {
 
     return snapshot.data() as UserResearchDoc;
   } catch (error) {
-    console.error("Erreur lors du chargement du template :", error);
+    logger.error("Erreur lors du chargement du template :", error);
     throw error;
   }
 }
@@ -40,6 +41,6 @@ export async function saveTemplate(
       ...data,
     });
   } catch (error) {
-    console.error("Erreur lors de la sauvegarde du template :", error);
+    logger.error("Erreur lors de la sauvegarde du template :", error);
   }
 }

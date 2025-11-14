@@ -123,8 +123,8 @@ export function DashboardKPICards() {
                   changeInfo.isPositive
                     ? "text-green-600"
                     : hasChange
-                    ? "text-red-600"
-                    : "text-muted-foreground"
+                      ? "text-red-600"
+                      : "text-muted-foreground"
                 }`}
               >
                 {changeInfo.text}

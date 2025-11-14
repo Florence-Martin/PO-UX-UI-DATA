@@ -60,7 +60,7 @@ export async function getTimeSeriesMetrics(): Promise<TimeSeriesMetric[]> {
           ...doc.data(),
           date: doc.data().date.toDate(),
           createdAt: doc.data().createdAt.toDate(),
-        } as TimeSeriesMetric)
+        }) as TimeSeriesMetric
     );
   } catch (error) {
     console.error("Error getting time series metrics:", error);

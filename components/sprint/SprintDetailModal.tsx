@@ -60,8 +60,8 @@ export function SprintDetailModal({
             {isCreating
               ? "Créer un nouveau sprint"
               : readOnly
-              ? `${sprint?.title} (Lecture seule)`
-              : `Détails du sprint ${sprint?.title}`}
+                ? `${sprint?.title} (Lecture seule)`
+                : `Détails du sprint ${sprint?.title}`}
           </DialogTitle>
         </DialogHeader>
 

@@ -127,12 +127,12 @@ export function WireframesProgressPad() {
               level === 0
                 ? "text-gray-600"
                 : level === 1
-                ? "text-red-600"
-                : level === 2
-                ? "text-orange-600"
-                : level === 3
-                ? "text-blue-600"
-                : "text-green-600"
+                  ? "text-red-600"
+                  : level === 2
+                    ? "text-orange-600"
+                    : level === 3
+                      ? "text-blue-600"
+                      : "text-green-600"
             }
           `}
             >

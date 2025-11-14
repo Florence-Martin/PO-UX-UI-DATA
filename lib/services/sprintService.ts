@@ -12,6 +12,7 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+import { logger } from "../utils/logger";
 
 const sprintCollection = collection(db, "sprints");
 
@@ -183,7 +184,7 @@ export const handleIncompleteTasks = async (
   // Gérer TOUTES les tasks du sprint (terminées ET incomplètes)
   // pour qu'elles ne polluent plus le Sprint Backlog actif
   if (sprintTasks.length > 0) {
-    console.log(
+    logger.info(
       `📝 ${sprintTasks.length} Tasks trouvées dans le sprint (${completed.length} terminées, ${incomplete.length} incomplètes)`
     );
 
@@ -200,12 +201,12 @@ export const handleIncompleteTasks = async (
         });
 
         const status = isTaskCompleted(task) ? "terminée" : "incomplète";
-        console.log(
+        logger.info(
           `  📝 Task "${task.title}" (${status}) archivée (badge retiré)`
         );
       } else {
         // Logique pour reporter au sprint suivant
-        console.log(`  ➡️ Task "${task.title}" à reporter au sprint suivant`);
+        logger.info(`  ➡️ Task "${task.title}" à reporter au sprint suivant`);
       }
     });
 
@@ -234,7 +235,7 @@ export const handleIncompleteUserStories = async (
   );
 
   if (incomplete.length > 0) {
-    console.log(
+    logger.info(
       `📋 ${incomplete.length} User Stories non terminées trouvées dans le sprint`
     );
 
@@ -249,10 +250,10 @@ export const handleIncompleteUserStories = async (
           sprintId: null,
           badge: null,
         });
-        console.log(`📤 [${story.code}] reportée au backlog`);
+        logger.info(`📤 [${story.code}] reportée au backlog`);
       } else {
         // Logique pour reporter au sprint suivant (à implémenter si nécessaire)
-        console.log(`➡️ [${story.code}] à reporter au sprint suivant`);
+        logger.info(`➡️ [${story.code}] à reporter au sprint suivant`);
       }
     });
 
@@ -306,7 +307,7 @@ export const migrateExpiredSprints = async (
 
     // Si le sprint n'est pas terminé mais que sa date de fin est dépassée
     if (sprint.status !== "done" && endDate < now) {
-      console.log(
+      logger.info(
         `🔄 Clôture automatique du ${
           sprint.title
         } (fin: ${endDate.toLocaleDateString()})`
@@ -347,17 +348,17 @@ export const migrateExpiredSprints = async (
   }
 
   if (results.length > 0) {
-    console.log(`✅ ${results.length} sprint(s) clôturé(s) automatiquement`);
+    logger.info(`✅ ${results.length} sprint(s) clôturé(s) automatiquement`);
     results.forEach((result) => {
-      console.log(
+      logger.info(
         `  📊 ${result.sprintTitle}: ${result.completed} US terminées, ${result.moved} US reportées au backlog`
       );
-      console.log(
+      logger.info(
         `     🎯 ${result.tasksCompleted} tâches terminées, ${result.tasksMoved} tâches reportées au backlog`
       );
     });
   } else {
-    console.log("ℹ️ Aucun sprint à clôturer automatiquement");
+    logger.info("ℹ️ Aucun sprint à clôturer automatiquement");
   }
 
   return results;
@@ -407,10 +408,7 @@ export const getSprintTasks = async (
 
     return sprintTasks;
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des tâches du sprint:",
-      error
-    );
+    logger.error("Erreur lors de la récupération des tâches du sprint:", error);
     return [];
   }
 };
@@ -418,7 +416,7 @@ export const getSprintTasks = async (
 //  Synchroniser les User Stories avec les sprints (réparer les incohérences)
 export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
   try {
-    console.log("🔄 Synchronisation des User Stories avec les sprints...");
+    logger.info("🔄 Synchronisation des User Stories avec les sprints...");
 
     // Récupérer tous les sprints et User Stories
     const sprints = await getAllSprints();
@@ -432,7 +430,7 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
 
     for (const sprint of sprints) {
       try {
-        console.log(`🔍 Synchronisation du sprint: ${sprint.title}`);
+        logger.info(`🔍 Synchronisation du sprint: ${sprint.title}`);
 
         // Trouver les User Stories qui ont ce sprint comme sprintId
         const storiesWithThisSprintId = userStories
@@ -450,11 +448,11 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
           );
 
         if (needsSync) {
-          console.log(
-            `  � Sprint "${sprint.title}" nécessite une synchronisation`
+          logger.info(
+            `  ⚠️ Sprint "${sprint.title}" nécessite une synchronisation`
           );
-          console.log(`     Actuel: [${currentUserStoryIds.join(", ")}]`);
-          console.log(`     Correct: [${storiesWithThisSprintId.join(", ")}]`);
+          logger.info(`     Actuel: [${currentUserStoryIds.join(", ")}]`);
+          logger.info(`     Correct: [${storiesWithThisSprintId.join(", ")}]`);
 
           // Mettre à jour le sprint avec les bonnes userStoryIds
           // En conservant toutes les propriétés existantes pour respecter les règles Firebase
@@ -465,13 +463,13 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
             updatedAt: Timestamp.now(),
           });
 
-          console.log(`  ✅ Sprint "${sprint.title}" synchronisé`);
+          logger.info(`  ✅ Sprint "${sprint.title}" synchronisé`);
           syncedCount++;
         } else {
-          console.log(`  ✅ Sprint "${sprint.title}" déjà synchronisé`);
+          logger.info(`  ✅ Sprint "${sprint.title}" déjà synchronisé`);
         }
       } catch (sprintError) {
-        console.error(
+        logger.error(
           `❌ Erreur lors de la synchronisation du sprint ${sprint.title}:`,
           sprintError
         );
@@ -479,12 +477,12 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
       }
     }
 
-    console.log(
+    logger.info(
       `✅ Synchronisation terminée: ${syncedCount} sprint(s) mis à jour`
     );
     return { synced: syncedCount };
   } catch (error) {
-    console.error("❌ Erreur lors de la synchronisation:", error);
+    logger.error("❌ Erreur lors de la synchronisation:", error);
     throw error;
   }
 };
@@ -492,7 +490,7 @@ export const syncSprintUserStories = async (): Promise<{ synced: number }> => {
 //  Debug : Vérifier l'état d'une User Story spécifique
 export const debugUserStory = async (code: string): Promise<void> => {
   try {
-    console.log(`🔍 Debug User Story ${code}:`);
+    logger.debug(`🔍 Debug User Story ${code}:`);
 
     const userStoriesSnapshot = await getDocs(collection(db, "user_stories"));
     const userStories = userStoriesSnapshot.docs.map((doc) => ({

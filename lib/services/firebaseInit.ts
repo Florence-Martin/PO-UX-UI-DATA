@@ -7,6 +7,7 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
+import { logger } from "../utils/logger";
 
 /**
  * Initialise les collections Firebase nécessaires pour les wireframes
@@ -14,13 +15,13 @@ import {
  */
 export async function initializeWireframeCollections() {
   try {
-    console.log("🔧 Initialisation des collections wireframes...");
+    logger.info("🔧 Initialisation des collections wireframes...");
 
     // Vérifier si la collection wireframe_grids existe déjà
     const gridsSnapshot = await getDocs(collection(db, "wireframe_grids"));
 
     if (gridsSnapshot.empty) {
-      console.log("📝 Création de la grille par défaut...");
+      logger.info("📝 Création de la grille par défaut...");
 
       // Créer une grille par défaut
       const defaultGridData = {
@@ -38,14 +39,14 @@ export async function initializeWireframeCollections() {
       const gridRef = doc(collection(db, "wireframe_grids"));
       await setDoc(gridRef, defaultGridData);
 
-      console.log("✅ Grille par défaut créée avec l'ID:", gridRef.id);
+      logger.info("✅ Grille par défaut créée avec l'ID:", gridRef.id);
       return gridRef.id;
     } else {
-      console.log("✅ Collections wireframes déjà existantes");
+      logger.info("✅ Collections wireframes déjà existantes");
       return gridsSnapshot.docs[0].id;
     }
   } catch (error) {
-    console.error("❌ Erreur lors de l'initialisation des collections:", error);
+    logger.error("❌ Erreur lors de l'initialisation des collections:", error);
     throw error;
   }
 }
@@ -63,10 +64,10 @@ export async function ensureWireframeCollectionsExist() {
     const imagesCollection = collection(db, "wireframe_images");
     await getDocs(imagesCollection);
 
-    console.log("✅ Collections wireframes vérifiées");
+    logger.info("✅ Collections wireframes vérifiées");
     return true;
   } catch (error) {
-    console.log("🔧 Collections manquantes, initialisation...");
+    logger.info("🔧 Collections manquantes, initialisation...");
     await initializeWireframeCollections();
     return true;
   }

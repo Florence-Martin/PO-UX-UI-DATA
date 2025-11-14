@@ -120,15 +120,15 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
                 status === "done"
                   ? "bg-green-500 text-white"
                   : status === "in-progress"
-                  ? "bg-yellow-500 text-black"
-                  : "bg-red-500 text-white"
+                    ? "bg-yellow-500 text-black"
+                    : "bg-red-500 text-white"
               }`}
             >
               {status === "done"
                 ? "Terminé"
                 : status === "in-progress"
-                ? "En cours"
-                : "À faire"}
+                  ? "En cours"
+                  : "À faire"}
             </Badge>
           </div>
           <Select
@@ -207,8 +207,8 @@ export function AddQuarterForm({ onSubmit, initialData }: AddQuarterFormProps) {
           {isSubmitting
             ? "Enregistrement..."
             : initialData
-            ? "Mettre à jour"
-            : "Enregistrer"}
+              ? "Mettre à jour"
+              : "Enregistrer"}
         </Button>
       </div>
     </div>

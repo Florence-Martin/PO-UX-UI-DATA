@@ -11,6 +11,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { logger } from "../utils/logger";
 
 export interface WireframeGrid {
   id?: string;
@@ -48,7 +49,7 @@ class WireframeService {
     gridData: Omit<WireframeGrid, "id" | "createdAt" | "updatedAt">
   ): Promise<string> {
     try {
-      console.log("🔧 WireframeService: Création grille...", gridData);
+      logger.debug("🔧 WireframeService: Création grille...", gridData);
 
       const now = Timestamp.now();
       const docRef = await addDoc(this.gridsCollection, {
@@ -57,11 +58,10 @@ class WireframeService {
         updatedAt: now,
       });
 
-      console.log("✅ WireframeService: Grille créée:", docRef.id);
+      logger.info("✅ WireframeService: Grille créée:", docRef.id);
       return docRef.id;
     } catch (error: any) {
-      console.error("❌ WireframeService: Erreur création:", error);
-      console.error("Erreur lors de la création de la grille:", error);
+      logger.error("❌ WireframeService: Erreur création:", error);
       throw error;
     }
   }
@@ -77,7 +77,7 @@ class WireframeService {
         updatedAt: Timestamp.now(),
       });
     } catch (error: any) {
-      console.error("Erreur lors de la mise à jour de la grille:", error);
+      logger.error("Erreur lors de la mise à jour de la grille:", error);
       throw error;
     }
   }
@@ -92,7 +92,7 @@ class WireframeService {
       const gridRef = doc(this.gridsCollection, gridId);
       await deleteDoc(gridRef);
     } catch (error: any) {
-      console.error("Erreur lors de la suppression de la grille:", error);
+      logger.error("Erreur lors de la suppression de la grille:", error);
       throw error;
     }
   }
@@ -107,19 +107,19 @@ class WireframeService {
       }
       return null;
     } catch (error) {
-      console.error("Erreur lors de la récupération de la grille:", error);
+      logger.error("Erreur lors de la récupération de la grille:", error);
       throw error;
     }
   }
 
   async getAllGrids(): Promise<WireframeGrid[]> {
     try {
-      console.log("🔧 WireframeService: Récupération grilles...");
+      logger.debug("🔧 WireframeService: Récupération grilles...");
 
       // Temporairement sans orderBy pour éviter l'erreur d'index
       const querySnapshot = await getDocs(this.gridsCollection);
 
-      console.log(
+      logger.info(
         "✅ WireframeService: Grilles récupérées:",
         querySnapshot.size
       );
@@ -134,7 +134,7 @@ class WireframeService {
         (a, b) => b.updatedAt?.toMillis() - a.updatedAt?.toMillis()
       );
     } catch (error) {
-      console.error("❌ WireframeService: Erreur récupération grilles:", error);
+      logger.error("❌ WireframeService: Erreur récupération grilles:", error);
       throw error;
     }
   }
@@ -191,7 +191,7 @@ class WireframeService {
       const docRef = await addDoc(this.imagesCollection, imageData);
       return { ...imageData, id: docRef.id };
     } catch (error) {
-      console.error("Erreur upload image:", error);
+      logger.error("Erreur upload image:", error);
       throw error;
     }
   }
@@ -204,7 +204,7 @@ class WireframeService {
       const imageRef = doc(this.imagesCollection, imageId);
       await updateDoc(imageRef, updates);
     } catch (error: any) {
-      console.error("Erreur lors de la mise à jour de l'image:", error);
+      logger.error("Erreur lors de la mise à jour de l'image:", error);
       throw error;
     }
   }
@@ -231,7 +231,7 @@ class WireframeService {
         await deleteDoc(imageRef);
       }
     } catch (error: any) {
-      console.error("Erreur lors de la suppression de l'image:", error);
+      logger.error("Erreur lors de la suppression de l'image:", error);
       throw error;
     }
   }
@@ -249,7 +249,7 @@ class WireframeService {
       // Tri côté client
       return images.sort((a, b) => a.cellIndex - b.cellIndex);
     } catch (error) {
-      console.error(
+      logger.error(
         "Erreur lors de la récupération des images de la grille:",
         error
       );
@@ -267,7 +267,7 @@ class WireframeService {
       }
       return null;
     } catch (error) {
-      console.error("Erreur lors de la récupération de l'image:", error);
+      logger.error("Erreur lors de la récupération de l'image:", error);
       throw error;
     }
   }
@@ -292,7 +292,7 @@ class WireframeService {
       // Uploader la nouvelle image
       return await this.uploadImage(gridId, cellIndex, newFile, gridSize);
     } catch (error) {
-      console.error("Erreur lors du remplacement de l'image:", error);
+      logger.error("Erreur lors du remplacement de l'image:", error);
       throw error;
     }
   }
@@ -319,7 +319,7 @@ class WireframeService {
       const newGrid = await this.getGrid(gridId);
       return newGrid!;
     } catch (error) {
-      console.error(
+      logger.error(
         "Erreur lors de la création/récupération de la grille par défaut:",
         error
       );

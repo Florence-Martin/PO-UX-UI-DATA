@@ -22,7 +22,7 @@ export function useScenarios() {
   const fetchScenarios = async () => {
     const snapshot = await getDocs(collection(db, "user_research_scenarios"));
     const list = snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Scenario)
+      (doc) => ({ id: doc.id, ...doc.data() }) as Scenario
     );
     setScenarios(list);
     setLoading(false);

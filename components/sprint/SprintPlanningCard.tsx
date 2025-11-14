@@ -61,8 +61,8 @@ export function SprintPlanningCard({
         sprint.status === "done"
           ? "opacity-75 border-green-200 bg-green-50/50"
           : isExpired
-          ? "border-orange-200 bg-orange-50/50"
-          : ""
+            ? "border-orange-200 bg-orange-50/50"
+            : ""
       }`}
     >
       {/* En-tête avec titre et badges */}

@@ -9,6 +9,7 @@ import {
   query,
   Timestamp,
 } from "firebase/firestore";
+import { logger } from "../utils/logger";
 
 export interface UserMetric {
   id: string;
@@ -41,7 +42,7 @@ export async function createUserMetric(
     const docRef = await addDoc(collection(db, collectionName), docData);
     return docRef.id;
   } catch (error) {
-    console.error("Error creating user metric:", error);
+    logger.error("Error creating user metric:", error);
     throw error;
   }
 }
@@ -61,10 +62,10 @@ export async function getUserMetrics(): Promise<UserMetric[]> {
           ...doc.data(),
           date: doc.data().date?.toDate() || new Date(),
           createdAt: doc.data().createdAt?.toDate() || new Date(),
-        } as UserMetric)
+        }) as UserMetric
     );
   } catch (error) {
-    console.error("Error getting user metrics:", error);
+    logger.error("Error getting user metrics:", error);
     return [];
   }
 }
@@ -73,7 +74,7 @@ export async function deleteUserMetric(id: string) {
   try {
     await deleteDoc(doc(db, collectionName, id));
   } catch (error) {
-    console.error("Error deleting user metric:", error);
+    logger.error("Error deleting user metric:", error);
     throw error;
   }
 }
@@ -84,10 +85,13 @@ export function aggregateDeviceData(metrics: UserMetric[]): DeviceData {
   }
 
   // Compter les occurrences par device
-  const deviceCounts = metrics.reduce((acc, metric) => {
-    acc[metric.device] = (acc[metric.device] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const deviceCounts = metrics.reduce(
+    (acc, metric) => {
+      acc[metric.device] = (acc[metric.device] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const total = metrics.length;
 
@@ -205,7 +209,7 @@ export async function generateSampleUserMetrics(): Promise<void> {
       )
     );
   } catch (error) {
-    console.error("Error generating sample user metrics:", error);
+    logger.error("Error generating sample user metrics:", error);
     throw error;
   }
 }

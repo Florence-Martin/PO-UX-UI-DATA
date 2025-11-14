@@ -96,9 +96,8 @@ describe("Wireframe Grid Integration Tests", () => {
       mockWireframeService.getGrid.mockResolvedValue(specificGrid);
 
       // Logique simulée du hook pour un ID spécifique
-      const currentGrid = await mockWireframeService.getGrid(
-        "specific-grid-id"
-      );
+      const currentGrid =
+        await mockWireframeService.getGrid("specific-grid-id");
 
       expect(currentGrid).toEqual(specificGrid);
       expect(mockWireframeService.getGrid).toHaveBeenCalledWith(

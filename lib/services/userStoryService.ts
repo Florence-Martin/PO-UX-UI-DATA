@@ -1,15 +1,16 @@
-import { db } from "../firebase";
 import {
   collection,
-  getDocs,
-  updateDoc,
   deleteDoc,
   doc,
-  Timestamp,
+  getDocs,
   setDoc,
+  Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { toast } from "sonner";
+import { db } from "../firebase";
 import { UserStory } from "../types/userStory";
+import { logger } from "../utils/logger";
 
 const COLLECTION_NAME = "user_stories";
 
@@ -138,7 +139,7 @@ export async function updateSprintBadgeForUserStory(
       badge: "sprint",
       updatedAt: Timestamp.now(),
     });
-    console.log(`[DEBUG] Badge "sprint" ajouté à la User Story ${userStoryId}`);
+    logger.debug(`Badge "sprint" ajouté à la User Story ${userStoryId}`);
   } else {
     // Sinon, supprime le badge "sprint"
     await updateDoc(userStoryRef, {
@@ -146,8 +147,6 @@ export async function updateSprintBadgeForUserStory(
       badge: null,
       updatedAt: Timestamp.now(),
     });
-    console.log(
-      `[DEBUG] Badge "sprint" supprimé de la User Story ${userStoryId}`
-    );
+    logger.debug(`Badge "sprint" supprimé de la User Story ${userStoryId}`);
   }
 }

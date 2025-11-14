@@ -65,8 +65,8 @@ export function RoadmapCard({ data, onEdit }: RoadmapCardProps) {
               {status === "done"
                 ? "Terminé"
                 : status === "in-progress"
-                ? "En cours"
-                : "À faire"}
+                  ? "En cours"
+                  : "À faire"}
             </Badge>
 
             {onEdit && (

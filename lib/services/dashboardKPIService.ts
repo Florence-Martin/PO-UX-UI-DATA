@@ -9,6 +9,7 @@ import {
   query,
   Timestamp,
 } from "firebase/firestore";
+import { logger } from "../utils/logger";
 
 export interface DashboardKPI {
   id: string;
@@ -44,7 +45,7 @@ export async function createDashboardKPI(
     const docRef = await addDoc(collection(db, collectionName), docData);
     return docRef.id;
   } catch (error) {
-    console.error("Error creating dashboard KPI:", error);
+    logger.error("Error creating dashboard KPI:", error);
     throw error;
   }
 }
@@ -64,10 +65,10 @@ export async function getDashboardKPIs(): Promise<DashboardKPI[]> {
           ...doc.data(),
           date: doc.data().date?.toDate() || new Date(),
           createdAt: doc.data().createdAt?.toDate() || new Date(),
-        } as DashboardKPI)
+        }) as DashboardKPI
     );
   } catch (error) {
-    console.error("Error getting dashboard KPIs:", error);
+    logger.error("Error getting dashboard KPIs:", error);
     return [];
   }
 }
@@ -76,7 +77,7 @@ export async function deleteDashboardKPI(id: string) {
   try {
     await deleteDoc(doc(db, collectionName, id));
   } catch (error) {
-    console.error("Error deleting dashboard KPI:", error);
+    logger.error("Error deleting dashboard KPI:", error);
     throw error;
   }
 }
@@ -218,7 +219,7 @@ export async function generateSampleDashboardKPIs(): Promise<void> {
   try {
     await Promise.all(sampleKPIs.map((kpi) => createDashboardKPI(kpi)));
   } catch (error) {
-    console.error("Error generating sample dashboard KPIs:", error);
+    logger.error("Error generating sample dashboard KPIs:", error);
     throw error;
   }
 }
