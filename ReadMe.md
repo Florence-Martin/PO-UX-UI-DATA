@@ -224,7 +224,10 @@ npm run clean            # Nettoyer et réinstaller
 
 - Sprint Management robuste (nettoyage automatique, migration des US, badges sprints terminés)
 - Qualité technique : couverture 100%, types TS stricts, architecture modulaire, conformité RGPD
-- Performances web : Lighthouse Desktop (Perf 100, Accessibilité 98, SEO 100)
+- Performances web optimales (Lighthouse Production Vercel) :
+  - **Desktop** : Performance 100/100, Accessibilité 98/100, Best Practices 93/100, SEO 100/100
+  - **Mobile** : Performance 71/100, Accessibilité 92/100, Best Practices 93/100, SEO 100/100
+- Tests unitaires : 166 tests passés sur 166 total (16 suites)
 - UX : interface fluide et responsive avec dark/light mode
 
 ---
