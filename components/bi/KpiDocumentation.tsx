@@ -127,7 +127,7 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
   return (
     <div className="space-y-4">
       {/* Statistiques */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-2 sm:gap-3">
         {Object.entries(categoryStats).map(([category, count]) => {
           const config = {
             product: {
@@ -171,14 +171,16 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
                 )
               }
             >
-              <CardContent className="p-3">
+              <CardContent className="p-2 sm:p-3">
                 <div className="flex flex-col items-center text-center gap-1">
                   <div
-                    className={`w-8 h-8 rounded-full ${config.color} flex items-center justify-center text-white font-bold text-sm`}
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${config.color} flex items-center justify-center text-white font-bold text-xs sm:text-sm`}
                   >
                     {count}
                   </div>
-                  <p className={`text-xs font-medium ${config.textColor}`}>
+                  <p
+                    className={`text-[10px] sm:text-xs font-medium ${config.textColor} leading-tight`}
+                  >
                     {config.label}
                   </p>
                 </div>
@@ -189,7 +191,7 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
       </div>
 
       {/* Barre de recherche et filtres */}
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -208,16 +210,16 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
             </button>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap sm:flex-nowrap">
           {selectedCategory && (
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSelectedCategory(null)}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 flex-1 sm:flex-initial"
             >
               <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">
+              <span className="hidden md:inline">
                 {
                   {
                     product: "Produit",
@@ -233,11 +235,12 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
           )}
           <Button
             size="sm"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 flex-1 sm:flex-initial"
             onClick={() => setShowAddModal(true)}
           >
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nouveau KPI</span>
+            <span className="hidden md:inline">Nouveau KPI</span>
+            <span className="md:hidden">Nouveau</span>
           </Button>
         </div>
       </div>
@@ -249,8 +252,11 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
         {selectedCategory && " dans cette catégorie"}
       </div>
 
-      <ScrollArea className="h-[calc(100vh-400px)] sm:h-[500px]">
-        <div className="space-y-3 pr-4">
+      <ScrollArea className="h-[calc(100vh-480px)] sm:h-[calc(100vh-420px)] md:h-[500px]">
+        <div
+          className="space-y-3
+        "
+        >
           {filteredKpis.length === 0 ? (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
@@ -269,41 +275,47 @@ export function KpiDocumentation({ kpis }: KpiDocumentationProps) {
                 className="hover:shadow-lg transition-all duration-200"
               >
                 <CardHeader className="pb-3">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                    <div className="space-y-1 flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {getVisualizationIcon(kpi.visualizationType || "line")}
-                        <h4 className="font-semibold text-sm sm:text-base">
-                          {kpi.name}
-                        </h4>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {getVisualizationIcon(
+                            kpi.visualizationType || "line"
+                          )}
+                          <h4 className="font-semibold text-sm sm:text-base">
+                            {kpi.name}
+                          </h4>
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                          {kpi.definition}
+                        </p>
                       </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
-                        {kpi.definition}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {kpi.category && getCategoryBadge(kpi.category)}
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 flex-shrink-0">
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7"
+                          className="h-8 w-8"
                           onClick={() => setEditingKpi(kpi)}
                           title="Modifier"
                         >
-                          <Pencil className="h-3.5 w-3.5" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => setDeletingKpi(kpi)}
                           title="Supprimer"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
+                    {kpi.category && (
+                      <div className="flex gap-2">
+                        {getCategoryBadge(kpi.category)}
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
 

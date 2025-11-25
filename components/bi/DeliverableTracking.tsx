@@ -142,7 +142,7 @@ export function DeliverableTracking({
   return (
     <div className="space-y-4">
       {/* Statistiques */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         {[
           {
             status: "completed",
@@ -195,22 +195,22 @@ export function DeliverableTracking({
       </div>
 
       {/* Barre de filtres */}
-      <div className="flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between items-start sm:items-center">
         <div className="text-sm text-muted-foreground">
           {filteredDeliverables.length} livrable
           {filteredDeliverables.length > 1 ? "s" : ""}
           {selectedStatus && " dans ce statut"}
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
           {selectedStatus && (
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSelectedStatus(null)}
-              className="flex items-center gap-1 flex-1 sm:flex-initial"
+              className="flex items-center gap-1 flex-1 sm:flex-initial min-w-0"
             >
-              <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">
+              <Filter className="h-4 w-4 flex-shrink-0" />
+              <span className="hidden md:inline truncate">
                 {
                   {
                     completed: "Terminés",
@@ -229,13 +229,14 @@ export function DeliverableTracking({
             onClick={() => setShowAddModal(true)}
           >
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nouveau livrable</span>
+            <span className="hidden md:inline">Nouveau livrable</span>
+            <span className="md:hidden">Nouveau</span>
           </Button>
         </div>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-400px)] sm:h-[400px]">
-        <div className="space-y-3 pr-4">
+      <ScrollArea className="h-[calc(100vh-480px)] sm:h-[calc(100vh-420px)] md:h-[450px]">
+        <div className="space-y-3">
           {filteredDeliverables.length === 0 ? (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
@@ -254,48 +255,48 @@ export function DeliverableTracking({
                 className="hover:shadow-lg transition-all duration-200"
               >
                 <CardHeader className="pb-3">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                    <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <div className="flex-shrink-0">
-                        {getStatusIcon(deliverable.status)}
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div className="flex-shrink-0 mt-0.5">
+                          {getStatusIcon(deliverable.status)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm sm:text-base">
+                            {deliverable.name}
+                          </h4>
+                          {deliverable.description && (
+                            <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
+                              {deliverable.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm sm:text-base">
-                          {deliverable.name}
-                        </h4>
-                        {deliverable.description && (
-                          <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
-                            {deliverable.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2 items-end">
-                      <div className="flex gap-2">
-                        {getStatusBadge(deliverable.status)}
-                        {(deliverable as any).priority &&
-                          getPriorityBadge((deliverable as any).priority)}
-                      </div>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 flex-shrink-0">
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7"
+                          className="h-8 w-8"
                           onClick={() => setEditingDeliverable(deliverable)}
                           title="Modifier"
                         >
-                          <Pencil className="h-3.5 w-3.5" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => setDeletingDeliverable(deliverable)}
                           title="Supprimer"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      {getStatusBadge(deliverable.status)}
+                      {(deliverable as any).priority &&
+                        getPriorityBadge((deliverable as any).priority)}
                     </div>
                   </div>
                 </CardHeader>
