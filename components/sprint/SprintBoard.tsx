@@ -113,17 +113,21 @@ export function SprintBoard() {
     sprintUserStories.length > 0 &&
     sprintUserStories.every(isUserStoryDoDCompleted);
 
-  const totalPoints = allSprintTasks.reduce(
-    (sum, task) => sum + (task.storyPoints || 0),
+  // 🆕 Calcul de la progression DoD globale du sprint
+  const totalDoDCriteria = sprintUserStories.reduce(
+    (sum, us) => sum + (us.dodItems?.length || 0),
     0
   );
 
-  const donePoints = allSprintTasks
-    .filter((task) => task.status === "done")
-    .reduce((sum, task) => sum + (task.storyPoints || 0), 0);
+  const completedDoDCriteria = sprintUserStories.reduce((sum, us) => {
+    if (!us.dodItems) return sum;
+    return sum + us.dodItems.filter((item) => item.checked).length;
+  }, 0);
 
-  const percentDone =
-    totalPoints > 0 ? Math.round((donePoints / totalPoints) * 100) : 0;
+  const dodProgressPercent =
+    totalDoDCriteria > 0
+      ? Math.round((completedDoDCriteria / totalDoDCriteria) * 100)
+      : 0;
 
   // Un sprint est terminé si toutes les tâches sont done ET que toutes les US ont leur DoD validée
   const isSprintDone =
@@ -153,14 +157,24 @@ export function SprintBoard() {
     <div className="space-y-6">
       <SprintActiveCard sprint={activeSprint} userStories={userStories} />
 
+      {/* 🆕 Barre de progression DoD globale du sprint */}
       <div>
         <p className="text-sm text-muted-foreground mb-1">
-          Progression : {donePoints} / {totalPoints} pts ({percentDone}%)
+          Definition of Done : {completedDoDCriteria} / {totalDoDCriteria}{" "}
+          critères validés ({dodProgressPercent}%)
         </p>
         <div className="w-full h-2 bg-border rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-500 transition-all duration-500"
-            style={{ width: `${percentDone}%` }}
+            className={`h-full transition-all duration-500 ${
+              dodProgressPercent === 100
+                ? "bg-green-500"
+                : dodProgressPercent >= 70
+                ? "bg-yellow-500"
+                : dodProgressPercent >= 40
+                ? "bg-orange-500"
+                : "bg-red-500"
+            }`}
+            style={{ width: `${dodProgressPercent}%` }}
           />
         </div>
       </div>
