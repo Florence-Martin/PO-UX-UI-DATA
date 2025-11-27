@@ -1,12 +1,19 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { useCombinedRefs } from "@/hooks/useCombinedRefs";
 import { BacklogTask } from "@/lib/types/backlogTask";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCombinedRefs } from "@/hooks/useCombinedRefs";
 import { toast } from "sonner";
 
+import { getSprintById, updateSprint } from "@/lib/services/sprintService";
+import {
+  getAllUserStories,
+  updateUserStory,
+} from "@/lib/services/userStoryService";
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
 import {
   Grip,
   MoreVertical,
@@ -14,19 +21,9 @@ import {
   PinOff,
   SquareArrowOutUpRight,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import {
-  updateUserStory,
-  getAllUserStories,
-} from "@/lib/services/userStoryService";
-import { UserStory } from "@/lib/types/userStory";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,9 +32,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { Sprint } from "@/lib/types/sprint";
-import { getSprintById, updateSprint } from "@/lib/services/sprintService";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface KanbanItemProps {
   task: BacklogTask;
@@ -194,10 +194,10 @@ export function KanbanItem({ task, onClick, sprints }: KanbanItemProps) {
                 </DropdownMenu>
               </div>
 
-              {/* Titre de l’US */}
-              <p className="text-[12px] text-muted-foreground leading-snug line-clamp-2">
+              {/* Titre de l'US - masqué pour affichage compact */}
+              {/* <p className="text-[12px] text-muted-foreground leading-snug line-clamp-2">
                 {userStory.title}
-              </p>
+              </p> */}
             </div>
           ) : (
             <div className="text-xs text-red-500 italic flex items-center gap-1 mb-2">

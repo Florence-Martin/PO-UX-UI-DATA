@@ -3,7 +3,7 @@
 import {
   createBacklogTask,
   deleteBacklogTask,
-  getActiveSprintTasks,
+  getAllBacklogTasks,
   updateBacklogTask,
 } from "@/lib/services/backlogTasksService";
 import { getAllSprints } from "@/lib/services/sprintService";
@@ -28,7 +28,9 @@ export function useBacklogTasks() {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const allTasks = await getActiveSprintTasks();
+      // 🔄 MODIFICATION MULTI-SPRINT : Charger TOUTES les tâches au lieu de seulement celles du sprint actif
+      // Le filtrage par sprint se fait ensuite dans les composants (KanbanBoard, SprintBoard)
+      const allTasks = await getAllBacklogTasks();
       setTasks(allTasks);
       setError(null);
     } catch (err) {

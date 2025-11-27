@@ -1,7 +1,8 @@
 "use client";
 
 import { useTimeline } from "@/context/TimelineContext";
-import { useActiveSprint, useSprints } from "@/hooks/sprint";
+import { useSprints } from "@/hooks/sprint";
+import { useActiveSprints } from "@/hooks/sprint/useActiveSprints";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useUserStories } from "@/hooks/useUserStories";
 import { BacklogTask } from "@/lib/types/backlogTask";
@@ -38,12 +39,16 @@ export function KanbanBoard() {
     updateTaskStatus,
   } = useBacklogTasks();
   const { sprints } = useSprints();
-  const { activeSprint } = useActiveSprint();
+  const { activeSprints, selectedSprint, setSelectedSprint } =
+    useActiveSprints();
   const { userStories } = useUserStories();
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
   const { refreshOnDemand } = useTimeline();
+
+  // Utiliser le sprint sélectionné ou le premier sprint actif
+  const activeSprint = selectedSprint || activeSprints[0] || null;
 
   // ✅ Récupérer les User Stories du sprint actif
   // Utilise la fonction centralisée qui gère la double source de vérité (push/pull)
@@ -131,6 +136,31 @@ export function KanbanBoard() {
 
   return (
     <>
+      {/* 🆕 Sélecteur de sprint actif */}
+      {activeSprints.length > 1 && (
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-sm font-medium">Sprint actif :</span>
+          <select
+            value={selectedSprint?.id || ""}
+            onChange={(e) => {
+              const sprint = activeSprints.find((s) => s.id === e.target.value);
+              setSelectedSprint(sprint || null);
+            }}
+            className="px-3 py-2 border rounded-md bg-background text-foreground"
+          >
+            {activeSprints.map((sprint) => (
+              <option key={sprint.id} value={sprint.id}>
+                {sprint.title}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-muted-foreground">
+            ({activeSprints.length} sprint{activeSprints.length > 1 ? "s" : ""}{" "}
+            en cours)
+          </span>
+        </div>
+      )}
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
