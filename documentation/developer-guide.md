@@ -58,21 +58,46 @@ Animation : Framer Motion
 - `cleanupCompletedSprintsBadges()` : Nettoie les badges des sprints terminés
 - `migrateExpiredSprints()` : Migration automatique des sprints expirés
 - `debugUserStory(id)` : Debug d'une User Story spécifique
-- Gestion du cycle de vie des sprints et badges
+- Gestion du cycle de vie des sprints
 
 #### BacklogTasksService (`lib/services/backlogTasksService.ts`)
 
-- `getAllBacklogTasks()` : Récupère les tâches avec badge "sprint" actif
-- `getAllBacklogTasksUnfiltered()` : Récupère toutes les tâches (sans filtre)
-- Filtrage automatique par badge pour le Sprint Backlog
+- `getAllBacklogTasks()` : Récupère TOUTES les tâches (pas de filtre badge)
+- `getActiveSprintTasks()` : Filtre les tâches du sprint actif via userStoryIds
+- **⚠️ Important** : Le champ `badge` n'est PLUS utilisé comme critère de filtrage
 
-#### Pattern de filtrage par badge
+#### Utilitaires Sprint (`lib/utils/sprintUserStories.ts`)
+
+**🆕 Nouveau système (2025)** : Fonctions centralisées pour le filtrage des sprints
 
 ```typescript
-// Exemple : filtrage des User Stories actives
+// Récupération des User Stories d'un sprint (double source de vérité)
+export function getUserStoriesForSprint(
+  activeSprint: Sprint | null,
+  userStories: UserStory[]
+): UserStory[]
+
+// Filtrage des tâches d'un sprint par intersection userStoryIds
+export function getTasksForSprint(
+  tasks: BacklogTask[],
+  sprintUserStoryIds: string[]
+): BacklogTask[]
+```
+
+**Sources de vérité** :
+- **PUSH (prioritaire)** : `sprint.userStoryIds` → Performance optimale
+- **PULL (fallback)** : `us.sprintId` → Sécurité contre désynchronisation
+- **TASK** : `task.userStoryIds` → Intersection avec sprintUserStoryIds
+
+**❌ Badge déprécié comme critère** :
+```typescript
+// ❌ ANCIEN (obsolète) :
 const activeUserStories = userStories.filter(
   (us) => us.sprintId === currentSprintId && us.badge === "sprint"
 );
+
+// ✅ NOUVEAU (2025) :
+const activeUserStories = getUserStoriesForSprint(activeSprint, userStories);
 ```
 
 ---
@@ -196,6 +221,193 @@ npm run clean           # Nettoyer et réinstaller
 - TypeScript Importer
 - Auto Rename Tag
 - Prettier - Code formatter
+
+---
+
+## 🆕 Architecture Sprint Workflow (2025)
+
+### Vue d'ensemble
+
+Le workflow Sprint a été **complètement refactorisé en novembre 2025** pour éliminer la dépendance au champ `badge` comme critère métier.
+
+#### Principes architecturaux
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SPRINT WORKFLOW 2.0                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Source de vérité unique                                 │
+│     ✅ sprint.userStoryIds (PUSH - prioritaire)            │
+│     ✅ userStory.sprintId (PULL - fallback)                │
+│     ✅ task.userStoryIds (LINK)                            │
+│     ❌ badge (DÉCORATIF uniquement)                        │
+│                                                             │
+│  2. Fonctions centralisées                                  │
+│     📦 getUserStoriesForSprint()                            │
+│     📦 getTasksForSprint()                                  │
+│                                                             │
+│  3. Filtrage cohérent                                       │
+│     🎯 Sprint Backlog = Sprint actif (même logique)        │
+│                                                             │
+│  4. Redirection automatique                                 │
+│     🚀 Création → /sprint?tab=kanban (500ms)               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Pipeline de traitement
+
+```typescript
+// 1️⃣ Détection du sprint actif
+const { activeSprint } = useActiveSprint();
+// Logique : sprint.isActive === true OU date actuelle dans [startDate, endDate]
+
+// 2️⃣ Récupération User Stories (double source de vérité)
+const sprintUserStories = getUserStoriesForSprint(activeSprint, userStories);
+// PUSH : sprint.userStoryIds (prioritaire)
+// PULL : us.sprintId (fallback)
+
+// 3️⃣ Extraction IDs
+const sprintUserStoryIds = sprintUserStories.map(us => us.id);
+
+// 4️⃣ Filtrage tâches (intersection)
+const sprintTasks = getTasksForSprint(allTasks, sprintUserStoryIds);
+// Logique : task.userStoryIds ∩ sprintUserStoryIds
+
+// 5️⃣ Répartition par statut (Kanban)
+const sprintTodo = sprintTasks.filter(t => t.status === "todo");
+const sprintInProgress = sprintTasks.filter(t => t.status === "in-progress");
+const sprintInTesting = sprintTasks.filter(t => t.status === "in-testing");
+const sprintDone = sprintTasks.filter(t => t.status === "done");
+```
+
+### Fichiers clés
+
+| Fichier | Rôle | Description |
+|---------|------|-------------|
+| `lib/utils/sprintUserStories.ts` | **Fonctions centralisées** | `getUserStoriesForSprint()`, `getTasksForSprint()` |
+| `hooks/sprint/useActiveSprint.tsx` | **Détection sprint actif** | Priorité `isActive`, fallback date range |
+| `hooks/sprint/useSprintDetail.tsx` | **Création/modification** | CRUD + redirection automatique |
+| `components/backlog/KanbanBoard.tsx` | **Sprint Backlog** | Vue Kanban (exécution) |
+| `components/sprint/SprintBoard.tsx` | **Sprint actif** | Vue synthèse (suivi) |
+
+### Flux complet : Création → Affichage
+
+```mermaid
+graph LR
+    A[Créer Sprint] --> B[updateUserStorySprint]
+    B --> C[updateBadgesForSprintUserStories]
+    C --> D[toast.success]
+    D --> E[refetch]
+    E --> F[onClose]
+    F --> G[setTimeout 500ms]
+    G --> H[router.push /sprint?tab=kanban]
+    H --> I[useActiveSprint]
+    I --> J[getUserStoriesForSprint]
+    J --> K[getTasksForSprint]
+    K --> L[Affichage Kanban]
+```
+
+### Rôle du champ `badge`
+
+#### ❌ Ancien système (OBSOLÈTE)
+
+```typescript
+// ❌ Badge utilisé comme critère de filtrage (FAUX)
+const sprintTasks = tasks.filter(task => task.badge === "sprint");
+const sprintUS = userStories.filter(us => us.badge === "sprint");
+```
+
+**Problèmes** :
+- Source de vérité unique → Fragile
+- Requêtes Firestore filtrées → Impossible de filtrer côté client
+- Risque de désynchronisation
+
+#### ✅ Nouveau système (2025)
+
+```typescript
+// ✅ badge conservé uniquement pour synchronisation décorative
+// Mis à jour automatiquement via updateBadgesForSprintUserStories()
+// JAMAIS utilisé comme critère de filtrage
+
+// Synchronisation automatique
+await updateBadgesForSprintUserStories(sprint.userStoryIds);
+// → Met badge: "sprint" sur US liées au sprint
+// → Met badge: null sur US retirées du sprint
+```
+
+**Usages légitimes** :
+- 🎨 **Affichage UI** : Chip "Sprint" sur cartes US
+- 🔄 **Synchronisation** : Cohérence des données
+- 🐛 **Debug** : Visualisation rapide de l'état
+- 🔧 **Migration** : Compatibilité avec ancien code
+
+### Points d'attention
+
+#### 1. Timeout de redirection (500ms)
+
+```typescript
+// hooks/sprint/useSprintDetail.tsx
+setTimeout(() => {
+  router.push('/sprint?tab=kanban');
+}, 500);
+```
+
+**⚠️ Fragilité** : Dépend de la latence réseau  
+**✅ Mitigation** : `refetch()` appelé avant + `onSnapshot` temps réel  
+**💡 Amélioration future** : Attendre `refetch()` au lieu d'un timeout fixe
+
+#### 2. Double source de vérité (push/pull)
+
+**Complexité** : `sprint.userStoryIds` + `us.sprintId`
+
+**✅ Justification** :
+- Performance : Push-first (requêtes optimisées)
+- Robustesse : Pull en fallback (désynchronisation)
+- Cohérence : `getUserStoriesForSprint()` concilie les deux
+
+#### 3. Badge conservé
+
+**Question** : Pourquoi ne pas supprimer `badge` ?
+
+**Réponses** :
+1. Compatibilité avec code existant
+2. Migration progressive
+3. Utile pour debug et affichage UI
+4. Synchronisation automatique
+
+**⚠️ Règle** : Badge **JAMAIS** utilisé comme critère de filtrage
+
+### Bonnes pratiques
+
+```typescript
+// ✅ BON : Utiliser les fonctions centralisées
+import { getUserStoriesForSprint, getTasksForSprint } from '@/lib/utils/sprintUserStories';
+
+const sprintUS = getUserStoriesForSprint(activeSprint, userStories);
+const sprintTasks = getTasksForSprint(allTasks, sprintUS.map(us => us.id));
+
+// ❌ MAUVAIS : Filtrer par badge
+const sprintUS = userStories.filter(us => us.badge === "sprint");
+const sprintTasks = tasks.filter(task => task.badge === "sprint");
+
+// ✅ BON : Vérifier sprint actif
+const { activeSprint } = useActiveSprint();
+if (!activeSprint) return <EmptyState />;
+
+// ❌ MAUVAIS : Filtrer manuellement
+const activeSprint = sprints.find(s => s.isActive === true);
+```
+
+### Documentation complète
+
+📖 Voir `documentation/sprint-workflow-fix.md` pour :
+- Diagrammes détaillés du flux
+- Code complet de chaque étape
+- Tests de validation
+- Checklist de débogage
+- Évolutions futures
 
 ---
 

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { db } from "../firebase";
 import { UserStory } from "../types/userStory";
 import { logger } from "../utils/logger";
+import { getDefaultDoDItems } from "./dodService";
 
 const COLLECTION_NAME = "user_stories";
 
@@ -45,6 +46,7 @@ export async function createUserStory(data: Omit<UserStory, "id" | "code">) {
     id: docRef.id,
     code,
     ...data,
+    dodItems: getDefaultDoDItems(), // 🆕 Initialiser la DoD avec tous les critères
     createdAt: Timestamp.fromDate(new Date()),
     updatedAt: Timestamp.fromDate(new Date()),
   };

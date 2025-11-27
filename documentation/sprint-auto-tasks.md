@@ -1,5 +1,8 @@
 # 🆕 Fonctionnalité : Création Automatique de Tâches Sprint
 
+> **📅 Dernière mise à jour** : 27 novembre 2025  
+> **⚠️ Note** : Ce document a été mis à jour pour refléter le refactoring Sprint de novembre 2025
+
 ## 📋 Description
 
 Lorsque vous créez un sprint et cochez "Marquer comme sprint actif", l'application crée automatiquement des tâches par défaut pour les User Stories qui n'ont pas encore de tâches associées.
@@ -16,16 +19,27 @@ Lorsque vous créez un sprint et cochez "Marquer comme sprint actif", l'applicat
 
 - Création automatique d'une tâche par défaut pour chaque US sans tâches existantes
 - Les tâches apparaissent immédiatement dans la colonne "À Faire" du Sprint Backlog
+- Redirection automatique vers `/sprint?tab=kanban` après création
 - Le processus est entièrement automatisé
 
 ## 🔧 Fonctionnement Technique
 
-### Logique implémentée dans `useSprintForm.ts`
+### Logique implémentée dans `useSprintDetail.tsx`
 
 1. **Création du sprint** avec les User Stories sélectionnées
-2. **Mise à jour des User Stories** (ajout du `sprintId` et du badge "sprint")
-3. **Mise à jour des tâches existantes** liées aux US (ajout du badge "sprint")
-4. **🆕 Création automatique de tâches** pour les US sans tâches existantes
+   - `sprint.userStoryIds = ["us1", "us2", ...]` (PUSH)
+   
+2. **Mise à jour des User Stories**
+   - `us.sprintId = sprint.id` (PULL)
+   - `us.badge = "sprint"` (décoratif uniquement, synchronisé automatiquement)
+   
+3. **Synchronisation des badges** (décoratif)
+   - Appel de `updateBadgesForSprintUserStories()`
+   - ⚠️ Le badge n'est PAS utilisé comme critère de filtrage
+   
+4. **Redirection automatique**
+   - `router.push('/sprint?tab=kanban')` après 500ms
+   - Navigation vers Sprint Backlog avec rafraîchissement
 
 ### Exemple de tâche créée automatiquement
 
@@ -36,10 +50,29 @@ Lorsque vous créez un sprint et cochez "Marquer comme sprint actif", l'applicat
   priority: "high" | "medium" | "low", // Hérite de la priorité de l'US
   storyPoints: 2, // Hérite des story points de l'US
   status: "todo", // Toujours créée en "À Faire"
-  userStoryIds: ["us-id"],
-  badge: "sprint", // Directement avec le badge sprint
+  userStoryIds: ["us-id"], // ✅ Source de vérité pour le filtrage
+  badge: "sprint", // ⚠️ Décoratif uniquement (synchronisé automatiquement)
 }
 ```
+
+### ⚠️ Nouveau système (2025) : Filtrage des tâches
+
+Le système ne se base **PLUS** sur le champ `badge` pour filtrer les tâches du sprint.
+
+**Logique de filtrage** :
+```typescript
+// 1. Récupérer les User Stories du sprint (double source de vérité)
+const sprintUserStories = getUserStoriesForSprint(activeSprint, userStories);
+// PUSH : sprint.userStoryIds (prioritaire)
+// PULL : us.sprintId (fallback)
+
+// 2. Filtrer les tâches par intersection userStoryIds
+const sprintTasks = getTasksForSprint(allTasks, sprintUserStories.map(us => us.id));
+// Logique : task.userStoryIds ∩ sprintUserStoryIds
+```
+
+**✅ Source de vérité** : `task.userStoryIds` + `sprint.userStoryIds` + `us.sprintId`  
+**❌ Badge** : Champ décoratif uniquement (pas de critère de filtrage)
 
 ## ✅ Tests Ajoutés
 

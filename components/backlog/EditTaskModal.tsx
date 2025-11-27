@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
-import { BacklogTask } from "@/lib/types/backlogTask";
-import { UserStory } from "@/lib/types/userStory";
-import {
-  getAllUserStories,
-  getUsedUserStoryIds,
-} from "@/lib/services/userStoryService";
-import Link from "next/link";
-import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getUsedUserStoryIds } from "@/lib/services/userStoryService";
+import { BacklogTask } from "@/lib/types/backlogTask";
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
+import { ChevronDown, ChevronUp, FilePenLine, X } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FilterUserStoryList } from "../searchbar/FilterUserStoryList";
+import { Button } from "../ui/button";
 
 interface EditTaskModalProps {
   task: BacklogTask | null;
@@ -19,6 +17,8 @@ interface EditTaskModalProps {
   onClose: () => void;
   onSave: (updated: BacklogTask) => void;
   onDelete: (taskId: string) => void;
+  activeSprint: Sprint | null;
+  sprintUserStories: UserStory[];
 }
 
 export function EditTaskModal({
@@ -27,13 +27,20 @@ export function EditTaskModal({
   onClose,
   onSave,
   onDelete,
+  activeSprint,
+  sprintUserStories,
 }: EditTaskModalProps) {
   const [edited, setEdited] = useState<BacklogTask | null>(null);
-  const [userStories, setUserStories] = useState<UserStory[]>([]);
   const [showStoryList, setShowStoryList] = useState(false);
   const [usedUserStoryIds, setUsedUserStoryIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+
+  // ✅ Utiliser exclusivement les User Stories du sprint actif
+  // Passées en prop depuis KanbanBoard (via getUserStoriesForSprint)
+  // RÈGLE MÉTIER : Dans le Sprint Backlog, on ne peut créer/éditer des tâches
+  // que pour les User Stories du sprint en cours
+  const userStories = sprintUserStories;
 
   useEffect(() => {
     const fetchUsed = async () => {
@@ -48,10 +55,6 @@ export function EditTaskModal({
       setEdited(task);
     }
   }, [task]);
-
-  useEffect(() => {
-    getAllUserStories().then(setUserStories);
-  }, []);
 
   if (!isOpen || !edited) return null;
 

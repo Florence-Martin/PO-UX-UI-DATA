@@ -35,10 +35,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# scripts
+# scripts de développement et maintenance
 /fix-casing.sh
+/scripts/
 
-# Fichier d’aide local ChatGPT
+# Fichier d'aide local ChatGPT
 chatgpt-cheatsheet.md
 
 # Ignore les scripts et pages dev

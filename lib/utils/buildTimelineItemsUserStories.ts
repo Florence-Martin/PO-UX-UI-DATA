@@ -1,8 +1,8 @@
+import { BacklogTask } from "@/lib/types/backlogTask";
 import { Sprint } from "@/lib/types/sprint";
 import { UserStory } from "@/lib/types/userStory";
-import { BacklogTask } from "@/lib/types/backlogTask";
-import { Timestamp } from "firebase/firestore";
 import { formatDateToFrenchString } from "@/lib/utils/formatDateToFrenchString";
+import { Timestamp } from "firebase/firestore";
 
 export interface TimelineItem {
   id: string;
@@ -48,8 +48,9 @@ export function buildTimelineItemsUserStories(
   const addedKeys = new Set<string>();
 
   // à partir des tâches du backlog
+  // ✅ CORRECTION : Ne plus filtrer par badge="sprint" (badge n'est plus source de vérité)
+  // On garde uniquement les tâches liées à des User Stories
   backlogTasks.forEach((task) => {
-    if (task.badge !== "sprint") return;
     if (!task.userStoryIds || task.userStoryIds.length === 0) return;
 
     const userStoryId = task.userStoryIds[0];

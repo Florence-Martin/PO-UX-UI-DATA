@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  UserStoryDoD,
-  UserStoryDoDSummary,
+  UserStoryDoDFlexible,
+  UserStoryDoDFlexibleSummary,
 } from "@/components/user-story/UserStoryDoD";
 import { useUserStories } from "@/hooks/useUserStories";
 import {
@@ -12,15 +12,17 @@ import {
   getSprintById,
   handleIncompleteUserStories,
 } from "@/lib/services/sprintService";
+import { updateUserStory } from "@/lib/services/userStoryService";
+import { DoDItem } from "@/lib/types/dod";
 import { Sprint } from "@/lib/types/sprint";
-import { DoDProgress, UserStory } from "@/lib/types/userStory";
+import { UserStory } from "@/lib/types/userStory";
 import { AlertTriangle, ArrowRight, CheckCircle2, Clock } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function SprintAuditContent() {
-  const { userStories, updateDoDProgress, loading } = useUserStories();
+  const { userStories, loading } = useUserStories();
   const [sprint, setSprint] = useState<Sprint | null>(null);
   const [sprintStories, setSprintStories] = useState<UserStory[]>([]);
   const [isClosing, setIsClosing] = useState(false);
@@ -69,10 +71,13 @@ function SprintAuditContent() {
     if (sprintStories.length === 0)
       return { completed: 0, total: 0, percentage: 0 };
 
-    const totalCriteria = sprintStories.length * 6; // 6 critères par US
+    const totalCriteria = sprintStories.reduce(
+      (acc, story) => acc + (story.dodItems?.length || 0),
+      0
+    );
     const completedCriteria = sprintStories.reduce((acc, story) => {
-      if (!story.dodProgress) return acc;
-      return acc + Object.values(story.dodProgress).filter(Boolean).length;
+      if (!story.dodItems) return acc;
+      return acc + story.dodItems.filter((item) => item.checked).length;
     }, 0);
 
     return {
@@ -87,25 +92,25 @@ function SprintAuditContent() {
 
   const getReadyForClosureStories = () => {
     return sprintStories.filter((story) => {
-      if (!story.dodProgress) return false;
-      return Object.values(story.dodProgress).every(Boolean);
+      if (!story.dodItems || story.dodItems.length === 0) return false;
+      return story.dodItems.every((item) => item.checked);
     });
   };
 
   const getIncompleteStories = () => {
     return sprintStories.filter((story) => {
-      if (!story.dodProgress) return true;
-      return !Object.values(story.dodProgress).every(Boolean);
+      if (!story.dodItems || story.dodItems.length === 0) return true;
+      return !story.dodItems.every((item) => item.checked);
     });
   };
 
-  const handleDoDUpdate = async (storyId: string, newProgress: DoDProgress) => {
-    await updateDoDProgress(storyId, newProgress);
+  const handleDoDUpdate = async (storyId: string, newDoDItems: DoDItem[]) => {
+    await updateUserStory(storyId, { dodItems: newDoDItems });
 
     // Mettre à jour l'état local
     setSprintStories((prev) =>
       prev.map((story) =>
-        story.id === storyId ? { ...story, dodProgress: newProgress } : story
+        story.id === storyId ? { ...story, dodItems: newDoDItems } : story
       )
     );
   };
@@ -310,15 +315,15 @@ function SprintAuditContent() {
                   )}
                 </div>
                 <div className="flex-shrink-0">
-                  <UserStoryDoDSummary dodProgress={story.dodProgress} />
+                  <UserStoryDoDFlexibleSummary dodItems={story.dodItems} />
                 </div>
               </div>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="overflow-x-auto">
-                <UserStoryDoD
-                  dodProgress={story.dodProgress}
-                  onUpdate={(progress) => handleDoDUpdate(story.id, progress)}
+                <UserStoryDoDFlexible
+                  dodItems={story.dodItems}
+                  onUpdate={(items) => handleDoDUpdate(story.id, items)}
                 />
               </div>
             </CardContent>

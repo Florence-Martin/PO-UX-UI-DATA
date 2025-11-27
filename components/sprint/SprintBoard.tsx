@@ -21,9 +21,11 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { UserStoryDoDFlexibleSummary } from "../user-story/UserStoryDoD";
 import { SprintActiveCard } from "./SprintActiveCard";
 
 const columns = [
@@ -57,6 +59,11 @@ export function SprintBoard() {
   const { tasks } = useBacklogTasks();
   const { userStories } = useUserStories();
   const { activeSprint } = useActiveSprint();
+  const router = useRouter();
+
+  const handleNavigateToBacklog = (taskId: string) => {
+    router.push(`/sprint?tab=kanban#${taskId}`);
+  };
 
   if (!activeSprint) {
     return (
@@ -72,18 +79,23 @@ export function SprintBoard() {
 
   const sprintUserStoryIds = activeSprint.userStoryIds ?? [];
 
-  // Récupérer les User Stories du sprint actif ET qui ont encore le badge "sprint"
-  // (exclut automatiquement les US des sprints clôturés)
-  const sprintUserStories = userStories.filter(
-    (us) => sprintUserStoryIds.includes(us.id) && us.badge === "sprint"
+  // ✅ Récupérer les User Stories du sprint actif
+  // Source de vérité : sprintId (soit via activeSprint.userStoryIds, soit via us.sprintId)
+  // Le badge n'est plus utilisé comme critère de filtrage
+  // NOTE : Cette logique est équivalente à getUserStoriesForSprint(activeSprint, userStories)
+  // Nous utilisons ici le filtrage manuel pour des raisons de performance (pas besoin d'importer la fonction)
+  const sprintUserStories = userStories.filter((us) =>
+    sprintUserStoryIds.includes(us.id)
   );
 
-  // Filtrer les tâches du sprint actif ET qui ont encore le badge "sprint"
-  // (exclut automatiquement les tâches des sprints clôturés)
-  const sprintTasks = tasks.filter(
-    (task) =>
-      task.userStoryIds?.some((id) => sprintUserStoryIds.includes(id)) &&
-      task.badge === "sprint"
+  // ✅ Filtrer les tâches du sprint actif
+  // Une tâche appartient au sprint si elle référence au moins une User Story du sprint
+  // Source de vérité : task.userStoryIds intersecte les US du sprint actif
+  // Le badge n'est plus utilisé comme critère de filtrage
+  // NOTE : Cette logique est équivalente à getTasksForSprint(tasks, sprintUserStoryIds)
+  // Nous utilisons ici le filtrage manuel pour des raisons de performance (pas besoin d'importer la fonction)
+  const sprintTasks = tasks.filter((task) =>
+    task.userStoryIds?.some((id) => sprintUserStoryIds.includes(id))
   );
 
   // ✅ Plus besoin de tâches virtuelles : nous créons maintenant des vraies tâches automatiquement !
@@ -92,8 +104,8 @@ export function SprintBoard() {
 
   // Vérifier si une User Story a sa DoD complétée
   const isUserStoryDoDCompleted = (userStory: UserStory): boolean => {
-    if (!userStory.dodProgress) return false;
-    return Object.values(userStory.dodProgress).every(Boolean);
+    if (!userStory.dodItems || userStory.dodItems.length === 0) return false;
+    return userStory.dodItems.every((item) => item.checked);
   };
 
   // Vérifier si toutes les User Stories du sprint ont leur DoD validée
@@ -168,22 +180,16 @@ export function SprintBoard() {
             {sprintUserStories.length} validées
           </span>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-2">
           {sprintUserStories.map((us) => (
             <div
               key={us.id}
-              className="flex items-center justify-between text-xs"
+              className="flex items-center justify-between text-xs gap-2"
             >
-              <span className="font-mono">{us.code}</span>
-              <span
-                className={
-                  isUserStoryDoDCompleted(us)
-                    ? "text-green-600"
-                    : "text-orange-600"
-                }
-              >
-                {isUserStoryDoDCompleted(us) ? "✅ Validée" : "⏳ En attente"}
-              </span>
+              <span className="font-mono flex-shrink-0">{us.code}</span>
+              <div className="flex-1">
+                <UserStoryDoDFlexibleSummary dodItems={us.dodItems} />
+              </div>
             </div>
           ))}
         </div>
@@ -322,15 +328,17 @@ export function SprintBoard() {
                             </span>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Link
-                                  href={`/backlog?tab=kanban#${task.id}`}
-                                  scroll={false}
+                                <button
+                                  onClick={() =>
+                                    handleNavigateToBacklog(task.id!)
+                                  }
+                                  className="inline-flex items-center justify-center p-1 rounded hover:bg-accent transition-colors cursor-pointer"
                                 >
                                   <Wrench className="w-4 h-4 hover:text-primary transition-colors" />
-                                </Link>
+                                </button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                Modifier dans le backlog
+                                Modifier dans le Sprint Backlog
                               </TooltipContent>
                             </Tooltip>
                           </div>

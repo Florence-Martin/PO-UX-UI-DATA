@@ -1,4 +1,5 @@
 import { BaseWorkItem } from "./BaseWorkItem";
+import { DoDItem } from "./dod";
 
 export type MoscowKey =
   | "mustHave"
@@ -24,5 +25,6 @@ export interface UserStory extends BaseWorkItem {
   moscow?: MoscowKey | null;
   sprintId?: string;
   badge?: "sprint" | "" | null;
-  dodProgress?: DoDProgress;
+  dodProgress?: DoDProgress; // ⚠️ DEPRECATED - Ancien système
+  dodItems?: DoDItem[]; // 🆕 Nouveau système - DoD propre à chaque US
 }

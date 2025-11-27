@@ -1,25 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useTimeline } from "@/context/TimelineContext";
+import { useActiveSprint, useSprints } from "@/hooks/sprint";
+import { useBacklogTasks } from "@/hooks/useBacklogTasks";
+import { useUserStories } from "@/hooks/useUserStories";
+import { BacklogTask } from "@/lib/types/backlogTask";
 import {
-  DndContext,
-  DragOverlay,
+  getTasksForSprint,
+  getUserStoriesForSprint,
+} from "@/lib/utils/sprintUserStories";
+import {
   closestCorners,
-  PointerSensor,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
   KeyboardSensor,
+  PointerSensor,
   useSensor,
   useSensors,
-  DragStartEvent,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { useState } from "react";
+import { EditTaskModal } from "./EditTaskModal";
 import { KanbanColumn } from "./KanbanColumn";
 import { KanbanItem } from "./KanbanItem";
-import { EditTaskModal } from "./EditTaskModal";
-import { useBacklogTasks } from "@/hooks/useBacklogTasks";
-import { BacklogTask } from "@/lib/types/backlogTask";
-import { useSprints } from "@/hooks/sprint";
-import { useTimeline } from "@/context/TimelineContext";
 
 export function KanbanBoard() {
   const {
@@ -33,10 +38,32 @@ export function KanbanBoard() {
     updateTaskStatus,
   } = useBacklogTasks();
   const { sprints } = useSprints();
+  const { activeSprint } = useActiveSprint();
+  const { userStories } = useUserStories();
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
   const { refreshOnDemand } = useTimeline();
+
+  // ✅ Récupérer les User Stories du sprint actif
+  // Utilise la fonction centralisée qui gère la double source de vérité (push/pull)
+  const sprintUserStories = getUserStoriesForSprint(activeSprint, userStories);
+  const sprintUserStoryIds = sprintUserStories.map((us) => us.id);
+
+  // ✅ Filtrer les tâches du sprint actif
+  // Une tâche appartient au sprint si elle référence au moins une US du sprint
+  // Source de vérité : task.userStoryIds intersecte les US du sprint
+  // Le badge n'est PLUS utilisé comme critère de filtrage
+  const allTasksFromHook = [...todo, ...inProgress, ...inTesting, ...done];
+  const sprintTasks = getTasksForSprint(allTasksFromHook, sprintUserStoryIds);
+
+  // Répartir les tâches du sprint par statut
+  const sprintTodo = sprintTasks.filter((t) => t.status === "todo");
+  const sprintInProgress = sprintTasks.filter(
+    (t) => t.status === "in-progress"
+  );
+  const sprintInTesting = sprintTasks.filter((t) => t.status === "in-testing");
+  const sprintDone = sprintTasks.filter((t) => t.status === "done");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -45,17 +72,21 @@ export function KanbanBoard() {
     })
   );
 
-  const allTasks = [...todo, ...inProgress, ...inTesting, ...done];
-
-  const findTask = (id: string) => allTasks.find((task) => task.id === id);
+  const findTask = (id: string) => sprintTasks.find((task) => task.id === id);
 
   const handleAddTask = (status: BacklogTask["status"]) => {
+    // ✅ Lier la nouvelle tâche aux User Stories du sprint actif
+    // Sans userStoryIds, la tâche serait filtrée par getTasksForSprint()
+    const userStoryIds =
+      sprintUserStoryIds.length > 0 ? sprintUserStoryIds : [];
+
     addTask({
       title: "Nouvelle tâche",
       description: "Description de la tâche",
       priority: "medium",
       storyPoints: 3,
       status,
+      userStoryIds, // ✅ CRITIQUE : Permet de lier la tâche au sprint
     });
   };
 
@@ -109,28 +140,28 @@ export function KanbanBoard() {
         <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[600px]">
           <KanbanColumn
             column={{ id: "todo", title: "À Faire" }}
-            tasks={todo}
+            tasks={sprintTodo}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
             sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "in-progress", title: "En Cours" }}
-            tasks={inProgress}
+            tasks={sprintInProgress}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
             sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "in-testing", title: "À Tester" }}
-            tasks={inTesting}
+            tasks={sprintInTesting}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
             sprints={sprints}
           />
           <KanbanColumn
             column={{ id: "done", title: "Terminé" }}
-            tasks={done}
+            tasks={sprintDone}
             onAddTask={handleAddTask}
             onTaskClick={handleClickTask}
             sprints={sprints}
@@ -155,6 +186,8 @@ export function KanbanBoard() {
           onClose={() => setTaskToEdit(null)}
           onSave={handleSaveEdit}
           onDelete={handleDeleteTask}
+          activeSprint={activeSprint}
+          sprintUserStories={sprintUserStories}
         />
       )}
     </>

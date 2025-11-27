@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DoDItem } from "@/lib/types/dod";
 import { DoDProgress } from "@/lib/types/userStory";
 import { AlertCircle, CheckCircle2, Circle } from "lucide-react";
 
@@ -43,6 +44,115 @@ const DOD_CRITERIA = [
   },
 ];
 
+// 🆕 NOUVEAU COMPOSANT - Utilise DoDItem[] au lieu de DoDProgress
+interface UserStoryDoDFlexibleProps {
+  dodItems?: DoDItem[];
+  onUpdate?: (newItems: DoDItem[]) => void;
+  readOnly?: boolean;
+  showPercentage?: boolean;
+}
+
+export function UserStoryDoDFlexible({
+  dodItems = [],
+  onUpdate,
+  readOnly = false,
+  showPercentage = true,
+}: UserStoryDoDFlexibleProps) {
+  const completedCount = dodItems.filter((item) => item.checked).length;
+  const totalCount = dodItems.length;
+  const percentage =
+    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+  const handleItemToggle = (itemId: string, checked: boolean) => {
+    if (readOnly || !onUpdate) return;
+
+    const newItems = dodItems.map((item) =>
+      item.id === itemId ? { ...item, checked } : item
+    );
+    onUpdate(newItems);
+  };
+
+  const getStatusIcon = () => {
+    if (percentage === 100)
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    if (percentage > 0)
+      return <AlertCircle className="h-4 w-4 text-orange-500" />;
+    return <Circle className="h-4 w-4 text-gray-400" />;
+  };
+
+  const getStatusColor = () => {
+    if (percentage === 100) return "bg-green-500";
+    if (percentage >= 70) return "bg-yellow-500";
+    if (percentage >= 40) return "bg-orange-500";
+    return "bg-red-500";
+  };
+
+  if (totalCount === 0) {
+    return (
+      <div className="text-sm text-muted-foreground italic">
+        Aucun critère DoD défini
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <div className="mb-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            {getStatusIcon()}
+            <span className="text-sm font-medium">Definition of Done</span>
+          </div>
+          {showPercentage && (
+            <Badge
+              variant={percentage === 100 ? "default" : "secondary"}
+              className="text-xs"
+            >
+              {completedCount}/{totalCount} ({percentage}%)
+            </Badge>
+          )}
+        </div>
+        {showPercentage && (
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-300 ${getStatusColor()}`}
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+        )}
+      </div>
+      <div className="space-y-3">
+        {dodItems
+          .sort((a, b) => a.order - b.order)
+          .map((item) => (
+            <div key={item.id} className="flex items-start space-x-3">
+              <Checkbox
+                id={`dod-${item.id}`}
+                checked={item.checked}
+                onCheckedChange={(checked) =>
+                  handleItemToggle(item.id, checked as boolean)
+                }
+                disabled={readOnly}
+                className="mt-0.5 flex-shrink-0"
+              />
+              <div className="min-w-0 flex-1">
+                <label
+                  htmlFor={`dod-${item.id}`}
+                  className={`text-sm leading-tight block cursor-pointer ${
+                    item.checked ? "line-through text-muted-foreground" : ""
+                  }`}
+                >
+                  {item.text}
+                </label>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+}
+
+// ⚠️ ANCIEN COMPOSANT - Maintenu pour rétrocompatibilité
 export function UserStoryDoD({
   dodProgress = {
     codeReviewed: false,
@@ -145,6 +255,36 @@ export function UserStoryDoD({
   );
 }
 
+// 🆕 NOUVEAU COMPOSANT - Résumé DoD flexible (badge)
+export function UserStoryDoDFlexibleSummary({
+  dodItems,
+}: {
+  dodItems?: DoDItem[];
+}) {
+  if (!dodItems || dodItems.length === 0) return null;
+
+  const completedCount = dodItems.filter((item) => item.checked).length;
+  const totalCount = dodItems.length;
+  const percentage = Math.round((completedCount / totalCount) * 100);
+
+  const getStatusColor = () => {
+    if (percentage === 100) return "bg-green-500 text-white";
+    if (percentage >= 70) return "bg-yellow-500 text-black";
+    if (percentage >= 40) return "bg-orange-500 text-white";
+    return "bg-red-500 text-white";
+  };
+
+  return (
+    <Badge
+      className={`${getStatusColor()} text-xs sm:text-sm whitespace-nowrap`}
+    >
+      <span className="hidden sm:inline">DoD: </span>
+      {completedCount}/{totalCount} ({percentage}%)
+    </Badge>
+  );
+}
+
+// ⚠️ ANCIEN COMPOSANT - Résumé DoD ancien système (maintenu pour rétrocompatibilité)
 export function UserStoryDoDSummary({
   dodProgress,
 }: {

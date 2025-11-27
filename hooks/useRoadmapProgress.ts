@@ -1,9 +1,9 @@
 // hooks/useRoadmapProgress.ts
-import { useState, useEffect } from "react";
-import { getAllSprints } from "@/lib/services/sprintService";
-import { getAllUserStories } from "@/lib/services/userStoryService";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
 import { getWireframesProgress } from "@/lib/services/progressService";
+import { getAllSprints } from "@/lib/services/sprintService";
+import { getAllUserStories } from "@/lib/services/userStoryService";
+import { useEffect, useState } from "react";
 
 interface RoadmapStep {
   id: number;
@@ -61,7 +61,7 @@ export const useRoadmapProgress = (): UseRoadmapProgressReturn => {
           {
             id: 4,
             label: "Backlog & Kanban",
-            progress: calculateBacklogProgress(tasks, sprints),
+            progress: calculateBacklogProgress(tasks, sprints, userStories),
           },
           {
             id: 5,
@@ -149,7 +149,11 @@ const calculateUserStoriesProgress = (
   return Math.round((completeUserStories.length / userStories.length) * 100);
 };
 
-const calculateBacklogProgress = (tasks: any[], sprints: any[]): number => {
+const calculateBacklogProgress = (
+  tasks: any[],
+  sprints: any[],
+  userStories: any[]
+): number => {
   if (tasks.length === 0) return 0;
 
   // Tâches avec estimation et priorité définies
@@ -161,7 +165,16 @@ const calculateBacklogProgress = (tasks: any[], sprints: any[]): number => {
       task.userStoryIds.length > 0
   );
 
-  const tasksInSprints = tasks.filter((task) => task.badge === "sprint");
+  // ✅ CORRECTION : Ne plus utiliser badge="sprint" comme critère
+  // Une tâche est dans un sprint si elle est liée à au moins une US ayant un sprintId
+  const tasksInSprints = tasks.filter((task) => {
+    if (!task.userStoryIds || task.userStoryIds.length === 0) return false;
+    // Vérifier si au moins une US de cette tâche a un sprintId
+    return task.userStoryIds.some((usId: string) => {
+      const us = userStories.find((u) => u.id === usId);
+      return us && us.sprintId;
+    });
+  });
 
   const organizationScore = Math.round(
     (organizedTasks.length / tasks.length) * 60

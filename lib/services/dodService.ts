@@ -1,11 +1,10 @@
 import {
-  collection,
   doc,
   getDoc,
-  setDoc,
   onSnapshot,
-  Unsubscribe,
+  setDoc,
   Timestamp,
+  Unsubscribe,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { DoD, DoDItem } from "../types/dod";
@@ -16,18 +15,48 @@ const DEFAULT_DOD_ID = "default";
 
 // Default DoD items if none exist in Firestore
 const DEFAULT_DOD_ITEMS: DoDItem[] = [
-  { id: "1", text: "Code relu par un pair", checked: false, order: 0 },
-  { id: "2", text: "Tests unitaires écrits", checked: false, order: 1 },
-  { id: "3", text: "Fonction testée en local", checked: false, order: 2 },
-  { id: "4", text: "Fonction validée en staging", checked: false, order: 3 },
-  { id: "5", text: "Documentation mise à jour", checked: false, order: 4 },
+  {
+    id: "1",
+    text: "Code relu par un pair",
+    checked: false,
+    order: 0,
+  },
+  {
+    id: "2",
+    text: "Tests automatisés écrits et fonctionnels",
+    checked: false,
+    order: 1,
+  },
+  {
+    id: "3",
+    text: "Fonction testée en local",
+    checked: false,
+    order: 2,
+  },
+  {
+    id: "4",
+    text: "Fonction validée en staging",
+    checked: false,
+    order: 3,
+  },
+  {
+    id: "5",
+    text: "Documentation mise à jour",
+    checked: false,
+    order: 4,
+  },
   {
     id: "6",
-    text: 'Ticket passé en "Done" sur Jira / Kanban',
+    text: "Ticket passé en Done",
     checked: false,
     order: 5,
   },
 ];
+
+// 🆕 Export pour utilisation dans d'autres services
+export function getDefaultDoDItems(): DoDItem[] {
+  return DEFAULT_DOD_ITEMS.map((item) => ({ ...item })); // Copie profonde
+}
 
 // Get DoD from Firestore with error handling
 export const getDoD = async (dodId: string = DEFAULT_DOD_ID): Promise<DoD> => {

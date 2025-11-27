@@ -18,13 +18,11 @@ import { getAllUserStories } from "./userStoryService";
 
 const COLLECTION_NAME = "backlog_tasks";
 
-// 🔍 Récupère les tâches du sprint actif (avec badge "sprint")
+// 🔍 Récupère TOUTES les tâches (sans filtre badge)
+// ✅ CORRECTION : Ne plus filtrer par badge="sprint" car badge n'est plus la source de vérité
+// Les consommateurs de cette fonction (Timeline, Roadmap, etc.) doivent filtrer par userStoryIds
 export const getAllBacklogTasks = async (): Promise<BacklogTask[]> => {
-  const sprintTasksQuery = query(
-    collection(db, COLLECTION_NAME),
-    where("badge", "==", "sprint")
-  );
-  const querySnapshot = await getDocs(sprintTasksQuery);
+  const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
   return querySnapshot.docs.map((docSnap) => ({
     id: docSnap.id,
     ...(docSnap.data() as Omit<BacklogTask, "id">),
@@ -78,17 +76,6 @@ export const getActiveSprintTasks = async (): Promise<BacklogTask[]> => {
     );
     return [];
   }
-};
-
-// 🔍 Récupère TOUTES les tâches (sans filtre badge)
-export const getAllBacklogTasksUnfiltered = async (): Promise<
-  BacklogTask[]
-> => {
-  const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
-  return querySnapshot.docs.map((docSnap) => ({
-    id: docSnap.id,
-    ...(docSnap.data() as Omit<BacklogTask, "id">),
-  }));
 };
 
 // ➕ Crée une nouvelle tâche

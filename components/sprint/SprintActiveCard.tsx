@@ -13,9 +13,10 @@ type Props = {
 export function SprintActiveCard({ sprint, userStories }: Props) {
   const getDate = (d: any) => d?.toDate?.() ?? new Date(d);
 
-  const sprintStories = userStories.filter(
-    (us) => us.sprintId === sprint.id && us.badge === "sprint"
-  );
+  // ✅ Récupérer les User Stories du sprint
+  // Source de vérité : us.sprintId === sprint.id
+  // Le badge n'est plus utilisé comme critère de filtrage
+  const sprintStories = userStories.filter((us) => us.sprintId === sprint.id);
   const velocity = sprintStories.reduce(
     (sum, us) => sum + (us.storyPoints || 0),
     0

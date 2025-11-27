@@ -1,14 +1,16 @@
 "use client";
 
-import { UserStory } from "@/lib/types/userStory";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Button } from "../ui/button";
-import { PencilLine, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
 import { getAllBacklogTasks } from "@/lib/services/backlogTasksService";
 import { updateUserStory } from "@/lib/services/userStoryService";
+import { DoDItem } from "@/lib/types/dod";
+import { UserStory } from "@/lib/types/userStory";
+import { motion } from "framer-motion";
+import { PencilLine, Pin, PinOff, SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { ExpandableSection } from "../backlog/ExpandableSection";
+import { Button } from "../ui/button";
+import { UserStoryDoDFlexible } from "../user-story/UserStoryDoD";
 
 type Props = {
   story: UserStory;
@@ -62,6 +64,19 @@ export function UserStoryCard({ story }: Props) {
         "Erreur lors de la mise à jour de la priorisation MoSCoW :",
         error
       );
+    }
+  };
+
+  // 🆕 Met à jour la DoD de la User Story
+  const handleDoDUpdate = async (newDoDItems: DoDItem[]) => {
+    try {
+      if (story.id) {
+        await updateUserStory(story.id, {
+          dodItems: newDoDItems,
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la DoD :", error);
     }
   };
 
@@ -188,7 +203,7 @@ export function UserStoryCard({ story }: Props) {
         </div>
       )}
 
-      {/* Critères d’acceptation */}
+      {/* Critères d'acceptation */}
       <ExpandableSection
         label="Critères d'acceptation"
         content={story.acceptanceCriteria}
@@ -196,6 +211,18 @@ export function UserStoryCard({ story }: Props) {
         clampClass="line-clamp-3"
         fullClass="text-muted-foreground italic transition-all"
       />
+
+      {/* 🆕 Definition of Done */}
+      {story.dodItems && story.dodItems.length > 0 && (
+        <div className="mt-4 p-3 border rounded-lg bg-muted/30">
+          <UserStoryDoDFlexible
+            dodItems={story.dodItems}
+            onUpdate={handleDoDUpdate}
+            readOnly={false}
+            showPercentage={true}
+          />
+        </div>
+      )}
 
       {/* Bouton modifier */}
       {isTargeted && (
