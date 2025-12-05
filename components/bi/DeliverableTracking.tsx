@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Deliverable } from "@/lib/services/deliverableService";
@@ -17,6 +18,7 @@ import {
   FolderKanban,
   Pencil,
   Plus,
+  Search,
   Trash2,
   User,
   X,
@@ -35,6 +37,7 @@ export function DeliverableTracking({
   deliverables,
 }: DeliverableTrackingProps) {
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingDeliverable, setEditingDeliverable] =
@@ -56,10 +59,19 @@ export function DeliverableTracking({
     return stats;
   }, [deliverables]);
 
-  // Filtrer par statut
-  const filteredDeliverables = selectedStatus
-    ? deliverables.filter((d) => d.status === selectedStatus)
-    : deliverables;
+  // Filtrer par recherche et statut
+  const filteredDeliverables = deliverables.filter((deliverable) => {
+    const matchesSearch =
+      deliverable.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (deliverable.description?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      ) ||
+      deliverable.owner.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = selectedStatus
+      ? deliverable.status === selectedStatus
+      : true;
+    return matchesSearch && matchesStatus;
+  });
   const getStatusIcon = (status: Deliverable["status"]) => {
     switch (status) {
       case "completed":
@@ -194,12 +206,26 @@ export function DeliverableTracking({
         ))}
       </div>
 
-      {/* Barre de filtres */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between items-start sm:items-center">
-        <div className="text-sm text-muted-foreground">
-          {filteredDeliverables.length} livrable
-          {filteredDeliverables.length > 1 ? "s" : ""}
-          {selectedStatus && " dans ce statut"}
+      {/* Barre de recherche et filtres */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Rechercher un livrable..."
+            className="pl-9 pr-9"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-1 top-1 h-7 w-7 p-0"
+              onClick={() => setSearchTerm("")}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <div className="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
           {selectedStatus && (
