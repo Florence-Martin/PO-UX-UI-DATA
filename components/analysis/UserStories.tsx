@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,12 +19,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { ArrowDownToDot, List, Notebook, Pen } from "lucide-react";
+import { ArrowDownToDot, List, Notebook, Pen, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { UserStoryQualityPanel } from "@/components/analysis/UserStoryQualityPanel";
+import { ExpandableSection } from "@/components/backlog/ExpandableSection";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Tooltip,
   TooltipContent,
@@ -26,6 +35,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useUserStories } from "@/hooks/useUserStories";
+import { useUserStoryQuality } from "@/hooks/useUserStoryQuality";
+import { Loader2 } from "lucide-react";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStories() {
@@ -37,13 +48,11 @@ export function UserStories() {
     acceptanceCriteria,
     isEditing,
     editingCode,
-    moscow,
     setTitle,
     setDescription,
     setPriority,
     setStoryPoints,
     setAcceptanceCriteria,
-    setMoscow,
     handleSave,
     handleEdit,
     handleDelete,
@@ -52,6 +61,18 @@ export function UserStories() {
     filterByPriority,
     setUserStorySearchTerm,
   } = useUserStories();
+
+  const {
+    analysis,
+    isLoading: isAnalyzing,
+    error: analysisError,
+    analyzeUserStory,
+    reset: resetAnalysis,
+  } = useUserStoryQuality();
+
+  const [accordionValue, setAccordionValue] = useState<string | undefined>(
+    undefined
+  );
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -74,6 +95,14 @@ export function UserStories() {
     }
   }, [storyIdToEdit, filteredStories, handleEdit, router]);
 
+  // Reset de l'analyse quand on change de US ou qu'on annule
+  useEffect(() => {
+    if (!isEditing) {
+      resetAnalysis();
+      setAccordionValue(undefined);
+    }
+  }, [isEditing, resetAnalysis]);
+
   // Surlignage temporaire
   useEffect(() => {
     if (isEditing && cardRef.current) {
@@ -82,6 +111,22 @@ export function UserStories() {
       setTimeout(() => el.classList.remove("ring-2", "ring-primary"), 3000);
     }
   }, [isEditing]);
+
+  // Fonction pour analyser la qualité
+  const handleAnalyze = async () => {
+    if (!title.trim() || !acceptanceCriteria.trim()) return;
+
+    await analyzeUserStory({
+      title: title.trim(),
+      description: description.trim(),
+      acceptanceCriteria: acceptanceCriteria.trim(),
+      code: editingCode || undefined,
+      priority: priority || undefined,
+    });
+
+    // Ouvrir l'accordéon automatiquement après l'analyse
+    setAccordionValue("quality-analysis");
+  };
 
   return (
     <div className="grid gap-6 sm:px-6 lg:px-8">
@@ -237,6 +282,95 @@ export function UserStories() {
               />
             </div>
 
+            {/* Section Quality Checker */}
+            <div className="border rounded-lg bg-muted/30">
+              <Accordion
+                type="single"
+                collapsible
+                value={accordionValue}
+                onValueChange={(val) => {
+                  console.log("Accordion changed:", val);
+                  setAccordionValue(val);
+                }}
+              >
+                <AccordionItem value="quality-analysis" className="border-none">
+                  <AccordionTrigger className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-purple-500" />
+                      <span className="font-semibold">
+                        Analyse de Qualité IA
+                      </span>
+                      {analysis && (
+                        <span className="ml-2 text-xs bg-green-500/10 text-green-600 dark:text-green-400 px-2 py-1 rounded-full">
+                          Analysé
+                        </span>
+                      )}
+                    </div>
+                  </AccordionTrigger>
+
+                  <AccordionContent className="px-4 pt-2 pb-4 space-y-4">
+                    {!analysis && !isAnalyzing && !analysisError && (
+                      <div className="text-center py-6 bg-card rounded-lg border border-border">
+                        <p className="text-sm text-foreground mb-4 px-4">
+                          Obtenez une analyse détaillée de la qualité de cette
+                          User Story (clarté, testabilité, risques)
+                        </p>
+
+                        <Button
+                          onClick={handleAnalyze}
+                          disabled={!title.trim() || !acceptanceCriteria.trim()}
+                          variant="default"
+                          className="gap-2"
+                        >
+                          <Sparkles className="h-4 w-4" />
+                          Analyser la qualité
+                        </Button>
+
+                        {(!title.trim() || !acceptanceCriteria.trim()) && (
+                          <p className="text-xs text-muted-foreground mt-3 px-4">
+                            ⚠️ Le titre et les critères d&apos;acceptation sont
+                            requis
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {isAnalyzing && (
+                      <div className="flex items-center justify-center py-8 gap-3">
+                        <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
+                        <p className="text-sm text-muted-foreground">
+                          Analyse en cours...
+                        </p>
+                      </div>
+                    )}
+
+                    {analysisError && (
+                      <Alert variant="destructive">
+                        <AlertDescription>{analysisError}</AlertDescription>
+                      </Alert>
+                    )}
+
+                    {analysis && !isAnalyzing && (
+                      <div className="space-y-4">
+                        <UserStoryQualityPanel analysis={analysis} />
+                        <div className="flex justify-end">
+                          <Button
+                            onClick={handleAnalyze}
+                            variant="outline"
+                            size="sm"
+                            className="gap-2"
+                          >
+                            <Sparkles className="h-4 w-4" />
+                            Ré-analyser
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
             {/* Boutons */}
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={resetForm}>
@@ -294,19 +428,29 @@ export function UserStories() {
                       {story.priority}
                     </span>
                   </div>
+
                   <h3 className="mt-1 text-base font-semibold text-foreground">
                     {story.title}
                   </h3>
                   <p className="text-sm italic">{story.description}</p>
+
                   <div className="text-sm text-yellow-500 flex items-center gap-1 mt-2">
                     ⭐{" "}
                     <span className="text-foreground">
                       {story.storyPoints} points
                     </span>
                   </div>
-                  <p className="text-sm mt-2 whitespace-pre-line">
-                    {story.acceptanceCriteria}
-                  </p>
+
+                  <div className="mt-2">
+                    <ExpandableSection
+                      label="Critères d'acceptation"
+                      content={story.acceptanceCriteria || ""}
+                      isLong={true}
+                      clampClass="line-clamp-3"
+                      fullClass="text-sm whitespace-pre-line"
+                    />
+                  </div>
+
                   <div className="flex justify-end gap-2 pt-4">
                     <Button
                       size="sm"

@@ -24,7 +24,10 @@ export function UserStoryCard({ story }: Props) {
 
   const isTitleLong = story.title?.length > 50;
   const isDescriptionLong = story.description?.length > 160;
-  const isAcceptanceCriteriaLong = story.acceptanceCriteria?.length > 160;
+  // Critères d'acceptation : toujours afficher "read more" s'il y a du contenu > 50 caractères ou plusieurs lignes
+  const isAcceptanceCriteriaLong =
+    (story.acceptanceCriteria?.length ?? 0) > 50 ||
+    (story.acceptanceCriteria?.split("\n").length ?? 0) > 2;
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -206,8 +209,8 @@ export function UserStoryCard({ story }: Props) {
       {/* Critères d'acceptation */}
       <ExpandableSection
         label="Critères d'acceptation"
-        content={story.acceptanceCriteria}
-        isLong={isAcceptanceCriteriaLong}
+        content={story.acceptanceCriteria || ""}
+        isLong={true}
         clampClass="line-clamp-3"
         fullClass="text-muted-foreground italic transition-all"
       />
