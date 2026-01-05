@@ -14,9 +14,10 @@ import { UserStoryDoDFlexible } from "../user-story/UserStoryDoD";
 
 type Props = {
   story: UserStory;
+  hideDoD?: boolean; // Masquer la DoD (pour vue Backlog)
 };
 
-export function UserStoryCard({ story }: Props) {
+export function UserStoryCard({ story, hideDoD = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isTargeted, setIsTargeted] = useState(false);
   const [linkedTasks, setLinkedTasks] = useState<any[]>([]);
@@ -215,8 +216,8 @@ export function UserStoryCard({ story }: Props) {
         fullClass="text-muted-foreground italic transition-all"
       />
 
-      {/* 🆕 Definition of Done */}
-      {story.dodItems && story.dodItems.length > 0 && (
+      {/* 🆕 Definition of Done - Masquée dans le Backlog */}
+      {!hideDoD && story.dodItems && story.dodItems.length > 0 && (
         <div className="mt-4 p-3 border rounded-lg bg-muted/30">
           <UserStoryDoDFlexible
             dodItems={story.dodItems}
