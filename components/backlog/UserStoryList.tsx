@@ -1,8 +1,8 @@
 "use client";
 
-import { useUserStories } from "@/hooks/useUserStories";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserStoryCard } from "@/components/analysis/UserStoryCard";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useUserStories } from "@/hooks/useUserStories";
 import { UserStorySearchBar } from "../searchbar/UserStorySearchBar";
 
 export function UserStoriesList() {
@@ -31,7 +31,7 @@ export function UserStoriesList() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filteredStories.map((story) => (
-              <UserStoryCard key={story.id} story={story} />
+              <UserStoryCard key={story.id} story={story} hideDoD={true} />
             ))}
           </div>
         )}
