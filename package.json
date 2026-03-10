@@ -15,7 +15,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "clean": "rm -rf .next node_modules package-lock.json && npm install",
-    "seed:po-kpis": "node scripts/seed-po-kpis.js"
+    "seed:po-kpis": "node scripts/seed-po-kpis.js",
+    "seed:tech-user-stories": "node scripts/seed-tech-user-stories.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
