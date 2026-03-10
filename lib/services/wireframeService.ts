@@ -211,15 +211,13 @@ class WireframeService {
 
   async deleteImage(imageId: string): Promise<void> {
     try {
-      // Récupérer les infos de l'image pour supprimer le fichier
       const imageRef = doc(this.imagesCollection, imageId);
       const imageSnap = await getDoc(imageRef);
 
       if (imageSnap.exists()) {
         const imageData = imageSnap.data() as WireframeImage;
 
-        // Supprimer le fichier via API route
-        await fetch("/api/delete-wireframe", {
+        const response = await fetch("/api/delete-wireframe", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -227,7 +225,18 @@ class WireframeService {
           body: JSON.stringify({ fileName: imageData.fileName }),
         });
 
-        // Supprimer le document Firestore
+        if (!response.ok) {
+          let errorMessage = "Erreur lors de la suppression du fichier";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData?.error || errorData?.message || errorMessage;
+          } catch {
+            // Ignore JSON parsing errors and keep the fallback message.
+          }
+
+          throw new Error(errorMessage);
+        }
+
         await deleteDoc(imageRef);
       }
     } catch (error: any) {

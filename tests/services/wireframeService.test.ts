@@ -218,6 +218,7 @@ describe("WireframeService", () => {
 
     test("should delete image", async () => {
       const mockImage = {
+        fileName: "test.png",
         downloadUrl: "/wireframes/test.png",
       };
 
@@ -238,6 +239,45 @@ describe("WireframeService", () => {
         "/api/delete-wireframe",
         expect.any(Object)
       );
+    });
+
+    test("does not delete Firestore document when delete API returns 404", async () => {
+      mockGetDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => ({ fileName: "test.png" }),
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+        json: async () => ({
+          error:
+            "Fichier introuvable, suppression Firestore non effectuée automatiquement",
+        }),
+      });
+
+      await expect(wireframeService.deleteImage("img-1")).rejects.toThrow(
+        "Fichier introuvable, suppression Firestore non effectuée automatiquement"
+      );
+
+      expect(mockDeleteDoc).not.toHaveBeenCalled();
+    });
+
+    test("does not delete Firestore document when delete API returns 500", async () => {
+      mockGetDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => ({ fileName: "test.png" }),
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+        json: async () => ({ error: "Erreur lors de la suppression" }),
+      });
+
+      await expect(wireframeService.deleteImage("img-1")).rejects.toThrow(
+        "Erreur lors de la suppression"
+      );
+
+      expect(mockDeleteDoc).not.toHaveBeenCalled();
     });
 
     test("should get grid images", async () => {
