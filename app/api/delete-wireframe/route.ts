@@ -1,50 +1,19 @@
 import { unlink } from "fs/promises";
 import { NextResponse } from "next/server";
-import path from "path";
-
-const ALLOWED_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".webp", ".svg"]);
+import {
+  assertAllowedWireframeExtension,
+  resolveWireframePath,
+  sanitizeWireframeFileName,
+} from "@/lib/utils/wireframeFileValidation";
 
 export async function DELETE(req: Request) {
   try {
     const body = await req.json();
     const rawFileName = body?.fileName;
 
-    if (typeof rawFileName !== "string" || rawFileName.trim() === "") {
-      return NextResponse.json(
-        { error: "Nom de fichier invalide" },
-        { status: 400 }
-      );
-    }
-
-    const fileName = path.basename(rawFileName);
-
-    // Refuse toute valeur contenant un chemin
-    if (fileName !== rawFileName) {
-      return NextResponse.json(
-        { error: "Chemin non autorisé" },
-        { status: 400 }
-      );
-    }
-
-    // Refuse les noms bizarres
-    if (!/^[a-zA-Z0-9._-]+$/.test(fileName)) {
-      return NextResponse.json(
-        { error: "Nom de fichier non autorisé" },
-        { status: 400 }
-      );
-    }
-
-    const ext = path.extname(fileName).toLowerCase();
-
-    if (!ALLOWED_EXTENSIONS.has(ext)) {
-      return NextResponse.json(
-        { error: "Extension non autorisée" },
-        { status: 400 }
-      );
-    }
-
-    const wireframesDir = path.join(process.cwd(), "public", "wireframes");
-    const fileToDelete = path.join(wireframesDir, fileName);
+    const fileName = sanitizeWireframeFileName(rawFileName);
+    assertAllowedWireframeExtension(fileName);
+    const fileToDelete = resolveWireframePath(fileName);
 
     try {
       await unlink(fileToDelete);
@@ -55,7 +24,10 @@ export async function DELETE(req: Request) {
     } catch (error: any) {
       if (error?.code === "ENOENT") {
         return NextResponse.json(
-          { message: "Fichier déjà supprimé ou introuvable" },
+          {
+            error:
+              "Fichier introuvable, suppression Firestore non effectuée automatiquement",
+          },
           { status: 404 }
         );
       }
@@ -63,6 +35,16 @@ export async function DELETE(req: Request) {
       throw error;
     }
   } catch (error) {
+    if (
+      error instanceof Error &&
+      (error.message === "Nom de fichier invalide" ||
+        error.message === "Chemin non autorisé" ||
+        error.message === "Nom de fichier non autorisé" ||
+        error.message === "Extension non autorisée")
+    ) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
     console.error("Erreur suppression:", error);
 
     return NextResponse.json(
