@@ -1,7 +1,12 @@
-# 📦 PO-UX-UI-DATA
+# 🧭 PO-UX-UI-DATA
 
-**Cockpit agile pour Product Owner spécialisé en UX/UI et Data.**  
-Une boîte à outils moderne pour cadrer, piloter et valider un produit numérique en contexte collaboratif (UX, BI, Tech).
+**Where product discovery, design and development meet.**
+
+Cockpit collaboratif pour les équipes produit.
+
+PO-UX-UI-DATA est une boîte à outils conçue pour relier les différentes étapes du développement d’un produit numérique : **product discovery, UX/UI design, analyse data et développement**.
+
+L’objectif est de faciliter le **cadrage produit, l’alignement des parties prenantes et le pilotage collaboratif du produit**.
 
 ![Tests](https://img.shields.io/badge/Tests-166%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
@@ -13,24 +18,28 @@ Une boîte à outils moderne pour cadrer, piloter et valider un produit numériq
 
 ## ⚠️ Mode Démo
 
-Cette version en ligne est une **démo publique** avec règles Firebase ouvertes :
+La version actuelle du projet fonctionne en **mode démonstration** avec des règles Firebase ouvertes afin de faciliter les tests.
 
 - Base Firestore : `allow read, write: if true`
-- Lecture/écriture autorisées uniquement pour tester
+- Lecture / écriture autorisées uniquement pour les démonstrations
 - Aucune donnée sensible n’est stockée
-- L’authentification sera ajoutée dans une future version
+- Un système d’authentification sera ajouté dans une prochaine version
 
 ---
 
 ## 🚀 Objectifs du projet
 
-- Structurer les besoins métier à partir de **personas, interviews et questionnaires**
+PO-UX-UI-DATA vise à créer un **point de convergence entre discovery, design et delivery**.
+
+Les fonctionnalités explorées dans ce projet incluent :
+
+- Structurer la **product discovery** à partir de personas, interviews et questionnaires
 - Concevoir rapidement des **wireframes interactifs** (connectés à Figma)
-- Gérer un **backlog produit agile** basé sur Scrum et la priorisation MoSCoW
-- Organiser les **sprints** et suivre la vélocité de manière itérative
-- Visualiser les **KPIs UX & business clés**
-- Coordonner les actions entre les équipes **UX, BI et développement**
-- Assurer la qualité via **checklists, tests et validations produit**
+- Gérer un **backlog produit agile** avec priorisation (MoSCoW / Scrum)
+- Organiser les **sprints** et suivre la vélocité
+- Visualiser les **KPIs UX et business**
+- Faciliter la collaboration entre **Product, UX, Data et Développement**
+- Sécuriser la qualité produit via **checklists, tests et validations**
 
 ---
 
