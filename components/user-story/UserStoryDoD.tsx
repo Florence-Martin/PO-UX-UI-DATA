@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getDefaultDoDItems } from "@/lib/services/dodService";
 import { DoDItem } from "@/lib/types/dod";
 import { DoDProgress } from "@/lib/types/userStory";
 import { AlertCircle, CheckCircle2, Circle } from "lucide-react";
@@ -58,15 +59,17 @@ export function UserStoryDoDFlexible({
   readOnly = false,
   showPercentage = true,
 }: UserStoryDoDFlexibleProps) {
-  const completedCount = dodItems.filter((item) => item.checked).length;
-  const totalCount = dodItems.length;
+  const effectiveDodItems =
+    dodItems.length > 0 ? dodItems : getDefaultDoDItems();
+  const completedCount = effectiveDodItems.filter((item) => item.checked).length;
+  const totalCount = effectiveDodItems.length;
   const percentage =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const handleItemToggle = (itemId: string, checked: boolean) => {
     if (readOnly || !onUpdate) return;
 
-    const newItems = dodItems.map((item) =>
+    const newItems = effectiveDodItems.map((item) =>
       item.id === itemId ? { ...item, checked } : item
     );
     onUpdate(newItems);
@@ -86,14 +89,6 @@ export function UserStoryDoDFlexible({
     if (percentage >= 40) return "bg-orange-500";
     return "bg-red-500";
   };
-
-  if (totalCount === 0) {
-    return (
-      <div className="text-sm text-muted-foreground italic">
-        Aucun critère DoD défini
-      </div>
-    );
-  }
 
   return (
     <div className="w-full">
@@ -122,7 +117,7 @@ export function UserStoryDoDFlexible({
         )}
       </div>
       <div className="space-y-3">
-        {dodItems
+        {effectiveDodItems
           .sort((a, b) => a.order - b.order)
           .map((item) => (
             <div key={item.id} className="flex items-start space-x-3">
@@ -261,10 +256,10 @@ export function UserStoryDoDFlexibleSummary({
 }: {
   dodItems?: DoDItem[];
 }) {
-  if (!dodItems || dodItems.length === 0) return null;
-
-  const completedCount = dodItems.filter((item) => item.checked).length;
-  const totalCount = dodItems.length;
+  const effectiveDodItems =
+    dodItems && dodItems.length > 0 ? dodItems : getDefaultDoDItems();
+  const completedCount = effectiveDodItems.filter((item) => item.checked).length;
+  const totalCount = effectiveDodItems.length;
   const percentage = Math.round((completedCount / totalCount) * 100);
 
   const getStatusColor = () => {

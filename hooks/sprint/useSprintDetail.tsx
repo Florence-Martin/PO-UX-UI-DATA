@@ -1,5 +1,10 @@
 // création / modification
 
+import { Timestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+
 import {
   createBacklogTask,
   getAllBacklogTasks,
@@ -14,10 +19,6 @@ import { Sprint } from "@/lib/types/sprint";
 import { UserStory } from "@/lib/types/userStory";
 import { sanitize, sprintSchema } from "@/lib/utils/sprintSchema";
 import { updateBadgesForSprintUserStories } from "@/lib/utils/updateSprintBadges";
-import { Timestamp } from "firebase/firestore";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 
 export function useSprintDetail(
   sprint: Sprint | null,
@@ -36,19 +37,11 @@ export function useSprintDetail(
 
   const [showStoryList, setShowStoryList] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [edited, setEdited] = useState<{ userStoryIds: string[] }>({
-    userStoryIds: [],
-  });
-
-  useEffect(() => {
-    if (sprint) {
-      setEdited({
-        userStoryIds: userStories
-          .filter((us) => us.sprintId === sprint.id)
-          .map((us) => us.id),
-      });
-    }
-  }, [sprint, userStories]);
+  const [edited, setEdited] = useState<{ userStoryIds: string[] }>(() => ({
+    userStoryIds: sprint
+      ? userStories.filter((us) => us.sprintId === sprint.id).map((us) => us.id)
+      : [],
+  }));
 
   const toggleUserStorySelection = (storyId: string) => {
     setEdited((prev) => ({

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Drawer } from "vaul";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,14 +25,28 @@ const EditDoDDrawer: React.FC<EditDoDDrawerProps> = ({
   items,
   onSave,
 }) => {
-  const [editableItems, setEditableItems] = useState<DoDItem[]>([]);
+  const resetKey = `${isOpen}-${items.map((item) => item.id).join("-")}`;
 
-  // Reset items when drawer opens
-  useEffect(() => {
-    if (isOpen) {
-      setEditableItems([...items].sort((a, b) => a.order - b.order));
-    }
-  }, [isOpen, items]);
+  return (
+    <EditDoDDrawerContent
+      key={resetKey}
+      isOpen={isOpen}
+      onClose={onClose}
+      items={items}
+      onSave={onSave}
+    />
+  );
+};
+
+const EditDoDDrawerContent: React.FC<EditDoDDrawerProps> = ({
+  isOpen,
+  onClose,
+  items,
+  onSave,
+}) => {
+  const [editableItems, setEditableItems] = useState<DoDItem[]>(() =>
+    [...items].sort((a, b) => a.order - b.order)
+  );
 
   // Handle drag and drop reordering
   const handleDragEnd = (result: DropResult) => {

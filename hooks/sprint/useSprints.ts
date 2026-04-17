@@ -1,7 +1,8 @@
+import { Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
+
 import { getAllSprints } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
-import { Timestamp } from "firebase/firestore";
 
 /**
  * Convertit une date (string, Date ou Timestamp) en instance de Date.
@@ -49,7 +50,11 @@ export function useSprints() {
   };
 
   useEffect(() => {
-    refetch();
+    const loadSprints = async () => {
+      await refetch();
+    };
+
+    void loadSprints();
   }, []);
 
   return { sprints, currentSprint, refetch };

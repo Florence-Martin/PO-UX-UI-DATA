@@ -17,7 +17,7 @@ jest.mock("firebase/firestore", () => ({
   },
 }));
 
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 
@@ -36,7 +36,7 @@ import {
   getAllScenarios,
   getScenario,
   saveScenario,
-} from "../../lib/services/scenarioService";
+} from "@/lib/services/scenarioService";
 
 const mockGetDocs = getDocs as jest.MockedFunction<typeof getDocs>;
 const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;
@@ -47,6 +47,36 @@ const mockCollection = collection as jest.MockedFunction<typeof collection>;
 const mockServerTimestamp = serverTimestamp as jest.MockedFunction<
   typeof serverTimestamp
 >;
+type GetDocResult = Awaited<ReturnType<typeof getDoc>>;
+type GetDocsResult = Awaited<ReturnType<typeof getDocs>>;
+
+function createDocSnapshot<T extends { id: string }>(data: T | null): GetDocResult {
+  return {
+    id: data?.id ?? "scenario_test",
+    exists: () => data !== null,
+    data: () => data,
+    metadata: {} as never,
+    get: jest.fn(),
+    toJSON: jest.fn(),
+    ref: {} as never,
+  } as unknown as GetDocResult;
+}
+
+function createQuerySnapshot<T extends { id: string }>(items: T[]): GetDocsResult {
+  return {
+    docs: items.map((item) =>
+      ({
+        id: item.id,
+        exists: () => true,
+        data: () => item,
+        metadata: {} as never,
+        get: jest.fn(),
+        toJSON: jest.fn(),
+        ref: {} as never,
+      }) as never
+    ),
+  } as unknown as GetDocsResult;
+}
 
 describe("scenarioService", () => {
   beforeEach(() => {
@@ -76,12 +106,7 @@ describe("scenarioService", () => {
         },
       ];
 
-      mockGetDocs.mockResolvedValue({
-        docs: mockScenarios.map((scenario) => ({
-          id: scenario.id,
-          data: () => scenario,
-        })),
-      });
+      mockGetDocs.mockResolvedValue(createQuerySnapshot(mockScenarios));
 
       const result = await getAllScenarios();
 
@@ -111,10 +136,7 @@ describe("scenarioService", () => {
         updatedAt: { toDate: () => new Date() },
       };
 
-      mockGetDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => mockScenario,
-      });
+      mockGetDoc.mockResolvedValue(createDocSnapshot(mockScenario));
 
       const result = await getScenario("scenario_1");
 
@@ -128,9 +150,7 @@ describe("scenarioService", () => {
     });
 
     it("should return null for non-existent scenario", async () => {
-      mockGetDoc.mockResolvedValue({
-        exists: () => false,
-      });
+      mockGetDoc.mockResolvedValue(createDocSnapshot(null));
 
       const result = await getScenario("non-existent");
 

@@ -5,9 +5,11 @@ import {
   getDashboardKPIs,
   KPIStats,
 } from "@/lib/services/dashboardKPIService";
+import { isFirebaseAnalyticsEnabled } from "@/lib/utils/featureFlags";
 import { useCallback, useEffect, useState } from "react";
 
 export function useDashboardKPIs() {
+  const analyticsEnabled = isFirebaseAnalyticsEnabled();
   const [kpis, setKpis] = useState<DashboardKPI[]>([]);
   const [aggregatedKpis, setAggregatedKpis] = useState<DashboardKPI[]>([]);
   const [stats, setStats] = useState<KPIStats>({
@@ -16,7 +18,7 @@ export function useDashboardKPIs() {
     decliningKPIs: 0,
     stableKPIs: 0,
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(analyticsEnabled);
   const [error, setError] = useState<string | null>(null);
 
   // Fonction sans useCallback pour éviter les cycles infinis
@@ -44,13 +46,19 @@ export function useDashboardKPIs() {
   };
 
   const refetch = useCallback(() => {
+    if (!analyticsEnabled) return;
     fetchKPIs();
-  }, []);
+  }, [analyticsEnabled]);
 
   // Effect sans dépendance sur fetchKPIs pour éviter les cycles
   useEffect(() => {
+    if (!analyticsEnabled) {
+      setLoading(false);
+      return;
+    }
+
     fetchKPIs();
-  }, []);
+  }, [analyticsEnabled]);
 
   // Méthode pour récupérer un KPI spécifique par type
   const getKPIByType = useCallback(
@@ -117,5 +125,6 @@ export function useDashboardKPIs() {
     refetch,
     getKPIByType,
     hasData: aggregatedKpis.length > 0,
+    isFirebaseEnabled: analyticsEnabled,
   };
 }

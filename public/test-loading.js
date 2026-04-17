@@ -36,4 +36,6 @@ setTimeout(() => {
   }
 }, 5000);
 
-export default {};
+const testLoading = {};
+
+export default testLoading;

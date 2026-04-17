@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import BacklogGoal from "@/components/analysis/BacklogGoal";
 import { RoadmapFlow } from "@/components/analysis/RoadmapFlow";
 import { DashboardBannerInfo } from "@/components/banner/DashboardBannerInfo";
@@ -7,7 +9,6 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UserMetrics } from "@/components/dashboard/UserMetrics";
 import { GDPRBanner } from "@/components/GDPRBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
 // import { Overview } from "@/components/dashboard/overview";
 
 export default function Home() {

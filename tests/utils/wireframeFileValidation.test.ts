@@ -4,7 +4,7 @@ import {
   assertAllowedWireframeMimeType,
   resolveWireframePath,
   sanitizeWireframeFileName,
-} from "../../lib/utils/wireframeFileValidation";
+} from "@/lib/utils/wireframeFileValidation";
 
 describe("wireframeFileValidation", () => {
   describe("sanitizeWireframeFileName", () => {

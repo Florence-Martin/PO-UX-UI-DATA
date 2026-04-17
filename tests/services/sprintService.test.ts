@@ -23,7 +23,7 @@ jest.mock("firebase/firestore", () => ({
   },
 }));
 
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 
@@ -42,7 +42,7 @@ import {
   getAllSprints,
   getSprintById,
   updateSprint,
-} from "../../lib/services/sprintService";
+} from "@/lib/services/sprintService";
 
 const mockGetDocs = getDocs as jest.MockedFunction<typeof getDocs>;
 const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;

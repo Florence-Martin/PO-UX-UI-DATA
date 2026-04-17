@@ -1,10 +1,11 @@
 "use client";
 
+import { Timestamp, collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 import { db } from "@/lib/firebase";
 import { getAllSprints } from "@/lib/services/sprintService";
 import { Sprint } from "@/lib/types/sprint";
-import { Timestamp, collection, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
 
 /**
  * Convertit n'importe quel format de date en Date JS.

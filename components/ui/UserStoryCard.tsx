@@ -1,11 +1,13 @@
 "use client";
 
-import { UserStory } from "@/lib/types/userStory";
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { Button } from "./button";
 import { ChevronDown, ChevronUp, PencilLine } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { UserStory } from "@/lib/types/userStory";
+
+import { Button } from "./button";
 
 type Props = {
   story: UserStory;
@@ -13,16 +15,17 @@ type Props = {
 
 export function UserStoryCard({ story }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isTargeted, setIsTargeted] = useState(false);
+  const [isTargeted] = useState(
+    () =>
+      typeof window !== "undefined" && window.location.hash.slice(1) === story.id
+  );
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash === story.id) {
-      setIsTargeted(true);
+    if (isTargeted) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [story.id]);
+  }, [isTargeted]);
 
   return (
     <motion.div

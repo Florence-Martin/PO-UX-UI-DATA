@@ -10,6 +10,7 @@ import {
 import { useActiveSprints } from "@/hooks/sprint/useActiveSprints";
 import { useBacklogTasks } from "@/hooks/useBacklogTasks";
 import { useUserStories } from "@/hooks/useUserStories";
+import { getDefaultDoDItems } from "@/lib/services/dodService";
 import { updateSprint } from "@/lib/services/sprintService";
 import { UserStory } from "@/lib/types/userStory";
 import {
@@ -105,6 +106,7 @@ export function SprintBoard() {
   // ✅ Plus besoin de tâches virtuelles : nous créons maintenant des vraies tâches automatiquement !
   // Utiliser directement les tâches réelles du sprint
   const allSprintTasks = sprintTasks;
+  const defaultDodCriteriaCount = getDefaultDoDItems().length;
 
   // Vérifier si une User Story a sa DoD complétée
   const isUserStoryDoDCompleted = (userStory: UserStory): boolean => {
@@ -119,7 +121,10 @@ export function SprintBoard() {
 
   // 🆕 Calcul de la progression DoD globale du sprint
   const totalDoDCriteria = sprintUserStories.reduce(
-    (sum, us) => sum + (us.dodItems?.length || 0),
+    (sum, us) =>
+      sum + (us.dodItems && us.dodItems.length > 0
+        ? us.dodItems.length
+        : defaultDodCriteriaCount),
     0
   );
 

@@ -19,7 +19,10 @@ type Props = {
 
 export function UserStoryCard({ story, hideDoD = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isTargeted, setIsTargeted] = useState(false);
+  const [isTargeted] = useState(
+    () =>
+      typeof window !== "undefined" && window.location.hash.slice(1) === story.id
+  );
   const [linkedTasks, setLinkedTasks] = useState<any[]>([]);
   const [moscow, setMoscow] = useState<string>(story.moscow || "");
 
@@ -31,12 +34,10 @@ export function UserStoryCard({ story, hideDoD = false }: Props) {
     (story.acceptanceCriteria?.split("\n").length ?? 0) > 2;
 
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash === story.id) {
-      setIsTargeted(true);
+    if (isTargeted) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [story.id]);
+  }, [isTargeted]);
 
   // Récupère les tâches liées à la User Story
   useEffect(() => {

@@ -5,23 +5,13 @@ const nextConfig = {
   // Active le mode strict de React pour détecter les problèmes potentiels
   reactStrictMode: true,
 
-  // Utilise le compilateur SWC pour la minification (plus rapide que Terser)
-  swcMinify: true,
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   typescript: {
     // ⚠️ Ignore complètement les erreurs TypeScript pendant le build
     // Nécessaire pour contourner les erreurs de types @babel__core
     ignoreBuildErrors: true,
   },
 
-  experimental: {
-    // Désactive la vérification de types pendant le build
-    typedRoutes: false,
-  },
+  typedRoutes: false,
 
   // Images non-optimisées - Vercel gère l'optimisation automatiquement
   images: { unoptimized: true },

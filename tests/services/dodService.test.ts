@@ -17,7 +17,7 @@ jest.mock("firebase/firestore", () => ({
   },
 }));
 
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 
@@ -26,11 +26,24 @@ import {
   getDoD,
   updateDoD,
   updateDoDItemStatus,
-} from "../../lib/services/dodService";
+} from "@/lib/services/dodService";
 
 const mockGetDoc = getDoc as jest.MockedFunction<typeof getDoc>;
 const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;
 const mockDoc = doc as jest.MockedFunction<typeof doc>;
+type GetDocResult = Awaited<ReturnType<typeof getDoc>>;
+
+function createDocSnapshot<T>(data: T | null): GetDocResult {
+  return {
+    id: "default",
+    exists: () => data !== null,
+    data: () => data,
+    metadata: {} as never,
+    get: jest.fn(),
+    toJSON: jest.fn(),
+    ref: {} as never,
+  } as unknown as GetDocResult;
+}
 
 describe("dodService", () => {
   beforeEach(() => {
@@ -51,10 +64,7 @@ describe("dodService", () => {
         lastUpdatedBy: "test-user",
       };
 
-      mockGetDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => mockDoD,
-      });
+      mockGetDoc.mockResolvedValue(createDocSnapshot(mockDoD));
 
       const result = await getDoD();
 
@@ -68,9 +78,7 @@ describe("dodService", () => {
     });
 
     it("should create and return default DoD when none exists", async () => {
-      mockGetDoc.mockResolvedValue({
-        exists: () => false,
-      });
+      mockGetDoc.mockResolvedValue(createDocSnapshot(null));
 
       const result = await getDoD();
 
@@ -118,10 +126,7 @@ describe("dodService", () => {
         lastUpdatedBy: "test-user",
       };
 
-      mockGetDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => existingDoD,
-      });
+      mockGetDoc.mockResolvedValue(createDocSnapshot(existingDoD));
 
       await updateDoDItemStatus("default", "1", true);
 

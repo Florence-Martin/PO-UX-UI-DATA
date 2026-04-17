@@ -10,18 +10,13 @@ import {
 import { DemoStore } from "@/lib/demo/demoStore";
 import { isDemoMode } from "@/lib/utils/demoMode";
 import { Database, FlaskConical, HardDrive } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function DemoBadge() {
-  const [isDemo, setIsDemo] = useState(false);
-  const [metadata, setMetadata] = useState<any>(null);
-
-  useEffect(() => {
-    setIsDemo(isDemoMode());
-    if (isDemoMode()) {
-      setMetadata(DemoStore.getMetadata());
-    }
-  }, []);
+  const [isDemo] = useState(() => isDemoMode());
+  const [metadata] = useState(() =>
+    isDemoMode() ? DemoStore.getMetadata() : null
+  );
 
   if (!isDemo) return null;
 

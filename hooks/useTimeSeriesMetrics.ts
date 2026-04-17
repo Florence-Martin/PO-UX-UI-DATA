@@ -4,12 +4,14 @@ import {
   TimeSeriesData,
   TimeSeriesMetric,
 } from "@/lib/services/timeSeriesService";
+import { isFirebaseAnalyticsEnabled } from "@/lib/utils/featureFlags";
 import { useCallback, useEffect, useState } from "react";
 
 export function useTimeSeriesMetrics() {
+  const analyticsEnabled = isFirebaseAnalyticsEnabled();
   const [metrics, setMetrics] = useState<TimeSeriesMetric[]>([]);
   const [aggregatedData, setAggregatedData] = useState<TimeSeriesData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(analyticsEnabled);
   const [error, setError] = useState<string | null>(null);
 
   // Fonction de fetch sans useCallback pour éviter les cycles infinis
@@ -33,13 +35,19 @@ export function useTimeSeriesMetrics() {
   };
 
   const refetch = useCallback(() => {
+    if (!analyticsEnabled) return;
     fetchMetrics();
-  }, []);
+  }, [analyticsEnabled]);
 
   // Effect sans dépendance sur fetchMetrics pour éviter les cycles
   useEffect(() => {
+    if (!analyticsEnabled) {
+      setLoading(false);
+      return;
+    }
+
     fetchMetrics();
-  }, []);
+  }, [analyticsEnabled]);
 
   // Données de fallback (les données statiques originales)
   const fallbackData: TimeSeriesData[] = [
@@ -87,5 +95,6 @@ export function useTimeSeriesMetrics() {
     error,
     refetch,
     hasData: aggregatedData.length > 0,
+    isFirebaseEnabled: analyticsEnabled,
   };
 }

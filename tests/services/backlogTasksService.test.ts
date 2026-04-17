@@ -16,12 +16,12 @@ import {
   getAllBacklogTasks,
   removeUserStoryIdFromTasks,
   updateBacklogTask,
-} from "../../lib/services/backlogTasksService";
-import { BacklogTask } from "../../lib/types/backlogTask";
+} from "@/lib/services/backlogTasksService";
+import { BacklogTask } from "@/lib/types/backlogTask";
 
 // Mock Firebase
 jest.mock("firebase/firestore");
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 

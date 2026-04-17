@@ -32,8 +32,9 @@ export default function BusinessRules({ content }: BusinessRulesProps) {
 
     const pushCurrentBlock = () => {
       if (currentBlock.length > 0) {
+        const blockKey = `block-${elements.length}`;
         elements.push(
-          <Card key={Math.random()} className="mb-4 border-l-4 border-blue-200">
+          <Card key={blockKey} className="mb-4 border-l-4 border-blue-200">
             <CardContent className="p-4">{currentBlock}</CardContent>
           </Card>
         );
@@ -96,8 +97,9 @@ export default function BusinessRules({ content }: BusinessRulesProps) {
           </h3>
         );
       } else if (line.trim().startsWith("- ")) {
+        const itemKey = `item-${elements.length}-${currentBlock.length}`;
         currentBlock.push(
-          <p key={Math.random()} className="text-sm text-muted-foreground mb-2">
+          <p key={itemKey} className="text-sm text-muted-foreground mb-2">
             {formatText(line.slice(2))}
           </p>
         );

@@ -14,8 +14,6 @@ import {
   closestCorners,
   DndContext,
   DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -25,7 +23,6 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useState } from "react";
 import { EditTaskModal } from "./EditTaskModal";
 import { KanbanColumn } from "./KanbanColumn";
-import { KanbanItem } from "./KanbanItem";
 
 export function KanbanBoard() {
   const {
@@ -43,7 +40,6 @@ export function KanbanBoard() {
     useActiveSprints();
   const { userStories } = useUserStories();
 
-  const [activeId, setActiveId] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<BacklogTask | null>(null);
   const { refreshOnDemand } = useTimeline();
 
@@ -77,8 +73,6 @@ export function KanbanBoard() {
     })
   );
 
-  const findTask = (id: string) => sprintTasks.find((task) => task.id === id);
-
   const handleAddTask = (status: BacklogTask["status"]) => {
     // ✅ Lier la nouvelle tâche aux User Stories du sprint actif
     // Sans userStoryIds, la tâche serait filtrée par getTasksForSprint()
@@ -95,27 +89,25 @@ export function KanbanBoard() {
     });
   };
 
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
-  };
-
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) {
-      setActiveId(null);
       return;
     }
 
-    const draggedTask = findTask(active.id as string);
-    console.debug("[DEBUG] draggedTask:", draggedTask);
-    const newStatus = over?.data?.current?.columnId as BacklogTask["status"];
+    const draggedTask = sprintTasks.find((task) => task.id === active.id);
+    const targetStatus = over?.data?.current?.columnId as
+      | BacklogTask["status"]
+      | undefined;
 
-    if (draggedTask && draggedTask.status !== newStatus) {
-      await updateTaskStatus(draggedTask.id!, newStatus);
-      await refreshOnDemand(); // synchronisation du contexte Timeline
+    // Le backlog supporte uniquement le déplacement inter-colonnes.
+    // Aucun ordre intra-colonne n'est persisté aujourd'hui.
+    if (!draggedTask || !targetStatus || draggedTask.status === targetStatus) {
+      return;
     }
 
-    setActiveId(null);
+    await updateTaskStatus(draggedTask.id!, targetStatus);
+    await refreshOnDemand(); // synchronisation du contexte Timeline
   };
 
   const handleClickTask = (task: BacklogTask) => {
@@ -164,7 +156,6 @@ export function KanbanBoard() {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
         <div className="flex flex-col md:flex-row gap-4 h-auto md:h-[600px]">
@@ -197,16 +188,6 @@ export function KanbanBoard() {
             sprints={sprints}
           />
         </div>
-
-        <DragOverlay>
-          {activeId && (
-            <div className="w-[300px]">
-              {findTask(activeId) && (
-                <KanbanItem task={findTask(activeId)!} sprints={sprints} />
-              )}
-            </div>
-          )}
-        </DragOverlay>
       </DndContext>
 
       {taskToEdit && (

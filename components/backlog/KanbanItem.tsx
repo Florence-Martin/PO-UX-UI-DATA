@@ -52,6 +52,7 @@ export function KanbanItem({ task, onClick, sprints }: KanbanItemProps) {
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
@@ -213,16 +214,18 @@ export function KanbanItem({ task, onClick, sprints }: KanbanItemProps) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="absolute top-1/2 right-[-15px] -translate-y-1/2 z-10">
-                    <div
-                      {...listeners}
-                      {...attributes}
-                      onClick={(e) => e.stopPropagation()}
-                      className="cursor-grab active:cursor-grabbing p-1 rounded-full bg-muted hover:bg-muted/70 animate-pulse"
-                    >
-                      <Grip className="h-6 w-6 text-muted-foreground" />
-                    </div>
-                  </div>
+                  <button
+                    ref={setActivatorNodeRef}
+                    type="button"
+                    {...listeners}
+                    {...attributes}
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-1/2 right-[-15px] -translate-y-1/2 z-10 cursor-grab active:cursor-grabbing p-1 rounded-full bg-muted hover:bg-muted/70 animate-pulse"
+                    style={{ touchAction: "none" }}
+                    aria-label={`Déplacer ${task.title}`}
+                  >
+                    <Grip className="h-6 w-6 text-muted-foreground" />
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
                   Glisser pour déplacer

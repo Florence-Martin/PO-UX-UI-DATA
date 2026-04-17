@@ -30,7 +30,34 @@ export function EditTaskModal({
   activeSprint,
   sprintUserStories,
 }: EditTaskModalProps) {
-  const [edited, setEdited] = useState<BacklogTask | null>(null);
+  if (!isOpen || !task) return null;
+
+  return (
+    <EditTaskModalContent
+      key={task.id ?? "new-task"}
+      task={task}
+      onClose={onClose}
+      onSave={onSave}
+      onDelete={onDelete}
+      activeSprint={activeSprint}
+      sprintUserStories={sprintUserStories}
+    />
+  );
+}
+
+type EditTaskModalContentProps = Omit<EditTaskModalProps, "task" | "isOpen"> & {
+  task: BacklogTask;
+};
+
+function EditTaskModalContent({
+  task,
+  onClose,
+  onSave,
+  onDelete,
+  activeSprint,
+  sprintUserStories,
+}: EditTaskModalContentProps) {
+  const [edited, setEdited] = useState<BacklogTask>(task);
   const [showStoryList, setShowStoryList] = useState(false);
   const [usedUserStoryIds, setUsedUserStoryIds] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,14 +76,6 @@ export function EditTaskModal({
     };
     fetchUsed();
   }, []);
-
-  useEffect(() => {
-    if (task) {
-      setEdited(task);
-    }
-  }, [task]);
-
-  if (!isOpen || !edited) return null;
 
   const toggleUserStorySelection = (storyId: string) => {
     if (
@@ -85,8 +104,6 @@ export function EditTaskModal({
   );
 
   const handleSave = () => {
-    if (!edited) return;
-
     // Nettoyage des données
     const sanitizedTask = {
       ...edited,

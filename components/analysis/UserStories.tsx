@@ -59,6 +59,7 @@ export function UserStories() {
     resetForm,
     filteredStories,
     filterByPriority,
+    filterByMoscow,
     setUserStorySearchTerm,
   } = useUserStories();
 
@@ -99,7 +100,6 @@ export function UserStories() {
   useEffect(() => {
     if (!isEditing) {
       resetAnalysis();
-      setAccordionValue(undefined);
     }
   }, [isEditing, resetAnalysis]);
 
@@ -287,7 +287,7 @@ export function UserStories() {
               <Accordion
                 type="single"
                 collapsible
-                value={accordionValue}
+                value={isEditing ? accordionValue : undefined}
                 onValueChange={(val) => {
                   console.log("Accordion changed:", val);
                   setAccordionValue(val);
@@ -392,6 +392,7 @@ export function UserStories() {
             </CardTitle>
             <UserStorySearchBar
               onFilterChange={filterByPriority}
+              onMoscowFilterChange={filterByMoscow}
               onSearchChange={setUserStorySearchTerm}
             />
           </CardHeader>

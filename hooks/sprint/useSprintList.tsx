@@ -14,10 +14,6 @@ export function useSprintList(refetch: () => void) {
   const [selectedSprint, setSelectedSprint] = useState<Sprint | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchUserStories();
-  }, []);
-
   const fetchUserStories = async () => {
     try {
       const data = await getAllUserStories();
@@ -26,6 +22,14 @@ export function useSprintList(refetch: () => void) {
       console.error("Erreur lors du chargement des User Stories :", error);
     }
   };
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void fetchUserStories();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const handleEdit = (sprint: Sprint) => {
     setSelectedSprint(sprint);

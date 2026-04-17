@@ -39,7 +39,11 @@ export function useScenarios() {
   };
 
   useEffect(() => {
-    fetchScenarios();
+    const loadScenarios = async () => {
+      await fetchScenarios();
+    };
+
+    void loadScenarios();
   }, []);
 
   return { scenarios, loading, saveScenario, deleteScenario };

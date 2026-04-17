@@ -1,14 +1,16 @@
 // components/wireframes/WireframeGridSimplified.tsx
 "use client";
 
+import { Download, Layout, Maximize2, Upload, X } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useWireframeGrid } from "@/hooks/useWireframeGrid";
 import { WireframeImage } from "@/lib/services/wireframeService";
-import { Download, Layout, Maximize2, Upload, X } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
+
 import { WireframeImageViewer } from "./WireframeImageViewer";
 
 interface WireframeGridProps {
