@@ -4,8 +4,8 @@
  */
 
 import { Timestamp } from "firebase/firestore";
-import { getAllSprints } from "../../lib/services/sprintService";
-import { Sprint } from "../../lib/types/sprint";
+import { getAllSprints } from "@/lib/services/sprintService";
+import { Sprint } from "@/lib/types/sprint";
 
 // Mock Firebase
 jest.mock("firebase/firestore", () => ({
@@ -21,17 +21,41 @@ jest.mock("firebase/firestore", () => ({
   },
 }));
 
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 
-jest.mock("../../lib/services/sprintService", () => ({
+jest.mock("@/lib/services/sprintService", () => ({
   getAllSprints: jest.fn(),
 }));
 
 const mockGetAllSprints = getAllSprints as jest.MockedFunction<
   typeof getAllSprints
 >;
+
+function createSprint(
+  overrides: Partial<Sprint> & Pick<Sprint, "id" | "title">
+): Sprint {
+  return {
+    id: overrides.id,
+    title: overrides.title,
+    startDate:
+      overrides.startDate ??
+      (Timestamp.fromDate(new Date("2025-11-01")) as unknown as Sprint["startDate"]),
+    endDate:
+      overrides.endDate ??
+      (Timestamp.fromDate(new Date("2025-11-15")) as unknown as Sprint["endDate"]),
+    userStoryIds: overrides.userStoryIds ?? [],
+    velocity: overrides.velocity ?? 0,
+    progress: overrides.progress ?? 0,
+    status: overrides.status ?? "planned",
+    hasReview: overrides.hasReview ?? false,
+    hasRetrospective: overrides.hasRetrospective ?? false,
+    goal: overrides.goal,
+    closedAt: overrides.closedAt,
+    isActive: overrides.isActive,
+  };
+}
 
 /**
  * Convertit n'importe quel format de date en Date JS (copie de la fonction du hook).
@@ -83,30 +107,42 @@ describe("useActiveSprints - Logique métier", () => {
         {
           id: "sprint1",
           title: "Sprint 28 - Workflow",
-          startDate: new Date("2025-11-01"),
-          endDate: new Date("2025-12-15"),
-          status: "in-progress",
+          startDate: Timestamp.fromDate(new Date("2025-11-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-15")) as unknown as Timestamp,
+          status: "active",
           isActive: true,
           userStoryIds: ["us1"],
-        } as Sprint,
+          velocity: 0,
+          progress: 0,
+          hasReview: false,
+          hasRetrospective: false,
+        },
         {
           id: "sprint2",
           title: "Sprint 29 - Multi-tâches",
-          startDate: new Date("2025-11-15"),
-          endDate: new Date("2025-12-30"),
-          status: "in-progress",
+          startDate: Timestamp.fromDate(new Date("2025-11-15")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-30")) as unknown as Timestamp,
+          status: "active",
           isActive: true,
           userStoryIds: ["us2"],
-        } as Sprint,
+          velocity: 0,
+          progress: 0,
+          hasReview: false,
+          hasRetrospective: false,
+        },
         {
           id: "sprint3",
           title: "Sprint 30 - Futur",
-          startDate: new Date("2026-01-01"),
-          endDate: new Date("2026-01-15"),
+          startDate: Timestamp.fromDate(new Date("2026-01-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2026-01-15")) as unknown as Timestamp,
           status: "planned",
           isActive: false,
           userStoryIds: [],
-        } as Sprint,
+          velocity: 0,
+          progress: 0,
+          hasReview: false,
+          hasRetrospective: false,
+        },
       ];
 
       mockGetAllSprints.mockResolvedValue(mockSprints);
@@ -121,24 +157,24 @@ describe("useActiveSprints - Logique métier", () => {
 
     it("doit exclure les sprints avec status=done", async () => {
       const mockSprints: Sprint[] = [
-        {
+        createSprint({
           id: "sprint1",
           title: "Sprint actif",
-          startDate: new Date("2025-11-01"),
-          endDate: new Date("2025-12-15"),
-          status: "in-progress",
+          startDate: Timestamp.fromDate(new Date("2025-11-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-15")) as unknown as Timestamp,
+          status: "active",
           isActive: true,
           userStoryIds: ["us1"],
-        } as Sprint,
-        {
+        }),
+        createSprint({
           id: "sprint2",
-          title: "Sprint terminé",
-          startDate: new Date("2025-10-01"),
-          endDate: new Date("2025-10-15"),
+          title: "Sprint termine",
+          startDate: Timestamp.fromDate(new Date("2025-10-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-10-15")) as unknown as Timestamp,
           status: "done",
           isActive: true,
           userStoryIds: ["us2"],
-        } as Sprint,
+        }),
       ];
 
       mockGetAllSprints.mockResolvedValue(mockSprints);
@@ -148,30 +184,30 @@ describe("useActiveSprints - Logique métier", () => {
 
       expect(activeSprints).toHaveLength(1);
       expect(activeSprints[0].id).toBe("sprint1");
-      expect(activeSprints[0].status).toBe("in-progress");
+      expect(activeSprints[0].status).toBe("active");
     });
 
     it("doit détecter les sprints actifs par date range (fallback)", async () => {
       // Date actuelle mockée : 2025-11-27
       const mockSprints: Sprint[] = [
-        {
+        createSprint({
           id: "sprint1",
           title: "Sprint en cours par date",
-          startDate: new Date("2025-11-20"),
-          endDate: new Date("2025-12-05"),
-          status: "in-progress",
-          isActive: false, // Pas de flag, mais dans la date range
+          startDate: Timestamp.fromDate(new Date("2025-11-20")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-05")) as unknown as Timestamp,
+          status: "active",
+          isActive: false,
           userStoryIds: ["us1"],
-        } as Sprint,
-        {
+        }),
+        createSprint({
           id: "sprint2",
           title: "Sprint futur",
-          startDate: new Date("2026-01-01"),
-          endDate: new Date("2026-01-15"),
+          startDate: Timestamp.fromDate(new Date("2026-01-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2026-01-15")) as unknown as Timestamp,
           status: "planned",
           isActive: false,
           userStoryIds: [],
-        } as Sprint,
+        }),
       ];
 
       mockGetAllSprints.mockResolvedValue(mockSprints);
@@ -185,15 +221,15 @@ describe("useActiveSprints - Logique métier", () => {
 
     it("doit retourner un tableau vide si aucun sprint actif", async () => {
       const mockSprints: Sprint[] = [
-        {
+        createSprint({
           id: "sprint1",
-          title: "Sprint terminé",
-          startDate: new Date("2025-10-01"),
-          endDate: new Date("2025-10-15"),
+          title: "Sprint termine",
+          startDate: Timestamp.fromDate(new Date("2025-10-01")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-10-15")) as unknown as Timestamp,
           status: "done",
           isActive: false,
           userStoryIds: [],
-        } as Sprint,
+        }),
       ];
 
       mockGetAllSprints.mockResolvedValue(mockSprints);
@@ -240,13 +276,13 @@ describe("useActiveSprints - Logique métier", () => {
 
   describe("Fonction isCurrentSprint", () => {
     it("doit retourner true si la date actuelle est dans la plage", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint en cours",
-        startDate: new Date("2025-11-20"),
-        endDate: new Date("2025-12-05"),
-        status: "in-progress",
-      } as Sprint;
+        startDate: Timestamp.fromDate(new Date("2025-11-20")) as unknown as Timestamp,
+        endDate: Timestamp.fromDate(new Date("2025-12-05")) as unknown as Timestamp,
+        status: "active",
+      });
 
       const result = isCurrentSprint(sprint);
 
@@ -254,13 +290,13 @@ describe("useActiveSprints - Logique métier", () => {
     });
 
     it("doit retourner false si la date actuelle est avant le début", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint futur",
-        startDate: new Date("2026-01-01"),
-        endDate: new Date("2026-01-15"),
+        startDate: Timestamp.fromDate(new Date("2026-01-01")) as unknown as Timestamp,
+        endDate: Timestamp.fromDate(new Date("2026-01-15")) as unknown as Timestamp,
         status: "planned",
-      } as Sprint;
+      });
 
       const result = isCurrentSprint(sprint);
 
@@ -268,13 +304,13 @@ describe("useActiveSprints - Logique métier", () => {
     });
 
     it("doit retourner false si la date actuelle est après la fin", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
-        title: "Sprint passé",
-        startDate: new Date("2025-10-01"),
-        endDate: new Date("2025-10-15"),
+        title: "Sprint passe",
+        startDate: Timestamp.fromDate(new Date("2025-10-01")) as unknown as Timestamp,
+        endDate: Timestamp.fromDate(new Date("2025-10-15")) as unknown as Timestamp,
         status: "done",
-      } as Sprint;
+      });
 
       const result = isCurrentSprint(sprint);
 
@@ -284,13 +320,13 @@ describe("useActiveSprints - Logique métier", () => {
     it("doit inclure toute la journée de fin (23:59:59)", () => {
       // Si la date actuelle est 2025-11-27 et la fin est 2025-11-27,
       // le sprint doit être considéré comme actif
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint dernier jour",
-        startDate: new Date("2025-11-20"),
-        endDate: new Date("2025-11-27"), // Aujourd'hui
-        status: "in-progress",
-      } as Sprint;
+        startDate: Timestamp.fromDate(new Date("2025-11-20")) as unknown as Timestamp,
+        endDate: Timestamp.fromDate(new Date("2025-11-27")) as unknown as Timestamp,
+        status: "active",
+      });
 
       const result = isCurrentSprint(sprint);
 
@@ -301,24 +337,24 @@ describe("useActiveSprints - Logique métier", () => {
   describe("Scénario multi-sprint réel", () => {
     it("doit gérer 2 sprints actifs simultanément (Sprint 28 + Sprint 29)", async () => {
       const mockSprints: Sprint[] = [
-        {
+        createSprint({
           id: "sprint28",
           title: "Sprint 28 test - Workflow 2025",
-          startDate: new Date("2025-11-27"),
-          endDate: new Date("2025-12-11"),
-          status: "in-progress",
+          startDate: Timestamp.fromDate(new Date("2025-11-27")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-11")) as unknown as Timestamp,
+          status: "active",
           isActive: true,
-          userStoryIds: ["2wxnxrHkHdFxsp2TQGZG"], // US-036
-        } as Sprint,
-        {
+          userStoryIds: ["2wxnxrHkHdFxsp2TQGZG"],
+        }),
+        createSprint({
           id: "sprint29",
-          title: "Sprint 29 - Multi-tâches User Stories",
-          startDate: new Date("2025-11-27"),
-          endDate: new Date("2025-12-11"),
-          status: "in-progress",
+          title: "Sprint 29 - Multi-taches User Stories",
+          startDate: Timestamp.fromDate(new Date("2025-11-27")) as unknown as Timestamp,
+          endDate: Timestamp.fromDate(new Date("2025-12-11")) as unknown as Timestamp,
+          status: "active",
           isActive: true,
-          userStoryIds: ["l3A27ElA15Q5v7DYHmyN"], // US-037
-        } as Sprint,
+          userStoryIds: ["l3A27ElA15Q5v7DYHmyN"],
+        }),
       ];
 
       mockGetAllSprints.mockResolvedValue(mockSprints);

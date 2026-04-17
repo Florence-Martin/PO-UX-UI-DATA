@@ -75,7 +75,8 @@ Ce document constitue la référence fonctionnelle des règles métier de l'appl
 - **RG6.2** – Le Sprint Board affiche les user stories en cours, regroupées par statut (à faire, en cours, en test, terminé).
 - **RG6.3** – La vélocité affiche la capacité de l’équipe par sprint, calculée à partir des story points complétés.
 - **RG6.4** – Il est possible de créer un nouveau sprint en sélectionnant des user stories depuis le backlog.
-- **❌ RG6.5** – Une user story ne peut appartenir à plusieurs sprints simultanément.
+- **RG6.5** – Lorsqu’une User Story est ajoutée à un sprint, les tâches techniques déjà liées conservent leur statut courant. Si aucune tâche n’existe encore pour cette User Story, une tâche par défaut est créée en statut `todo`.
+- **❌ RG6.6** – Une user story ne peut appartenir à plusieurs sprints simultanément.
 
 ⸻
 

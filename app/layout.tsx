@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TimelineProvider } from "@/context/TimelineContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "UX Data PO Kit",
@@ -55,15 +51,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TimelineProvider>
             <div className="flex h-screen">
               <Sidebar />
               <main className="flex-1 overflow-y-auto">{children}</main>
             </div>
-            <Toaster />
-            <Sonner position="top-right" richColors />
+            <Toaster position="top-right" richColors />
           </TimelineProvider>
         </ThemeProvider>
       </body>

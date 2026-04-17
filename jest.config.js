@@ -7,7 +7,9 @@ module.exports = {
   ],
   preset: "ts-jest",
   testEnvironment: "node",
+  watchman: false,
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
+    "^tldts$": "<rootDir>/node_modules/tldts/dist/index.cjs.min.js",
   },
 };

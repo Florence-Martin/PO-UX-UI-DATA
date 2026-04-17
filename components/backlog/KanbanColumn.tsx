@@ -51,6 +51,8 @@ export function KanbanColumn({
 
       <ScrollArea className="flex-1 ">
         <SortableContext
+          // Le contexte sortable sert au comportement de drag des cartes,
+          // mais le backlog ne persiste pas de réordonnancement intra-colonne.
           items={tasks.map((task) => task.id!)} // Les ID des tâches doivent être uniques
           strategy={verticalListSortingStrategy}
         >

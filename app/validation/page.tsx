@@ -1,13 +1,14 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { Suspense } from "react";
-import { ValidationChecklists } from "@/components/validation/ValidationChecklists";
-import { ApiTesting } from "@/components/validation/ApiTesting";
-import { ExternalTools } from "@/components/validation/ExternalTools";
+
 import { BannerInfo } from "@/components/banner/BannerInfo";
 import SectionTabsLayout from "@/components/ui/SectionTabsLayout";
-import { DatabaseDiagram } from "@/components/validation/DatabaseDiagram";
 import BusinessRules from "@/components/validation/BusinessRules";
+import { ApiTesting } from "@/components/validation/ApiTesting";
+import { DatabaseDiagram } from "@/components/validation/DatabaseDiagram";
+import { ExternalTools } from "@/components/validation/ExternalTools";
+import { ValidationChecklists } from "@/components/validation/ValidationChecklists";
 
 async function getBusinessRulesContent() {
   const filePath = path.join(

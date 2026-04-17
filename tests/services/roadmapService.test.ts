@@ -17,7 +17,7 @@ jest.mock("firebase/firestore", () => ({
   },
 }));
 
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 
@@ -32,7 +32,7 @@ import {
   deleteRoadmapQuarter,
   getRoadmapQuarters,
   saveRoadmapQuarter,
-} from "../../lib/services/roadmapService";
+} from "@/lib/services/roadmapService";
 
 const mockGetDocs = getDocs as jest.MockedFunction<typeof getDocs>;
 const mockSetDoc = setDoc as jest.MockedFunction<typeof setDoc>;

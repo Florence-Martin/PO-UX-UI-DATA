@@ -33,6 +33,27 @@ export function SprintDetailModal({
   onClose,
   readOnly = false,
 }: Props) {
+  const modalKey = sprint?.id ?? "new-sprint";
+
+  return (
+    <SprintDetailModalContent
+      key={modalKey}
+      sprint={sprint}
+      userStories={userStories}
+      open={open}
+      onClose={onClose}
+      readOnly={readOnly}
+    />
+  );
+}
+
+function SprintDetailModalContent({
+  sprint,
+  userStories,
+  open,
+  onClose,
+  readOnly = false,
+}: Props) {
   const { refetch } = useSprints();
   const {
     isCreating,

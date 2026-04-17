@@ -1,5 +1,5 @@
 import { unlink } from "fs/promises";
-import { DELETE } from "../../app/api/delete-wireframe/route";
+import { DELETE } from "@/app/api/delete-wireframe/route";
 
 jest.mock("fs/promises", () => ({
   unlink: jest.fn(),

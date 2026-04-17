@@ -3,13 +3,53 @@
  * US-036 : Multi-sprint support
  */
 
-import { BacklogTask } from "../../lib/types/backlogTask";
-import { Sprint } from "../../lib/types/sprint";
-import { UserStory } from "../../lib/types/userStory";
+import { Timestamp } from "firebase/firestore";
+import { BacklogTask } from "@/lib/types/backlogTask";
+import { Sprint } from "@/lib/types/sprint";
+import { UserStory } from "@/lib/types/userStory";
 import {
   getTasksForSprint,
   getUserStoriesForSprint,
-} from "../../lib/utils/sprintUserStories";
+} from "@/lib/utils/sprintUserStories";
+
+function createSprint(overrides: Partial<Sprint> & Pick<Sprint, "id" | "title">): Sprint {
+  return {
+    id: overrides.id,
+    title: overrides.title,
+    startDate:
+      overrides.startDate ??
+      (Timestamp.fromDate(new Date("2025-11-01")) as unknown as Sprint["startDate"]),
+    endDate:
+      overrides.endDate ??
+      (Timestamp.fromDate(new Date("2025-11-15")) as unknown as Sprint["endDate"]),
+    userStoryIds: overrides.userStoryIds ?? [],
+    velocity: overrides.velocity ?? 0,
+    progress: overrides.progress ?? 0,
+    status: overrides.status ?? "planned",
+    hasReview: overrides.hasReview ?? false,
+    hasRetrospective: overrides.hasRetrospective ?? false,
+    goal: overrides.goal,
+    closedAt: overrides.closedAt,
+    isActive: overrides.isActive,
+  };
+}
+
+function createBacklogTask(
+  overrides: Partial<BacklogTask> & Pick<BacklogTask, "title">
+): BacklogTask {
+  return {
+    id: overrides.id,
+    title: overrides.title,
+    description: overrides.description ?? "",
+    priority: overrides.priority ?? "medium",
+    storyPoints: overrides.storyPoints ?? 0,
+    status: overrides.status ?? "todo",
+    userStoryIds: overrides.userStoryIds,
+    badge: overrides.badge,
+    createdAt: overrides.createdAt,
+    updatedAt: overrides.updatedAt,
+  };
+}
 
 describe("sprintUserStories utils", () => {
   describe("getUserStoriesForSprint", () => {
@@ -35,11 +75,11 @@ describe("sprintUserStories utils", () => {
     ];
 
     it("doit retourner les User Stories du sprint via sprint.userStoryIds", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint 28",
         userStoryIds: ["us1"],
-      } as Sprint;
+      });
 
       const result = getUserStoriesForSprint(sprint, mockUserStories);
 
@@ -49,11 +89,11 @@ describe("sprintUserStories utils", () => {
     });
 
     it("doit retourner les User Stories via userStory.sprintId (fallback)", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint2",
         title: "Sprint 29",
         userStoryIds: [],
-      } as Sprint;
+      });
 
       const result = getUserStoriesForSprint(sprint, mockUserStories);
 
@@ -63,11 +103,11 @@ describe("sprintUserStories utils", () => {
     });
 
     it("doit combiner les deux méthodes (userStoryIds + sprintId)", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint 28",
         userStoryIds: ["us3"],
-      } as Sprint;
+      });
 
       const result = getUserStoriesForSprint(sprint, mockUserStories);
 
@@ -82,11 +122,11 @@ describe("sprintUserStories utils", () => {
     });
 
     it("doit retourner un tableau vide si aucune US ne correspond", () => {
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint99",
         title: "Sprint inexistant",
         userStoryIds: [],
-      } as Sprint;
+      });
 
       const result = getUserStoriesForSprint(sprint, mockUserStories);
 
@@ -103,11 +143,11 @@ describe("sprintUserStories utils", () => {
         } as UserStory,
       ];
 
-      const sprint: Sprint = {
+      const sprint = createSprint({
         id: "sprint1",
         title: "Sprint 28",
         userStoryIds: ["us1"], // US-036 déjà dans sprintId
-      } as Sprint;
+      });
 
       const result = getUserStoriesForSprint(sprint, mockDuplicateUS);
 
@@ -119,36 +159,36 @@ describe("sprintUserStories utils", () => {
 
   describe("getTasksForSprint", () => {
     const mockTasks: BacklogTask[] = [
-      {
+      createBacklogTask({
         id: "task1",
-        title: "Tâche 1 - Sprint 28",
+        title: "Tache 1 - Sprint 28",
         userStoryIds: ["us1"],
         status: "todo",
-      } as BacklogTask,
-      {
+      }),
+      createBacklogTask({
         id: "task2",
-        title: "Tâche 2 - Sprint 28",
+        title: "Tache 2 - Sprint 28",
         userStoryIds: ["us1"],
         status: "in-progress",
-      } as BacklogTask,
-      {
+      }),
+      createBacklogTask({
         id: "task3",
-        title: "Tâche 3 - Sprint 29",
+        title: "Tache 3 - Sprint 29",
         userStoryIds: ["us2"],
         status: "todo",
-      } as BacklogTask,
-      {
+      }),
+      createBacklogTask({
         id: "task4",
-        title: "Tâche 4 - Multi-sprint",
+        title: "Tache 4 - Multi-sprint",
         userStoryIds: ["us1", "us2"],
         status: "in-testing",
-      } as BacklogTask,
-      {
+      }),
+      createBacklogTask({
         id: "task5",
-        title: "Tâche 5 - Sans US",
+        title: "Tache 5 - Sans US",
         userStoryIds: [],
         status: "todo",
-      } as BacklogTask,
+      }),
     ];
 
     it("doit retourner les tâches liées aux US du sprint", () => {
@@ -196,18 +236,18 @@ describe("sprintUserStories utils", () => {
 
     it("doit gérer les tâches avec userStoryIds undefined", () => {
       const tasksWithUndefined: BacklogTask[] = [
-        {
+        createBacklogTask({
           id: "task1",
-          title: "Tâche sans userStoryIds",
+          title: "Tache sans userStoryIds",
           userStoryIds: undefined,
           status: "todo",
-        } as any,
-        {
+        }),
+        createBacklogTask({
           id: "task2",
-          title: "Tâche avec userStoryIds",
+          title: "Tache avec userStoryIds",
           userStoryIds: ["us1"],
           status: "todo",
-        } as BacklogTask,
+        }),
       ];
 
       const result = getTasksForSprint(tasksWithUndefined, ["us1"]);
@@ -223,24 +263,24 @@ describe("sprintUserStories utils", () => {
       const sprint29UserStoryIds = ["us2"];
 
       const allTasks: BacklogTask[] = [
-        {
+        createBacklogTask({
           id: "task1",
           title: "Sprint 28 task",
           userStoryIds: ["us1"],
           status: "todo",
-        } as BacklogTask,
-        {
+        }),
+        createBacklogTask({
           id: "task2",
           title: "Sprint 29 task",
           userStoryIds: ["us2"],
           status: "todo",
-        } as BacklogTask,
-        {
+        }),
+        createBacklogTask({
           id: "task3",
           title: "Multi-sprint task",
           userStoryIds: ["us1", "us2"],
           status: "in-progress",
-        } as BacklogTask,
+        }),
       ];
 
       const sprint28Tasks = getTasksForSprint(allTasks, sprint28UserStoryIds);

@@ -1,16 +1,18 @@
-import { useCallback, useRef, RefCallback } from "react";
+import { RefCallback, useCallback, useEffect, useRef } from "react";
 
 // Hook pour fusionner un ref local (avec .current) + setNodeRef (fonction)
 export function useCombinedRefs<T>(
   ...refs: (React.Ref<T> | undefined)[]
-): RefCallback<T> & { current: T | null } {
-  const targetRef = useRef<T | null>(null);
+): RefCallback<T> {
+  const refsRef = useRef(refs);
+
+  useEffect(() => {
+    refsRef.current = refs;
+  }, [refs]);
 
   const combinedRef: RefCallback<T> = useCallback(
     (node: T | null) => {
-      targetRef.current = node;
-
-      refs.forEach((ref) => {
+      refsRef.current.forEach((ref) => {
         if (!ref) return;
         if (typeof ref === "function") {
           ref(node);
@@ -19,8 +21,8 @@ export function useCombinedRefs<T>(
         }
       });
     },
-    [refs]
+    []
   );
 
-  return Object.assign(combinedRef, { current: targetRef.current });
+  return combinedRef;
 }

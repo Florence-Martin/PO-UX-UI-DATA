@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from "fs/promises";
-import { POST } from "../../app/api/upload-wireframe/route";
+import { POST } from "@/app/api/upload-wireframe/route";
 
 jest.mock("fs/promises", () => ({
   mkdir: jest.fn(),

@@ -1,105 +1,130 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getUserStoriesByMoscow } from "@/lib/services/userStoryService";
-import { updateUserStory } from "@/lib/services/userStoryService";
-import { UserStory } from "@/lib/types/userStory";
-import { MoscowColumn } from "./MoscowColumn";
-import { PrioritisedUserStoryCard } from "./PrioritisedUserStoryCard";
-
 import {
+  closestCorners,
   DndContext,
-  DragOverlay,
-  closestCenter,
-  DragStartEvent,
   DragEndEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
+import { updateUserStory, getUserStoriesByMoscow } from "@/lib/services/userStoryService";
+import { UserStory } from "@/lib/types/userStory";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { MoscowColumn } from "./MoscowColumn";
 
-// Définition du type des clés MoSCoW
 export type MoscowKey = "mustHave" | "shouldHave" | "couldHave" | "wontHave";
 
+type MoscowBoardData = Record<MoscowKey, UserStory[]>;
+
+const MOSCOW_COLUMNS: MoscowKey[] = [
+  "mustHave",
+  "shouldHave",
+  "couldHave",
+  "wontHave",
+];
+
+const COLUMN_LABELS: Record<MoscowKey, string> = {
+  mustHave: "Must Have",
+  shouldHave: "Should Have",
+  couldHave: "Could Have",
+  wontHave: "Won’t Have",
+};
+
+function moveStoryBetweenColumns(
+  board: MoscowBoardData,
+  storyId: string,
+  from: MoscowKey,
+  to: MoscowKey
+): MoscowBoardData {
+  const movedStory = board[from].find((story) => story.id === storyId);
+  if (!movedStory) return board;
+
+  return {
+    ...board,
+    [from]: board[from].filter((story) => story.id !== storyId),
+    [to]: [{ ...movedStory, moscow: to }, ...board[to]],
+  };
+}
+
 export function MoscowPrioritization() {
-  const [data, setData] = useState<Record<MoscowKey, UserStory[]>>({
+  const [board, setBoard] = useState<MoscowBoardData>({
     mustHave: [],
     shouldHave: [],
     couldHave: [],
     wontHave: [],
   });
+  const [activeStoryId, setActiveStoryId] = useState<string | null>(null);
 
-  const [hash, setHash] = useState<string>("");
-  const [activeStory, setActiveStory] = useState<UserStory | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-  // Met à jour le hash si l’URL change (ex: #us-xxx)
   useEffect(() => {
-    const updateHash = () => setHash(window.location.hash);
-    updateHash();
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
+    void getUserStoriesByMoscow().then(setBoard);
   }, []);
 
-  // Charge les user stories groupées par MoSCoW
-  useEffect(() => {
-    getUserStoriesByMoscow().then(setData);
-  }, []);
-
-  // Gestion du drag
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const storyId = event.active.id as string;
-    const story = Object.values(data)
-      .flat()
-      .find((s) => s.id === storyId);
-    if (story) setActiveStory(story);
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveStoryId(String(active.id));
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-    setActiveStory(null);
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    setActiveStoryId(null);
 
-    if (!over || active.id === over.id) return;
+    if (!over) return;
 
-    const activeId = active.id.toString();
-    const newMoscow = over.id as MoscowKey;
+    const storyId = String(active.id);
+    const fromColumn = active.data.current?.fromColumn as MoscowKey | undefined;
+    const toColumn = over.data.current?.columnId as MoscowKey | undefined;
+
+    if (!fromColumn || !toColumn || fromColumn === toColumn) {
+      return;
+    }
+
+    const previousBoard = board;
+    const nextBoard = moveStoryBetweenColumns(
+      previousBoard,
+      storyId,
+      fromColumn,
+      toColumn
+    );
+
+    setBoard(nextBoard);
 
     try {
-      await updateUserStory(activeId, { moscow: newMoscow as MoscowKey });
-      const updated = await getUserStoriesByMoscow();
-      setData(updated);
+      await updateUserStory(storyId, { moscow: toColumn });
     } catch (error) {
-      console.error("Erreur lors du déplacement :", error);
+      setBoard(previousBoard);
+      console.error("Erreur lors du déplacement MoSCoW :", error);
     }
   };
 
-  const columns = [
-    { label: "Must Have", key: "mustHave" },
-    { label: "Should Have", key: "shouldHave" },
-    { label: "Could Have", key: "couldHave" },
-    { label: "Won’t Have", key: "wontHave" },
-  ] as const;
-
   return (
     <DndContext
-      collisionDetection={closestCenter}
+      sensors={sensors}
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {columns.map(({ label, key }) => (
+        {MOSCOW_COLUMNS.map((columnId) => (
           <MoscowColumn
-            key={`${key}-${hash}`} // Permet de déclencher un re-render si hash change
-            label={label}
-            columnId={key}
-            stories={data[key]}
+            key={columnId}
+            label={COLUMN_LABELS[columnId]}
+            columnId={columnId}
+            stories={board[columnId]}
+            activeStoryId={activeStoryId}
           />
         ))}
       </div>
-      <DragOverlay>
-        {activeStory && (
-          <div className="w-[300px]">
-            <PrioritisedUserStoryCard story={activeStory} />
-          </div>
-        )}
-      </DragOverlay>
     </DndContext>
   );
 }

@@ -15,11 +15,11 @@ import {
   getUserStoriesByMoscow,
   updateUserStory,
   updateUserStorySprint,
-} from "../../lib/services/userStoryService";
+} from "@/lib/services/userStoryService";
 
 // Mock Firebase
 jest.mock("firebase/firestore");
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 

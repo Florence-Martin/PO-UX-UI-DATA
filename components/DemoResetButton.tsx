@@ -15,15 +15,11 @@ import { Button } from "@/components/ui/button";
 import { DemoStore } from "@/lib/demo/demoStore";
 import { isDemoMode } from "@/lib/utils/demoMode";
 import { Loader2, RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function DemoResetButton() {
-  const [isDemo, setIsDemo] = useState(false);
+  const [isDemo] = useState(() => isDemoMode());
   const [isResetting, setIsResetting] = useState(false);
-
-  useEffect(() => {
-    setIsDemo(isDemoMode());
-  }, []);
 
   if (!isDemo) return null;
 

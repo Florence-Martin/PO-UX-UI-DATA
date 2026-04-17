@@ -2,7 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useSearchParams } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 export type TabItem = {
   value: string;
@@ -25,27 +25,27 @@ export default function SectionTabsLayout({
 }: SectionTabsLayoutProps) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const [activeTab, setActiveTab] = useState(tabs[0].value);
+  const [manualTab, setManualTab] = useState(tabs[0].value);
+  const activeTab = useMemo(() => {
+    if (tabParam && tabs.some((tab) => tab.value === tabParam)) {
+      return tabParam;
+    }
+
+    return manualTab;
+  }, [manualTab, tabParam, tabs]);
 
   useEffect(() => {
-    if (!tabParam) return;
+    if (!tabParam || !tabs.some((tab) => tab.value === tabParam)) return;
 
-    const matchedTab = tabs.find((tab) => tab.value === tabParam);
+    const hash = window.location.hash;
 
-    if (matchedTab) {
-      setActiveTab(tabParam);
-
-      const hash = window.location.hash;
-
-      if (hash) {
-        // Convertit le hash en sélecteur CSS valide
-        const escapedHash = CSS.escape(hash.replace("#", ""));
-        const el = document.querySelector(`#${escapedHash}`);
-        if (el) {
-          setTimeout(() => {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 150);
-        }
+    if (hash) {
+      const escapedHash = CSS.escape(hash.replace("#", ""));
+      const el = document.querySelector(`#${escapedHash}`);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
       }
     }
   }, [tabParam, tabs]);
@@ -76,11 +76,7 @@ export default function SectionTabsLayout({
         </div>
       )}
 
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-4"
-      >
+      <Tabs value={activeTab} onValueChange={setManualTab} className="space-y-4">
         <TabsList className="flex flex-wrap gap-2 sm:gap-4 mb-9">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>

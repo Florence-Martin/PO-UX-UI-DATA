@@ -14,11 +14,11 @@ import {
   getPersona,
   Persona,
   savePersona,
-} from "../../lib/services/personaService";
+} from "@/lib/services/personaService";
 
 // Mock Firebase
 jest.mock("firebase/firestore");
-jest.mock("../../lib/firebase", () => ({
+jest.mock("@/lib/firebase", () => ({
   db: {},
 }));
 

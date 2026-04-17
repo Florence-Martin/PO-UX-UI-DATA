@@ -30,6 +30,12 @@ function mapTaskStatusToSection(status?: string): string {
   return "planning";
 }
 
+function mapSprintStatusToSection(status?: string): string {
+  if (status === "active") return "execution";
+  if (status === "done") return "review";
+  return "planning";
+}
+
 function getFormattedDate(date?: string | Timestamp | Date): string {
   if (!date) return "";
   if (typeof date === "string") return formatDateToFrenchString(date);
@@ -62,12 +68,13 @@ export function buildTimelineItemsUserStories(
     const matchingSprint = sprints.find((sprint) =>
       sprint.userStoryIds?.includes(userStoryId)
     );
+    if (!matchingSprint) return;
 
     const rawDate = matchingSprint?.startDate || userStory.createdAt;
     const formattedDate = getFormattedDate(rawDate);
-    const status = task.status ?? "todo";
-
-    const section = mapTaskStatusToSection(status);
+    const section = matchingSprint.status
+      ? mapSprintStatusToSection(matchingSprint.status)
+      : mapTaskStatusToSection(task.status ?? "todo");
 
     items.push({
       id: userStory.id,
@@ -100,15 +107,7 @@ export function buildTimelineItemsUserStories(
     const rawDate = matchingSprint.startDate || us.createdAt;
     const formattedDate = getFormattedDate(rawDate);
 
-    // Si le sprint est actif, on force la section "execution"
-    let section: string;
-    if (matchingSprint.status === "active") {
-      section = "execution";
-    } else if (matchingSprint.status === "done") {
-      section = "review";
-    } else {
-      section = "planning";
-    }
+    const section = mapSprintStatusToSection(matchingSprint.status);
 
     items.push({
       id: us.id,

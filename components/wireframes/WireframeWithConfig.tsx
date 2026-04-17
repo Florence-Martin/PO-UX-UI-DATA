@@ -20,11 +20,8 @@ export function WireframeWithConfig({
 }: WireframeWithConfigProps) {
   const {
     grid,
-    images,
     isLoading,
     error,
-    handleImageUpload,
-    removeImage,
     updateGridConfig,
   } = useWireframeGrid(gridId);
 
