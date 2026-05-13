@@ -75,7 +75,7 @@
     "joi": "^17.13.3",
     "lucide-react": "^0.446.0",
     "motion-utils": "^12.23.6",
-    "next": "^16.2.3",
+    "next": "^16.2.6",
     "next-themes": "^0.3.0",
     "postcss": "8.5.10",
     "react": "^18.3.1",
