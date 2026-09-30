@@ -11,19 +11,42 @@ L’objectif est de faciliter le **cadrage produit, l’alignement des parties p
 ![Tests](https://img.shields.io/badge/Tests-166%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
-![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
+![Security](https://img.shields.io/badge/Security-0%20vuln-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## ⚠️ Mode Démo
+## 📌 État actuel du projet
 
-La version actuelle du projet fonctionne en **mode démonstration** avec des règles Firebase ouvertes afin de faciliter les tests.
+Le dépôt est aujourd’hui dans un état de **base fonctionnelle mature / MVP de cockpit produit**. Il a atteint un bon niveau de complétude fonctionnelle et technique, avec un dashboard produit, des modules d’analyse, des wireframes, un backlog agile et une documentation assez avancée.
 
-- Base Firestore : `allow read, write: if true`
-- Lecture / écriture autorisées uniquement pour les démonstrations
-- Aucune donnée sensible n’est stockée
-- Un système d’authentification sera ajouté dans une prochaine version
+Les derniers correctifs de sécurité ont été appliqués :
+
+- mise à jour de `next` vers une version sécurisée,
+- correctif de `sharp` via override,
+- mise à jour de `joi` vers la version patchée,
+- validation finale avec `npm audit --omit=dev` → `found 0 vulnerabilities`.
+
+Le projet reste toutefois un **MVP orienté démonstration / validation produit**, et non une version de production totalement verrouillée côté sécurité et autorisations.
+
+---
+
+## ⚠️ Mode Démo et sécurité
+
+La version actuelle conserve une logique de démonstration pour faciliter les tests et la validation fonctionnelle.
+
+- certains modules peuvent encore fonctionner avec un accès simplifié,
+- la base Firebase est conçue pour les tests et la preuve de concept,
+- l’authentification et le contrôle d’accès doivent être durcis avant un usage réel en production.
+
+Le point clé à traiter maintenant est donc la **sécurisation de l’application** :
+
+- authentification utilisateur,
+- rôles et permissions,
+- protection des routes et API,
+- fermeture des accès en production,
+- validation des entrées et des uploads.
 
 ---
 
@@ -34,7 +57,7 @@ PO-UX-UI-DATA vise à créer un **point de convergence entre discovery, design e
 Les fonctionnalités explorées dans ce projet incluent :
 
 - Structurer la **product discovery** à partir de personas, interviews et questionnaires
-- Concevoir rapidement des **wireframes interactifs** (connectés à Figma)
+- Concevoir rapidement des **wireframes interactifs**
 - Gérer un **backlog produit agile** avec priorisation (MoSCoW / Scrum)
 - Organiser les **sprints** et suivre la vélocité
 - Visualiser les **KPIs UX et business**
@@ -205,7 +228,7 @@ npm run clean            # Nettoyer et réinstaller
 
 ## Stack Technique
 
-- Next.js 14 (App Router) + API Routes
+- Next.js 16 (App Router) + API Routes
 - TypeScript 5.2.2
 - TailwindCSS + Shadcn UI
 - Chart.js + Framer Motion (dataviz & animations)
@@ -255,9 +278,25 @@ npm run clean            # Nettoyer et réinstaller
 
 ## Statut du projet
 
-- Certaines fonctionnalités sont déjà dynamiques et connectées à Firebase (personas, backlog, sprints).
-- D’autres modules sont encore en mode statique ou preview, en attente d’implémentation complète.
-- Le projet évolue en continu avec des mises à jour régulières.
+Le projet est actuellement dans une phase de **maturité fonctionnelle** avec une base solide pour la démonstration, les validations produit et la préparation d’une version plus robuste.
+
+### Niveau actuel
+
+- ✅ architecture cohérente et exploitable pour le dashboard produit,
+- ✅ modules de discovery, backlog, dashboards, wireframes et sprint déjà présents,
+- ✅ documentation technique et fonctionnelle relativement complète,
+- ✅ tests et build validés,
+- ✅ dépendances critiques mises à jour après audit de sécurité,
+- ⚠️ authentification et sécurisation de production encore à compléter,
+- ⚠️ certaines zones restent en logique de démonstration / prototype.
+
+### Priorité d’action immédiate
+
+1. sécuriser les accès et les API,
+2. verrouiller les règles d’accès aux données,
+3. finaliser l’intégration auth / rôles,
+4. stabiliser la prod sur environnement propre,
+5. puis poursuivre l’évolution produit et la qualité UX.
 
 ---
 
