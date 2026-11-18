@@ -5,12 +5,6 @@ const nextConfig = {
   // Active le mode strict de React pour détecter les problèmes potentiels
   reactStrictMode: true,
 
-  typescript: {
-    // ⚠️ Ignore complètement les erreurs TypeScript pendant le build
-    // Nécessaire pour contourner les erreurs de types @babel__core
-    ignoreBuildErrors: true,
-  },
-
   typedRoutes: false,
 
   // Images non-optimisées - Vercel gère l'optimisation automatiquement
