@@ -23,5 +23,13 @@ Chaque étape est vérifiée, commitée et poussée séparément. La production 
 
 - Joi : 17.13.9, correctif dans la même version majeure.
 - Tests du schéma de sprint : cas valide, ordre des dates, limites de titre et types des identifiants de User Stories.
+- Typage, lint, 225 tests et build réussis. Commit `1afcaed` ; [prévisualisation réussie](https://vercel.com/florencemartins-projects/po-ux-ui-data/Gwm5mT81RJgKMQRrvwnLawTwvMMC).
+
+**4. Zod**
+
+- Zod : 4.6.7 ; TypeScript : 5.9.3 (compatible avec Zod 4 et ts-jest existant) ; resolvers : 7.0.7.
+- La route d'analyse expose les erreurs via `issues`, conserve le statut HTTP 400 et borne les textes (titre 300 caractères, description/critères 20 000, code/priorité 100).
+- Les réponses IA sont limitées à 50 éléments par liste et 4 000 caractères par texte. Ces limites s'appliquent à la validation, pas au téléchargement du corps HTTP.
+- Tests de l'API valide/invalide, des limites de taille et de l'intégration avec React Hook Form.
 
 Le rapport `AUDIT-DEPENDANCES-2026-11-18.md` reste l'instantané avant ces mises à jour.

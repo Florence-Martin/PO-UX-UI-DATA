@@ -12,18 +12,18 @@ export const UserStoryQualityResponseSchema = z.object({
   alerts: z.array(
     z.object({
       severity: z.enum(["low", "medium", "high"]),
-      message: z.string(),
+      message: z.string().max(4000),
     })
-  ),
-  questionsForBusiness: z.array(z.string()),
+  ).max(50),
+  questionsForBusiness: z.array(z.string().max(4000)).max(50),
   gherkinSuggestions: z.array(
     z.object({
-      scenario: z.string(),
-      given: z.string(),
-      when: z.string(),
-      then: z.string(),
+      scenario: z.string().max(4000),
+      given: z.string().max(4000),
+      when: z.string().max(4000),
+      then: z.string().max(4000),
     })
-  ),
+  ).max(50),
   investGuidelines: z
     .object({
       independent: z.boolean().optional(),

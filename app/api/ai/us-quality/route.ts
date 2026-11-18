@@ -10,13 +10,13 @@ import { z } from "zod";
  * Schéma de validation de la requête entrante
  */
 const RequestSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
+  title: z.string().min(1, "Le titre est requis").max(300),
+  description: z.string().min(1, "La description est requise").max(20000),
   acceptanceCriteria: z
     .string()
-    .min(1, "Les critères d'acceptation sont requis"),
-  code: z.string().optional(),
-  priority: z.string().optional(),
+    .min(1, "Les critères d'acceptation sont requis").max(20000),
+  code: z.string().max(100).optional(),
+  priority: z.string().max(100).optional(),
 });
 
 /**
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: "Données invalides",
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 }
       );
