@@ -75,7 +75,7 @@
     "firebase": "^11.5.0",
     "framer-motion": "^12.5.0",
     "input-otp": "^1.2.4",
-    "joi": "^17.13.8",
+    "joi": "17.13.9",
     "lucide-react": "^0.446.0",
     "motion-utils": "^12.23.6",
     "next": "16.4.6",

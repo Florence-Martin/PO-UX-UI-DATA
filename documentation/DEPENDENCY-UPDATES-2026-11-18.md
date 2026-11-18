@@ -17,5 +17,11 @@ Chaque étape est vérifiée, commitée et poussée séparément. La production 
 
 - DOMPurify : 3.4.18.
 - Trois tests vérifient le nettoyage réellement utilisé par les formulaires de sprint : conservation du texte français et du HTML inoffensif, suppression des scripts/gestionnaires d'événements, neutralisation des liens JavaScript.
+- Typage, lint, 219 tests et build réussis. Commit `25861b8` ; [prévisualisation réussie](https://vercel.com/florencemartins-projects/po-ux-ui-data/32LVaTAbgoNUnteC3hChvAL9iUyA).
+
+**3. Joi**
+
+- Joi : 17.13.9, correctif dans la même version majeure.
+- Tests du schéma de sprint : cas valide, ordre des dates, limites de titre et types des identifiants de User Stories.
 
 Le rapport `AUDIT-DEPENDANCES-2026-11-18.md` reste l'instantané avant ces mises à jour.
