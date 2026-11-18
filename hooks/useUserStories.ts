@@ -40,12 +40,7 @@ export function useUserStories() {
   const [prioritySearchTerm, setPrioritySearchTerm] = useState("");
   const [userStorySearchTerm, setUserStorySearchTerm] = useState("");
 
-  // Chargement initial
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  const refetch = async () => {
+  const refetch = useCallback(async () => {
     try {
       setLoading(true);
       const stories = await getAllUserStories();
@@ -58,7 +53,12 @@ export function useUserStories() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Chargement initial
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   // Filtrage dynamique
   useEffect(() => {
